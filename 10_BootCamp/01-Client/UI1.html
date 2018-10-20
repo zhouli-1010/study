@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0131)https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    
+    <title>UI コンポーネントを使ってみよう — HUE BT documents 1.0 ドキュメント</title>
+    
+    <link rel="stylesheet" href="./UI コンポーネントを使ってみよう1 — HUE BT documents 1.0 ドキュメント_files/proBlue.css" type="text/css">
+    <link rel="stylesheet" href="./UI コンポーネントを使ってみよう1 — HUE BT documents 1.0 ドキュメント_files/pygments.css" type="text/css">
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="./UI コンポーネントを使ってみよう1 — HUE BT documents 1.0 ドキュメント_files/jquery.js.ダウンロード"></script>
+    <script type="text/javascript" src="./UI コンポーネントを使ってみよう1 — HUE BT documents 1.0 ドキュメント_files/underscore.js.ダウンロード"></script>
+    <script type="text/javascript" src="./UI コンポーネントを使ってみよう1 — HUE BT documents 1.0 ドキュメント_files/doctools.js.ダウンロード"></script>
+    <script type="text/javascript" src="./UI コンポーネントを使ってみよう1 — HUE BT documents 1.0 ドキュメント_files/translations.js.ダウンロード"></script>
+    <link rel="top" title="HUE BT documents 1.0 ドキュメント" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html"> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/genindex.html" title="総合索引" accesskey="I">索引</a></li>
+        <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">HUE BT documents 1.0 ドキュメント</a> »</li>
+<li class="right">
+    <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html">English</a> |
+    
+</li>
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ui">
+<h1>UI コンポーネントを使ってみよう<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html#ui" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>Closure Library では、DOM 操作を行うプログラムを UI コンポーネントとして分離しています。</p>
+<p>Closure Library には、大量の UI コンポーネントが用意されています。
+下記のサイトにアクセスしてみて、実際にどのようなコンポーネントがあるのかを見てみましょう。</p>
+<p><a class="reference external" href="http://closure-library.googlecode.com/git-history/0148f7ecaa1be5b645fabe7338b9579ed2f951c8/closure/goog/demos/index.html">http://closure-library.googlecode.com/git-history/0148f7ecaa1be5b645fabe7338b9579ed2f951c8/closure/goog/demos/index.html</a></p>
+<p>HUE 開発においては、<tt class="docutils literal"><span class="pre">wap.core.ui</span></tt> 名前空間以下に様々な UI コンポーネントが用意されています。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">HUE Bootcamp では、HUE Framework の UI コンポーネントは利用しません。
+Closure Library の提供するコンポーネントもしくは、皆さんが自作したコンポーネントを利用します。</p>
+</div>
+<div class="section" id="id1">
+<h2>UI コンポーネントことはじめ<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>Todo List でいきなり UI コンポーネントを使う前に、安全な場所で練習します。
+練習用の場所を、sandbox ディレクトリに用意しています。</p>
+<p>まずは sandbox/html/hello-ui.html をエディタ (Eclipse) とブラウザ (Google Chrome) で開いてみましょう。</p>
+<p>将来ボタンになりそうな何かと、将来選択リストになりそうな何かが並んでいます。
+現時点ではもちろん動作しませんが、これを動かすのがゴールです。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">sandbox では、すぐ書いてすぐ動かすを実現するために、
+JavaScript ソースコードを HTML の &lt;script&gt; 要素内に直接記述するようにしていますが、
+実際の課題および判定試験、そしてもちろん、本番の HUE 開発では &lt;script&gt; 要素内に記述するのは厳禁ですよ。</p>
+</div>
+<div class="section" id="id2">
+<h3>ボタンを動かしてみよう<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html#id2" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>Closure Library には、ボタンに対応するコンポーネントとして、<tt class="docutils literal"><span class="pre">goog.ui.Button</span></tt> が用意されています。
+これを使ってみます。</p>
+<p>hello-ui.html の &lt;script&gt; 内に、次のコードを書いてみます。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">button</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Button</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">$button</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(</span><span class="s1">'hello-button'</span><span class="p">);</span>
+<span class="nx">button</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="nx">$button</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>これが基本的な使い方になります。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>なお、この書き方は最新の Closure Library では非推奨とされています。
+代わりに、次のように記述することになっています。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">$button</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(</span><span class="s1">'hello-button'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">button</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="nx">$button</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>これは、コンポーネントのインスタンス選択を goog.ui.decorate()
+(内部で利用している goog.ui.registry ) に任せることで、
+コンストラクタ呼び出しコードと HTML のクラス名とのダブルメンテナンスを防ぐことを目的としていると考えられます。</p>
+<p>しかし、コンポーネントのインスタンス選択の実装が現時点ではループ処理 (比較的低速) によって行われていること、
+プラグインを取捨選択して decorate() することに対応していないこと、
+HUE Bootcamp で作成するコンポーネントは decorate() が非推奨とされている goog.ui.Control クラスではなく
+goog.ui.Component クラスを継承して作成している関係上
+(つまり、HUE Bootcamp のコンポーネントに限って言えば非推奨ではない)、
+HUE Bootcamp では @deprecated な古い書き方を利用します。</p>
+<p class="last">HUE Framework の対応次第では、HUE 開発における推奨方法が変わる可能性があることに注意してください。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>decorate() の他に UI コンポーネントを生成するもうひとつのやり方に、render() があります。
+render() は、decorate() すべき HTML 要素がない状態のところに、新しい HTML 要素を生成してからdecorate() します。</p>
+<p>一般に DOM 操作は慎重に行う限りは「それほど」重たい操作ではありませんが、
+HUE においてはそれすら命取りとなりかねません。</p>
+<p class="last">特に、HUE 開発においては、HTML の組み立てを出来る限りサーバーサイドで行うという思想で設計されているので、
+render() を忘れてしまっても良いでしょう。
+HUE の場合の原則として、「ページのロード時には一切の DOM の変更は行わない」ということを覚えておいてください。
+ただし、HUE Bootcamp では、HUE Framework は利用していないので、サーバーサイドの支援を受けることが出来ません。
+そのため、ページロード時の DOM 変更を一部だけ許容していることには注意してください。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">Closure Library では、decorate() メソッドは HTML 要素を修飾 (decorate) することを前提としています。
+幾つかの UI component では decorate() 時に renderer を引数に取って見た目を変える設計になっていますが、
+HUE ではこのような設計を行わない (ページロード時には DOM の変更を行わない) ので注意してください。</p>
+</div>
+<p>この状態でブラウザを更新してみても、まだ何も起こりません。</p>
+<p>次に、ボタンをクリックしたら、メッセージを表示するようにします。</p>
+<p>イベントが発生した時に処理を行うためには、<tt class="docutils literal"><span class="pre">goog.events.listen</span></tt> を使い、
+イベントハンドラをブラウザに登録する必要があります。
+先ほどのコードの後ろに次のコードを追加してみましょう。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">showMessage</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">alert</span><span class="p">(</span><span class="s1">'Hello, UI component!'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">button</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Component</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ACTION</span><span class="p">,</span> <span class="nx">showMessage</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>ページを更新し、ボタンをクリックしてみましょう。
+画面に「Hello, UI component!」というメッセージが表示されましたね。</p>
+<p><tt class="docutils literal"><span class="pre">goog.events.listen</span></tt> の引数は次の通りです。</p>
+<ul>
+<li><p class="first">第1引数: イベントの対象となるコンポーネント。ここでは button を指定しています。</p>
+</li>
+<li><p class="first">第2引数: イベントの種類。ボタンをクリックした際には、goog.ui.Component.EventType.ACTION イベントが発生します。</p>
+</li>
+<li><dl class="first docutils">
+<dt>第3引数: イベント発生時の処理 (コールバック関数)。ここでは showMessage 関数が指定されています。</dt>
+<dd><p class="first last">無名関数で直接書き下すことも出来ますが、極力名前を付けるようにしてください。
+イベント用のコールバック関数をイベントハンドラとも呼びます。</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>第3引数に渡すイベントハンドラには、第1引数にイベントの詳細情報が渡されます。
+実際にイベント詳細情報を利用するか否かにかかわらず、必ずイベントハンドラには event 引数を定義するようにしてください。
+例の showMessage では関数名の直後に <tt class="docutils literal"><span class="pre">(event)</span></tt> と書かれています。このようにするだけで event 引数を定義できます。</p>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p class="last">Google Chrome では、イベント情報が格納される event グローバル変数 (window.event) が用意されます。
+そのため、イベントハンドラに event 変数を定義しなくても、イベント情報にアクセスできるように見えます。
+しかしこれは Google Chrome の独自仕様であり、他のブラウザ (例えば Firefox) では利用できません。
+このため、全てのイベントハンドラには利用の有無にかかわらず保険的に event 引数を定義するようにします。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>選択リストを使ってみよう<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html#id3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>HUE Bootcamp では、選択リストの UI コンポーネントが用意されています。これを使ってみましょう。</p>
+<p>次のコードを追加します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">list</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">List</span><span class="p">([</span>
+  <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">SelectableListPlugin</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">()</span>
+<span class="p">]);</span>
+<span class="kd">var</span> <span class="nx">$list</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(</span><span class="s1">'list'</span><span class="p">);</span>
+<span class="nx">list</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="nx">$list</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">wap.bootcamp.common.ui.List</span></tt> コンポーネントは、プラグインを追加して機能拡張ができるように作られています。
+今回は、選択リストのプラグインを組み込みます。</p>
+<p>このコードを追加してからブラウザの Item 1 〜 Item 3 をクリックすると、
+選択が切り替わることが確認できます。</p>
+</div>
+<div class="section" id="id4">
+<h3>イベントをキャンセルする<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html#id4" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>選択リストのリストが切り替わる際には、
+<tt class="docutils literal"><span class="pre">wap.bootcamp.common.ui.SelectableListPlugin.EventType.ITEM_SELECT</span></tt> イベントが発生します。
+<tt class="docutils literal"><span class="pre">goog.ui.Button</span></tt> と同様に、イベントハンドラを設定してみましょう。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">onItemSelect</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="cm">/** @type {wap.bootcamp.common.ui.ListItem} */</span>
+  <span class="kd">var</span> <span class="nx">listItem</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">;</span>
+  <span class="nx">alert</span><span class="p">(</span><span class="s1">'Item "'</span> <span class="o">+</span> <span class="nx">listItem</span><span class="p">.</span><span class="nx">getCaption</span><span class="p">()</span> <span class="o">+</span> <span class="s1">'" is selected.'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">list</span><span class="p">,</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">SelectableListPlugin</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ITEM_SELECT</span><span class="p">,</span> <span class="nx">onItemSelect</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>このプログラムを実行して、Item 1 〜 Item 3 をクリックすると、
+例えば「Item “Item 1” is selected.」というメッセージが表示されます。</p>
+<p>ここでポイントとなるのは、画面にメッセージが表示されているタイミングでは、
+まだ UI 上は切り替わっていないことにあります。
+つまり、この時点で何らかの事情でイベントをキャンセルすることも出来るのです。</p>
+<p>多くのコンポーネントにおいて、標準のイベント挙動をキャンセルする場合は、
+<tt class="docutils literal"><span class="pre">event.preventDefault()</span></tt> を呼び出します。</p>
+<p>例えば、次のコードを書き足してみてください。
+キャプションが「Item 3」のアイテムへの選択をキャンセルします。
+その結果、「Item 3」を選択できないようになります。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">onItemSelect</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="cm">/** @type {wap.bootcamp.common.ui.ListItem} */</span>
+  <span class="kd">var</span> <span class="nx">listItem</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">;</span>
+
+  <span class="cm">/** Add from here */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">listItem</span><span class="p">.</span><span class="nx">getCaption</span><span class="p">()</span> <span class="o">===</span> <span class="s1">'Item 3'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="cm">/** Add to here */</span>
+
+  <span class="nx">alert</span><span class="p">(</span><span class="s1">'Item "'</span> <span class="o">+</span> <span class="nx">listItem</span><span class="p">.</span><span class="nx">getCaption</span><span class="p">()</span> <span class="o">+</span> <span class="s1">'" is selected.'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">list</span><span class="p">,</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">SelectableListPlugin</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ITEM_SELECT</span><span class="p">,</span> <span class="nx">onItemSelect</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>目次<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>ステップ 1</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html"><em>UI コンポーネントを使ってみよう</em></a></td>
+</tr>
+<tr class="row-even"><td>ステップ 2</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html"><em>UI コンポーネントを作ってみよう</em></a></td>
+</tr>
+<tr class="row-odd"><td>ステップ 3</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html"><em>コンテナコンポーネントを作ってみよう</em></a></td>
+</tr>
+<tr class="row-even"><td>ステップ 4</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html"><em>コントローラーを作ろう</em></a></td>
+</tr>
+<tr class="row-odd"><td>ステップ 5</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html"><em>バリデーションロジックを加える</em></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html#">UI コンポーネントを使ってみよう</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html#id1">UI コンポーネントことはじめ</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html#id2">ボタンを動かしてみよう</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html#id3">選択リストを使ってみよう</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html#id4">イベントをキャンセルする</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html#id5">目次</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>このページ</h3>
+  <ul class="this-page-menu">
+    <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/_sources/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.txt" rel="nofollow">ソースコードを表示</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>クイック検索</h3>
+    <form class="search" action="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/search.html" method="get">
+      <input type="text" name="q">
+      <input type="submit" value="検索">
+      <input type="hidden" name="check_keywords" value="yes">
+      <input type="hidden" name="area" value="default">
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    検索キーワードは短い言葉に分割するとヒットしやすいです。(例)前提条件→前提 条件
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/genindex.html" title="総合索引">索引</a></li>
+        <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">HUE BT documents 1.0 ドキュメント</a> »</li>
+<li class="right">
+    <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html">English</a> |
+    
+</li>
+
+      </ul>
+    </div>
+    <div class="footer">
+        © Copyright 2013, Works Applications, Inc..
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2 で生成しました。
+    </div>
+  
+</body></html>

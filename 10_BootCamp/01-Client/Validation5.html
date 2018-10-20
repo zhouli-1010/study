@@ -1,0 +1,856 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0128)https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    
+    <title>バリデーションロジックを加える — HUE BT documents 1.0 ドキュメント</title>
+    
+    <link rel="stylesheet" href="./バリデーションロジックを加える — HUE BT documents 1.0 ドキュメント_files/proBlue.css" type="text/css">
+    <link rel="stylesheet" href="./バリデーションロジックを加える — HUE BT documents 1.0 ドキュメント_files/pygments.css" type="text/css">
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="./バリデーションロジックを加える — HUE BT documents 1.0 ドキュメント_files/jquery.js.ダウンロード"></script>
+    <script type="text/javascript" src="./バリデーションロジックを加える — HUE BT documents 1.0 ドキュメント_files/underscore.js.ダウンロード"></script>
+    <script type="text/javascript" src="./バリデーションロジックを加える — HUE BT documents 1.0 ドキュメント_files/doctools.js.ダウンロード"></script>
+    <script type="text/javascript" src="./バリデーションロジックを加える — HUE BT documents 1.0 ドキュメント_files/translations.js.ダウンロード"></script>
+    <link rel="top" title="HUE BT documents 1.0 ドキュメント" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html"> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/genindex.html" title="総合索引" accesskey="I">索引</a></li>
+        <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">HUE BT documents 1.0 ドキュメント</a> »</li>
+<li class="right">
+    <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html">English</a> |
+    
+</li>
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>バリデーションロジックを加える<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>ここで機能追加要望がやって来ました。</p>
+<ul class="simple">
+<li>プロジェクト、タスクの登録フォームでバリデーションを行いたい</li>
+<li>エラー (重複タイトル) があったら、テキスト欄の縁を赤くして、その脇にエラーメッセージを表示したい</li>
+<li>エラー時には [ADD] ボタンが無効になっていて欲しい</li>
+<li>テキスト欄が空の時は、[ADD] ボタンが無効になっていて欲しい</li>
+</ul>
+<p>現在の DAO の実装 (サーバーサイドを模している) でも、このような不整合データが登録されることはありませんが、
+[ADD] ボタンを押してからエラーメッセージが表示されるのが不親切だということのようです。</p>
+<p><a class="reference download internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/_downloads/practice_demo_2.html"><tt class="xref download docutils literal"><span class="pre">動作デモ</span></tt></a> も参考にしてください。</p>
+<div class="section" id="registrar">
+<h2>Registrar コンポーネントの修正<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#registrar" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>まずは Registrar コンポーネントを修正します。
+Registrar コンポーネントに以下の状態をもたせます。</p>
+<ul class="simple">
+<li>VALID: バリデーションに成功している場合</li>
+<li>VALIDATING: バリデーション中</li>
+<li>INVALID: バリデーションに失敗している場合 (重複タイトルがある)</li>
+<li>EMPTY: テキスト欄が空</li>
+<li>DISABLED: <tt class="docutils literal"><span class="pre">isEnabled()</span></tt> が false</li>
+</ul>
+<div class="section" id="add">
+<h3>状態遷移と [ADD] ボタン、テキスト欄の制御<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#add" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>最初にコンストラクタを変更します。
+<tt class="docutils literal"><span class="pre">this.enabled_</span></tt> を削除し、代わりに <tt class="docutils literal"><span class="pre">this.status_</span></tt> を追加します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {goog.dom.DomHelper=} opt_domHelper</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.ui.Component}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opt_domHelper</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">opt_domHelper</span><span class="p">);</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {Element}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {Element}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {wap.bootcamp.todolist.ui.Registrar.Status}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">status_</span> <span class="o">=</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALID</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Component</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @enum {number}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">VALID</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="nx">VALIDATING</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">INVALID</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="nx">EMPTY</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="nx">DISABLED</span><span class="o">:</span> <span class="mi">4</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">decorateInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'decorateInternal'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findTextElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findAddButtonElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="nx">$element</span><span class="p">,</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">status_</span> <span class="o">=</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">goog</span><span class="p">.</span><span class="nx">string</span><span class="p">.</span><span class="nx">isEmptySafe</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">value</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">status_</span> <span class="o">=</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">EMPTY</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">status_</span> <span class="o">=</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALID</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">disposeInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">status_</span> <span class="o">=</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">;</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'disposeInternal'</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @return {boolean}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">isEnabled</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">status_</span> <span class="o">!==</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {boolean} enabled</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setEnabled</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">enabled</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">enabled</span> <span class="o">?</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALID</span> <span class="o">:</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @return {wap.bootcamp.todolist.ui.Registrar.Status}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getStatus</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">status_</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.todolist.ui.Registrar.Status} status</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setStatus</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">status_</span> <span class="o">=</span> <span class="nx">status</span><span class="p">;</span>
+
+  <span class="k">switch</span> <span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">DISABLED</span><span class="o">:</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(),</span>
+          <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">EMPTY</span><span class="o">:</span>
+    <span class="k">case</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALIDATING</span><span class="o">:</span>
+    <span class="k">case</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">INVALID</span><span class="o">:</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(),</span>
+          <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALID</span><span class="o">:</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(),</span>
+          <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="k">break</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>この修正は Registrar の既存機能には影響を及ぼしません。</p>
+<p>続いて、テキスト欄が空の場合に [ADD] ボタンを無効にする処理を加えます。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">Registrar の挙動として、内容が空の場合にそもそも [ADD] ボタンを押せる必要がないはずです。
+そのため、この部分については、外部のバリデーションロジックに問い合わせることはしません。</p>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.string'</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {goog.events.Event} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">validate_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">goog</span><span class="p">.</span><span class="nx">string</span><span class="p">.</span><span class="nx">isEmptySafe</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">value</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">EMPTY</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALID</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>テキスト欄が入力された際に、<tt class="docutils literal"><span class="pre">validate_</span></tt> が呼ばれるようにします。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enterDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="s1">'enterDocument'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span><span class="p">,</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">CLICK</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">fireAddEvent_</span>
+  <span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">,</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">INPUT</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">validate_</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>[ADD] ボタンを押したあとにテキスト欄が空になるときに、同時に [ADD] ボタンを無効化します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {goog.events.Event} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">fireAddEvent_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">addEvent</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">AddEvent</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="nx">addEvent</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">EMPTY</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>sandbox/registrar.html の挙動が変化し、適切に [ADD] ボタンが動作することを確認してください。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>ブラウザで HTML を開いた時点では [ADD] ボタンが押せるようになっていますが、
+内部ステータス上は「2」、すなわち EMPTY になっています。これは正しい仕様です。
+画面ロード時に DOM の書き換えを行わない、というルールになっていることを思い出してください。
+HUE のやり方では、sandbox/registrar.html を次のように書き換えることになります。</p>
+<div class="last highlight-html"><div class="highlight"><pre><span class="nt">&lt;input</span> <span class="na">class=</span><span class="s">"registrar-add-button"</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">value=</span><span class="s">"ADD"</span> <span class="na">disabled=</span><span class="s">"disabled"</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id2">
+<h3>バリデーションロジックへの対応<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#id2" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>続いてバリデーションロジックへの対応を行います。
+<tt class="docutils literal"><span class="pre">AsynchronousTrialEvent</span></tt> を使えば良さそうですね。</p>
+<ol class="arabic simple">
+<li>INPUT イベントで <tt class="docutils literal"><span class="pre">this.dispatchEvent(new</span> <span class="pre">AsynchronousTrialEvent(...))</span></tt></li>
+<li>もし <tt class="docutils literal"><span class="pre">this.dispatchEvent(new</span> <span class="pre">AsynchronousTrialEvent(...))</span></tt> false なら
+(呼び出し先で <tt class="docutils literal"><span class="pre">event.preventDefault()</span></tt> が呼ばれたら)、ステータスを VALIDATING にする</li>
+<li>fulfilled ならステータスを VALID にする</li>
+<li>rejected ならステータスを INVALID にする</li>
+</ol>
+<p>「2」の処理が必要な理由については、 <a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html"><em>コンテナコンポーネントを作ってみよう</em></a> で解説した通りです。</p>
+<p>まず、<tt class="docutils literal"><span class="pre">goog.require()</span></tt> に追記を行います。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.Promise'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.array'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.dom'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.dom.TagName'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.dom.classlist'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.events'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.events.Event'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.events.EventType'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.string'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.ui.Component'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.common.event.AsynchronousTrialEvent'</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">validate_</span></tt> メソッドに処理を追記します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {goog.events.Event} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">validate_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">goog</span><span class="p">.</span><span class="nx">string</span><span class="p">.</span><span class="nx">isEmptySafe</span><span class="p">(</span><span class="nx">text</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">EMPTY</span><span class="p">);</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">Promise</span><span class="p">.</span><span class="nx">withResolver</span><span class="p">();</span>
+  <span class="nx">trial</span><span class="p">.</span><span class="nx">promise</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALID</span><span class="p">);</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+      <span class="p">.</span><span class="nx">thenCatch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">INVALID</span><span class="p">);</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="kd">var</span> <span class="nx">validateEvent</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">EventType</span><span class="p">,</span> <span class="nx">trial</span><span class="p">,</span> <span class="nx">text</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="nx">validateEvent</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALIDATING</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALID</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @enum {string}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">EventType</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">ADD</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">getUniqueId</span><span class="p">(</span><span class="s1">'registrar-add'</span><span class="p">),</span>
+  <span class="nx">VALIDATE</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">getUniqueId</span><span class="p">(</span><span class="s1">'registrar-validate'</span><span class="p">)</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>エラーメッセージの表示<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#id3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>次にいよいよ、「エラー (重複タイトル) があったら、テキスト欄の縁を赤くして、その脇にエラーメッセージを表示したい」
+の機能を実装します。</p>
+<p>まず、sandbox/registrar.html に、エラーメッセージを表示させるための <tt class="docutils literal"><span class="pre">&lt;p&gt;</span></tt> 要素を追加します。</p>
+<div class="highlight-html"><div class="highlight"><pre>      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"my-registrar"</span> <span class="na">class=</span><span class="s">"registrar"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">class=</span><span class="s">"registrar-text"</span> <span class="na">type=</span><span class="s">"text"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">class=</span><span class="s">"registrar-add-button"</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">value=</span><span class="s">"ADD"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"registrar-validation-error-message"</span><span class="nt">&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+</div>
+<p>CSS は既に準備されています。</p>
+<div class="highlight-html"><div class="highlight"><pre>.registrar-text-has-error {
+  border-color: red;
+  box-shadow: 0 0 1px 1px rgba(255, 0, 0, 0.5);
+}
+.registrar-validation-error-message {
+  font-size: 70%;
+  text-align: right;
+  color: red;
+  min-height: 14px;
+  margin: 0 60px -10px 0;
+}
+.registrar-validation-valid {
+  visibility: hidden;
+}
+</pre></div>
+</div>
+<p>エラーメッセージ &lt;p&gt; 要素をフィールドに追加します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {goog.dom.DomHelper=} opt_domHelper</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.ui.Component}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opt_domHelper</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">opt_domHelper</span><span class="p">);</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {Element}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {Element}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {Element}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$validationErrorMessage_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {wap.bootcamp.todolist.ui.Registrar.Status}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">status_</span> <span class="o">=</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Component</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>CSS 用のクラスを追加します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @enum {string}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">TEXT</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'registrar-text'</span><span class="p">),</span>
+  <span class="nx">ADD_BUTTON</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'registrar-add-button'</span><span class="p">),</span>
+  <span class="nx">DISABLED</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'registrar-disabled'</span><span class="p">),</span>
+  <span class="nx">TEXT_HAS_ERROR</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'registrar-text-has-error'</span><span class="p">),</span>
+  <span class="nx">ERROR_MESSAGE</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'registrar-validation-error-message'</span><span class="p">)</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">decorateInternal()</span></tt> を準備します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">decorateInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'decorateInternal'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findTextElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findAddButtonElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$validationErrorMessage_</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findValidationErrorMessageElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="nx">$element</span><span class="p">,</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">status_</span> <span class="o">=</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">goog</span><span class="p">.</span><span class="nx">string</span><span class="p">.</span><span class="nx">isEmptySafe</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">value</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">status_</span> <span class="o">=</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">EMPTY</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">status_</span> <span class="o">=</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALID</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>忘れずに <tt class="docutils literal"><span class="pre">disposeInternal()</span></tt> を変更します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">disposeInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$validationErrorMessage_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">status_</span> <span class="o">=</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">;</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'disposeInternal'</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">findValidationErrorMessageElement_()</span></tt> を追加します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {Element} $element</span>
+<span class="cm"> * @return {Element}</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findValidationErrorMessageElement_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">ERROR_MESSAGE</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">setStatus()</span></tt> で CSS クラスの追加・削除を行います。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.todolist.ui.Registrar.Status} status</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setStatus</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">status_</span> <span class="o">=</span> <span class="nx">status</span><span class="p">;</span>
+
+  <span class="k">switch</span> <span class="p">(</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">DISABLED</span><span class="o">:</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(),</span>
+          <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">);</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">,</span>
+          <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">TEXT_HAS_ERROR</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">EMPTY</span><span class="o">:</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(),</span>
+          <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">);</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">,</span>
+          <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">TEXT_HAS_ERROR</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALIDATING</span><span class="o">:</span>
+    <span class="k">case</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">INVALID</span><span class="o">:</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(),</span>
+          <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">);</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">,</span>
+          <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">TEXT_HAS_ERROR</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALID</span><span class="o">:</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(),</span>
+          <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">);</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">,</span>
+          <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">TEXT_HAS_ERROR</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="k">break</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">各 case の処理内容は true/false, add/remove の違いしかないので、
+メソッドに切り出してしまった方が良いです。
+今回は気合と根性で乗り切ってしまいます。</p>
+</div>
+<p>最後にバリデーションエラーメッセージの処理を <tt class="docutils literal"><span class="pre">validate_</span></tt> に記載します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @return {?string}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getErrorMessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">$validationErrorMessage_</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getTextContent</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$validationErrorMessage_</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {?string=} opt_errorMessage</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setErrorMessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opt_errorMessage</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">$validationErrorMessage_</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">setTextContent</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$validationErrorMessage_</span><span class="p">,</span> <span class="nx">opt_errorMessage</span> <span class="o">||</span> <span class="s1">''</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {goog.events.Event} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">validate_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">goog</span><span class="p">.</span><span class="nx">string</span><span class="p">.</span><span class="nx">isEmptySafe</span><span class="p">(</span><span class="nx">text</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">EMPTY</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setErrorMessage</span><span class="p">(</span><span class="s1">'Title must not be empty'</span><span class="p">);</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">Promise</span><span class="p">.</span><span class="nx">withResolver</span><span class="p">();</span>
+  <span class="nx">trial</span><span class="p">.</span><span class="nx">promise</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALID</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">setErrorMessage</span><span class="p">();</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+      <span class="p">.</span><span class="nx">thenCatch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">INVALID</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">setErrorMessage</span><span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="kd">var</span> <span class="nx">validateEvent</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">VALIDATE</span><span class="p">,</span> <span class="nx">trial</span><span class="p">,</span> <span class="nx">text</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="nx">validateEvent</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALIDATING</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setErrorMessage</span><span class="p">(</span><span class="s1">'Validating...'</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setStatus</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">Status</span><span class="p">.</span><span class="nx">VALID</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setErrorMessage</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">古い sandbox/registrar.html に <tt class="docutils literal"><span class="pre">decorate()</span></tt> した場合は、<tt class="docutils literal"><span class="pre">this.$validationErrorMessage_</span></tt> は <tt class="docutils literal"><span class="pre">null</span></tt> です。
+忘れずにエラーチェックを行います。</p>
+</div>
+<p>sandbox/registrar.html で Registrar コンポーネントが正しく動作するか確認してみましょう。
+既存の機能に対する挙動変更 (影響) はないはずです。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>テキストを空にした場合、テキスト欄が赤くなる挙動変更がありますが、これは問題ありません。</p>
+<p class="last">本来はコンポーネント開発と並行して CSS の開発を行います。
+CSS の項目を追加しなければテキスト欄が赤くなることはありませんが、
+HUE Bootcamp の演習課題では、CSS の編集を端折るために、
+あらかじめテキスト欄が赤くなる CSS を使って開発していたために、挙動が変更されたように見えるだけです。</p>
+</div>
+<p>非同期イベントをハンドルしてみます。</p>
+<p>コンソール上から以下のコードを入力、または &lt;script&gt; 要素に追記してください。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span>
+  <span class="nx">registrar</span><span class="p">,</span>
+  <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">VALIDATE</span><span class="p">,</span>
+  <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span> <span class="o">===</span> <span class="s1">'error'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">event</span><span class="p">.</span><span class="nx">trial</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s1">'Title must not be "error"'</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">event</span><span class="p">.</span><span class="nx">trial</span><span class="p">.</span><span class="nx">resolve</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>すると、テキスト欄に「error」を入力したらエラーメッセージが出るようになります。</p>
+</div>
+</div>
+<div class="section" id="projectlist">
+<h2>ProjectList コンポーネントの修正<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#projectlist" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>Registrar コンポーネントの VALIDATE イベントは、単純にあるテキスト入力項目のバリデーションの責任しか持ちません。
+最終的に行いたいことは、プロジェクト全体としてのバリデーションです
+(Todo list のプロジェクトでは入力項目はタイトル1つしかありませんが、これが複数の入力項目で構成される場合を想像してください)。</p>
+<p>そこで、Registrar コンポーネントの VALIDATE イベントを VALIDATE_PROJECT に詰め替えます。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.common.logic.promise'</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @enum {string} */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">EventType</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">CREATE_PROJECT</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">getUniqueId</span><span class="p">(</span><span class="s1">'create-project'</span><span class="p">),</span>
+  <span class="nx">DELETE_PROJECT</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">getUniqueId</span><span class="p">(</span><span class="s1">'delete-project'</span><span class="p">),</span>
+  <span class="nx">VALIDATE_PROJECT</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">getUniqueId</span><span class="p">(</span><span class="s1">'validate-project'</span><span class="p">)</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enterDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'enterDocument'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ADD</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tryAddProject_</span>
+  <span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">DeletableListPlugin</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ITEM_DELETE</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tryDeleteProject_</span>
+  <span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">VALIDATE</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">validateProject_</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.event.AsynchronousTrialEvent.&lt;string, *&gt;} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">validateProject_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">project</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="nb">String</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">)</span>
+  <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">Promise</span><span class="p">.</span><span class="nx">withResolver</span><span class="p">();</span>
+  <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">logic</span><span class="p">.</span><span class="nx">promise</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="nx">trial</span><span class="p">.</span><span class="nx">promise</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">trial</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">VALIDATE_PROJECT</span><span class="p">,</span> <span class="nx">trial</span><span class="p">,</span> <span class="nx">project</span><span class="p">));</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">詰め替えたイベントの接続は todolist-app.js と同様に
+<tt class="docutils literal"><span class="pre">wap.bootcamp.common.logic.promise.redirect</span></tt> が利用できます。</p>
+</div>
+</div>
+<div class="section" id="tasklist">
+<h2>TaskList コンポーネントの修正<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#tasklist" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>同じようなグルーコードが並ぶのでそろそろ飽きてくる頃ですね。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.common.logic.promise'</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @enum {string} */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">EventType</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">CREATE_TASK</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">getUniqueId</span><span class="p">(</span><span class="s1">'create-task'</span><span class="p">),</span>
+  <span class="nx">UPDATE_TASK</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">getUniqueId</span><span class="p">(</span><span class="s1">'update-task'</span><span class="p">),</span>
+  <span class="nx">VALIDATE_TASK</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">getUniqueId</span><span class="p">(</span><span class="s1">'validate-project'</span><span class="p">)</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enterDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'enterDocument'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ADD</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tryAddTask_</span>
+  <span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">CheckableListPlugin</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ITEM_CHECKED</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tryToggleTask_</span>
+  <span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">VALIDATE</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">validateTask_</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.event.AsynchronousTrialEvent.&lt;string, *&gt;} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">validateTask_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">task</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">projectId</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">project_</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">),</span>
+    <span class="nx">done</span><span class="o">:</span> <span class="kc">false</span>
+  <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">Promise</span><span class="p">.</span><span class="nx">withResolver</span><span class="p">();</span>
+  <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">logic</span><span class="p">.</span><span class="nx">promise</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="nx">trial</span><span class="p">.</span><span class="nx">promise</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">trial</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span><span class="p">(</span>
+    <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">VALIDATE_TASK</span><span class="p">,</span> <span class="nx">trial</span><span class="p">,</span> <span class="nx">task</span><span class="p">));</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>バリデーションロジックの作成<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>UI コンポーネントの修正が完了したところで、バリデーションを行うようにします。</p>
+<p>ここでは、サーバーサイドに問い合わせてバリデーションを行うようにします。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">速度改善に伴ってバリデーションをクライアントサイドで行う場合の設計の方法についてはここでは割愛します。
+(いずれドキュメントを用意する予定です)</p>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">bindEvents_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+  <span class="c1">// OMIT</span>
+
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">application_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">VALIDATE_PROJECT</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">validateProject_</span><span class="p">,</span>
+      <span class="kc">false</span><span class="p">,</span>
+      <span class="k">this</span>
+  <span class="p">);</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">application_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">VALIDATE_TASK</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">validateTask_</span><span class="p">,</span>
+      <span class="kc">false</span><span class="p">,</span>
+      <span class="k">this</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.event.AsynchronousTrialEvent.&lt;wap.bootcamp.todolist.dto.Project,</span>
+<span class="cm"> *   wap.bootcamp.todolist.dto.Project&gt;} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">validateProject_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+  <span class="kd">var</span> <span class="nx">project</span> <span class="o">=</span> <span class="cm">/** @type {wap.bootcamp.todolist.dto.Project} */</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">trial</span><span class="p">;</span>
+  <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">logic</span><span class="p">.</span><span class="nx">promise</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">daos_</span><span class="p">.</span><span class="nx">projectDao</span><span class="p">.</span><span class="nx">validate</span><span class="p">(</span><span class="nx">project</span><span class="p">),</span>
+      <span class="nx">trial</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.event.AsynchronousTrialEvent.&lt;wap.bootcamp.todolist.dto.Task,</span>
+<span class="cm"> *   wap.bootcamp.todolist.dto.Task&gt;} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">validateTask_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+  <span class="kd">var</span> <span class="nx">task</span> <span class="o">=</span> <span class="cm">/** @type {!wap.bootcamp.todolist.dto.Task} */</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">trial</span><span class="p">;</span>
+  <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">logic</span><span class="p">.</span><span class="nx">promise</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">daos_</span><span class="p">.</span><span class="nx">taskDao</span><span class="p">.</span><span class="nx">validate</span><span class="p">(</span><span class="nx">task</span><span class="p">),</span>
+      <span class="nx">trial</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>これで全て完了です。お疲れ様でした。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>ステップ 1</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html"><em>UI コンポーネントを使ってみよう</em></a></td>
+</tr>
+<tr class="row-even"><td>ステップ 2</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html"><em>UI コンポーネントを作ってみよう</em></a></td>
+</tr>
+<tr class="row-odd"><td>ステップ 3</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html"><em>コンテナコンポーネントを作ってみよう</em></a></td>
+</tr>
+<tr class="row-even"><td>ステップ 4</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html"><em>コントローラーを作ろう</em></a></td>
+</tr>
+<tr class="row-odd"><td>ステップ 5</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html"><em>バリデーションロジックを加える</em></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#">バリデーションロジックを加える</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#registrar">Registrar コンポーネントの修正</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#add">状態遷移と [ADD] ボタン、テキスト欄の制御</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#id2">バリデーションロジックへの対応</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#id3">エラーメッセージの表示</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#projectlist">ProjectList コンポーネントの修正</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#tasklist">TaskList コンポーネントの修正</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html#id4">バリデーションロジックの作成</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>このページ</h3>
+  <ul class="this-page-menu">
+    <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/_sources/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.txt" rel="nofollow">ソースコードを表示</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>クイック検索</h3>
+    <form class="search" action="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/search.html" method="get">
+      <input type="text" name="q">
+      <input type="submit" value="検索">
+      <input type="hidden" name="check_keywords" value="yes">
+      <input type="hidden" name="area" value="default">
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    検索キーワードは短い言葉に分割するとヒットしやすいです。(例)前提条件→前提 条件
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/genindex.html" title="総合索引">索引</a></li>
+        <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">HUE BT documents 1.0 ドキュメント</a> »</li>
+<li class="right">
+    <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html">English</a> |
+    
+</li>
+
+      </ul>
+    </div>
+    <div class="footer">
+        © Copyright 2013, Works Applications, Inc..
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2 で生成しました。
+    </div>
+  
+</body></html>

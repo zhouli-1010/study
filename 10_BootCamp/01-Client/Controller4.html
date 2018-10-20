@@ -1,0 +1,391 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0130)https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    
+    <title>コントローラーを作ろう — HUE BT documents 1.0 ドキュメント</title>
+    
+    <link rel="stylesheet" href="./コントローラーを作ろう — HUE BT documents 1.0 ドキュメント_files/proBlue.css" type="text/css">
+    <link rel="stylesheet" href="./コントローラーを作ろう — HUE BT documents 1.0 ドキュメント_files/pygments.css" type="text/css">
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="./コントローラーを作ろう — HUE BT documents 1.0 ドキュメント_files/jquery.js.ダウンロード"></script>
+    <script type="text/javascript" src="./コントローラーを作ろう — HUE BT documents 1.0 ドキュメント_files/underscore.js.ダウンロード"></script>
+    <script type="text/javascript" src="./コントローラーを作ろう — HUE BT documents 1.0 ドキュメント_files/doctools.js.ダウンロード"></script>
+    <script type="text/javascript" src="./コントローラーを作ろう — HUE BT documents 1.0 ドキュメント_files/translations.js.ダウンロード"></script>
+    <link rel="top" title="HUE BT documents 1.0 ドキュメント" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html"> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/genindex.html" title="総合索引" accesskey="I">索引</a></li>
+        <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">HUE BT documents 1.0 ドキュメント</a> »</li>
+<li class="right">
+    <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html">English</a> |
+    
+</li>
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>コントローラーを作ろう<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>ここまでの開発で、画面制御部分ができ上がりました。
+ここから、Todo List アプリケーションとして動作するためには、
+Application コンポーネントやその子コンポーネントが発生させるイベントに対して、
+サーバーサイドと適切にデータアクセスを行い、その結果をコンポーネントに反映させる必要があります。</p>
+<p>コントローラーは、Application コンテナコンポーネントと DAO とを配線する役割を担います。</p>
+<p>まずはコンストラクタです。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * Controller for Todo List application.</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @param {wap.bootcamp.todolist.container.Application} application</span>
+<span class="cm"> * @param {!{</span>
+<span class="cm"> *   projectDao: wap.bootcamp.todolist.dao.ProjectDao,</span>
+<span class="cm"> *   taskDao: wap.bootcamp.todolist.dao.TaskDao</span>
+<span class="cm"> * }} daos</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">application</span><span class="p">,</span> <span class="nx">daos</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">application_</span> <span class="o">=</span> <span class="nx">application</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">daos_</span> <span class="o">=</span> <span class="nx">daos</span><span class="p">;</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">bindEvents_</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">initialize_</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>次に <tt class="docutils literal"><span class="pre">bindEvents_()</span></tt> です。Application (およびその子コンポーネント) が発火させるイベントにハンドラを割り当てていきます。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">bindEvents_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">application_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">CREATE_PROJECT</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">createProject_</span><span class="p">,</span>
+      <span class="kc">false</span><span class="p">,</span>
+      <span class="k">this</span>
+  <span class="p">);</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">application_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">DELETE_PROJECT</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">deleteProject_</span><span class="p">,</span>
+      <span class="kc">false</span><span class="p">,</span>
+      <span class="k">this</span>
+  <span class="p">);</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">application_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">REQUIRE_TASKS</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">requireTasks_</span><span class="p">,</span>
+      <span class="kc">false</span><span class="p">,</span>
+      <span class="k">this</span>
+  <span class="p">);</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">application_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">CREATE_TASK</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">createTask_</span><span class="p">,</span>
+      <span class="kc">false</span><span class="p">,</span>
+      <span class="k">this</span>
+  <span class="p">);</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">application_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">UPDATE_TASK</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">updateTask_</span><span class="p">,</span>
+      <span class="kc">false</span><span class="p">,</span>
+      <span class="k">this</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>それぞれのイベントハンドラを記述していきます。
+まずは <tt class="docutils literal"><span class="pre">createProject_</span></tt> です。</p>
+<p>create するプロジェクトは <tt class="docutils literal"><span class="pre">event.target</span></tt> で取得できます。
+<tt class="docutils literal"><span class="pre">event.target</span></tt> は <tt class="docutils literal"><span class="pre">goog.events.Event</span></tt> で {Object|undefined} として定義されているので、
+<tt class="docutils literal"><span class="pre">wap.bootcamp.todolist.dto.Project</span></tt> への型キャストが必要になります。</p>
+<p>また、非同期処理用の <tt class="docutils literal"><span class="pre">goog.promise.Resolver</span></tt> は <tt class="docutils literal"><span class="pre">event.trial</span></tt> で取得できます。</p>
+<p>ProjectDao の <tt class="docutils literal"><span class="pre">create()</span></tt> を呼び、fulfilled/rejected の結果に応じて
+<tt class="docutils literal"><span class="pre">event.trial</span></tt> を <tt class="docutils literal"><span class="pre">resolve()</span></tt> / <tt class="docutils literal"><span class="pre">reject()</span></tt> します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.event.AsynchronousTrialEvent.&lt;</span>
+<span class="cm"> *   wap.bootcamp.todolist.dto.Project, wap.bootcamp.todolist.dto.Project&gt;} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">createProject_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+  <span class="kd">var</span> <span class="nx">project</span> <span class="o">=</span> <span class="cm">/** @type {wap.bootcamp.todolist.dto.Project} */</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">trial</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">daos_</span><span class="p">.</span><span class="nx">projectDao</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">project</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">createdProject</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">trial</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">createdProject</span><span class="p">);</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">thenCatch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">trial</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+      <span class="p">});</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>これを全てのイベントハンドラについて記述すれば良いのですが、
+毎回この定型文を書くのは億劫です。</p>
+<p>HUE Bootcamp では、Promise の結果を Resolver にリダイレクトする便利メソッドを提供しています。
+このように書けます。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.event.AsynchronousTrialEvent.&lt;</span>
+<span class="cm"> *   wap.bootcamp.todolist.dto.Project, wap.bootcamp.todolist.dto.Project&gt;} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">createProject_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+  <span class="kd">var</span> <span class="nx">project</span> <span class="o">=</span> <span class="cm">/** @type {wap.bootcamp.todolist.dto.Project} */</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">logic</span><span class="p">.</span><span class="nx">promise</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">daos_</span><span class="p">.</span><span class="nx">projectDao</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">project</span><span class="p">),</span>
+      <span class="nx">event</span><span class="p">.</span><span class="nx">trial</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last"><tt class="docutils literal"><span class="pre">event.preventDefault()</span></tt> の理由については <a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html"><em>コンテナコンポーネントを作ってみよう</em></a> で解説した通りです。</p>
+</div>
+<p>残りも同じです。書いてみましょう</p>
+<script type="text/javascript">
+    function showhide(element){
+        if (!document.getElementById)
+            return
+
+        if (element.style.display == "block")
+            element.style.display = "none"
+        else
+            element.style.display = "block"
+    };
+</script>
+<a href="javascript:showhide(document.getElementById(&#39;hiddencodeblock5&#39;))">+ show/hide code</a><br><div id="hiddencodeblock5" style="display: none"><div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.event.AsynchronousTrialEvent.&lt;number, wap.bootcamp.todolist.dto.Project&gt;} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">deleteProject_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+  <span class="kd">var</span> <span class="nx">projectId</span> <span class="o">=</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">logic</span><span class="p">.</span><span class="nx">promise</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">daos_</span><span class="p">.</span><span class="nx">projectDao</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="nx">projectId</span><span class="p">),</span>
+      <span class="nx">event</span><span class="p">.</span><span class="nx">trial</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.event.AsynchronousTrialEvent.&lt;number, Array.&lt;wap.bootcamp.todolist.dto.Task&gt;&gt;} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">requireTasks_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+  <span class="kd">var</span> <span class="nx">projectId</span> <span class="o">=</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">logic</span><span class="p">.</span><span class="nx">promise</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">daos_</span><span class="p">.</span><span class="nx">taskDao</span><span class="p">.</span><span class="nx">fetchByProjectId</span><span class="p">(</span><span class="nx">projectId</span><span class="p">),</span>
+      <span class="nx">event</span><span class="p">.</span><span class="nx">trial</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.event.AsynchronousTrialEvent.&lt;wap.bootcamp.todolist.dto.Task,</span>
+<span class="cm"> *   wap.bootcamp.todolist.dto.Task&gt;} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">createTask_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+  <span class="kd">var</span> <span class="nx">task</span> <span class="o">=</span> <span class="cm">/** @type {!wap.bootcamp.todolist.dto.Task} */</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">logic</span><span class="p">.</span><span class="nx">promise</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">daos_</span><span class="p">.</span><span class="nx">taskDao</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">task</span><span class="p">),</span>
+      <span class="nx">event</span><span class="p">.</span><span class="nx">trial</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.event.AsynchronousTrialEvent.&lt;Object, wap.bootcamp.todolist.dto.Task&gt;} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">updateTask_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+  <span class="kd">var</span> <span class="nx">task</span> <span class="o">=</span> <span class="cm">/** @type {!wap.bootcamp.todolist.dto.Task} */</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">logic</span><span class="p">.</span><span class="nx">promise</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">daos_</span><span class="p">.</span><span class="nx">taskDao</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">task</span><span class="p">),</span>
+      <span class="nx">event</span><span class="p">.</span><span class="nx">trial</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div><p>また、プログラムの開始時の処理も記述しましょう。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">initialize_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">loadAllProjects_</span><span class="p">();</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">loadAllProjects_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">daos_</span><span class="p">.</span><span class="nx">projectDao</span>
+      <span class="p">.</span><span class="nx">fetchAll</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">projects</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">application_</span><span class="p">.</span><span class="nx">addProjects</span><span class="p">(</span><span class="nx">projects</span><span class="p">);</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+      <span class="p">.</span><span class="nx">thenCatch</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="s1">'Failed to load projects'</span><span class="p">);</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>コントローラーは以上で完成です。</p>
+<div class="section" id="id2">
+<h2>アプリケーションの初期化<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>最後に、アプリケーションを初期化するコードを書きます。
+<tt class="docutils literal"><span class="pre">todolist-ini.js</span></tt> は次のようにします。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.TodolistApp'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.container.Application'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.dao.ProjectDao'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.dao.ProjectDaoMockImpl'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.dao.TaskDao'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.dao.TaskDaoMockImpl'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.dao.mock'</span><span class="p">);</span>
+
+<span class="nx">goog</span><span class="p">.</span><span class="nx">scope</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">application</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">();</span>
+  <span class="nx">application</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
+
+  <span class="kd">var</span> <span class="nx">daos</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">projectDao</span><span class="o">:</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">dao</span><span class="p">.</span><span class="nx">ProjectDaoMockImpl</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">dao</span><span class="p">.</span><span class="nx">mock</span><span class="p">.</span><span class="nx">PROJECTS</span><span class="p">,</span>
+      <span class="mi">0</span>
+    <span class="p">),</span>
+    <span class="nx">taskDao</span><span class="o">:</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">dao</span><span class="p">.</span><span class="nx">TaskDaoMockImpl</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">dao</span><span class="p">.</span><span class="nx">mock</span><span class="p">.</span><span class="nx">TASKS</span><span class="p">,</span>
+      <span class="mi">0</span>
+    <span class="p">)</span>
+  <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">todolistApp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">TodolistApp</span><span class="p">(</span><span class="nx">application</span><span class="p">,</span> <span class="nx">daos</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>これでアプリケーションは完成です。</p>
+</div>
+<div class="section" id="id3">
+<h2>最終チェックから動作テスト、デバッグ<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>アプリケーションを動かす前に、<tt class="docutils literal"><span class="pre">gulp</span> <span class="pre">check</span></tt> コマンドで最終チェックを行います。
+gjslint やコンパイラチェックを行います。</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gulp check
+</pre></div>
+</div>
+<p>ここで、Closure Library 由来のエラー・警告を除いた全ての問題点をしっかり取り除きましょう。</p>
+<p>全ての問題点を除いたら、todolist.js をビルドします。</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gulp build
+</pre></div>
+</div>
+<p>これで todolist.js および todolist.js.map ファイル (ソースマップファイル) が作られます。</p>
+<p>全てが完了したら、ブラウザより index.html を開いてアプリケーションを実行してみましょう。</p>
+<div class="section" id="id4">
+<h3>目次<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html#id4" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>ステップ 1</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html"><em>UI コンポーネントを使ってみよう</em></a></td>
+</tr>
+<tr class="row-even"><td>ステップ 2</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html"><em>UI コンポーネントを作ってみよう</em></a></td>
+</tr>
+<tr class="row-odd"><td>ステップ 3</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html"><em>コンテナコンポーネントを作ってみよう</em></a></td>
+</tr>
+<tr class="row-even"><td>ステップ 4</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html"><em>コントローラーを作ろう</em></a></td>
+</tr>
+<tr class="row-odd"><td>ステップ 5</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html"><em>バリデーションロジックを加える</em></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html#">コントローラーを作ろう</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html#id2">アプリケーションの初期化</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html#id3">最終チェックから動作テスト、デバッグ</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html#id4">目次</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>このページ</h3>
+  <ul class="this-page-menu">
+    <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/_sources/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.txt" rel="nofollow">ソースコードを表示</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>クイック検索</h3>
+    <form class="search" action="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/search.html" method="get">
+      <input type="text" name="q">
+      <input type="submit" value="検索">
+      <input type="hidden" name="check_keywords" value="yes">
+      <input type="hidden" name="area" value="default">
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    検索キーワードは短い言葉に分割するとヒットしやすいです。(例)前提条件→前提 条件
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/genindex.html" title="総合索引">索引</a></li>
+        <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">HUE BT documents 1.0 ドキュメント</a> »</li>
+<li class="right">
+    <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html">English</a> |
+    
+</li>
+
+      </ul>
+    </div>
+    <div class="footer">
+        © Copyright 2013, Works Applications, Inc..
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2 で生成しました。
+    </div>
+  
+</body></html>

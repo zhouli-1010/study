@@ -1,0 +1,1089 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0132)https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    
+    <title>UI コンポーネントを作ってみよう — HUE BT documents 1.0 ドキュメント</title>
+    
+    <link rel="stylesheet" href="./UI コンポーネントを作ってみよう 2— HUE BT documents 1.0 ドキュメント_files/proBlue.css" type="text/css">
+    <link rel="stylesheet" href="./UI コンポーネントを作ってみよう 2— HUE BT documents 1.0 ドキュメント_files/pygments.css" type="text/css">
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="./UI コンポーネントを作ってみよう 2— HUE BT documents 1.0 ドキュメント_files/jquery.js.ダウンロード"></script>
+    <script type="text/javascript" src="./UI コンポーネントを作ってみよう 2— HUE BT documents 1.0 ドキュメント_files/underscore.js.ダウンロード"></script>
+    <script type="text/javascript" src="./UI コンポーネントを作ってみよう 2— HUE BT documents 1.0 ドキュメント_files/doctools.js.ダウンロード"></script>
+    <script type="text/javascript" src="./UI コンポーネントを作ってみよう 2— HUE BT documents 1.0 ドキュメント_files/translations.js.ダウンロード"></script>
+    <link rel="top" title="HUE BT documents 1.0 ドキュメント" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html"> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/genindex.html" title="総合索引" accesskey="I">索引</a></li>
+        <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">HUE BT documents 1.0 ドキュメント</a> »</li>
+<li class="right">
+    <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html">English</a> |
+    
+</li>
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ui">
+<h1>UI コンポーネントを作ってみよう<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#ui" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>UI コンポーネントの使い方がわかったところで、コンポーネントの作り方を学習します。
+ここでは、折りたたみ機能を実現する Foldable、Todo list を登録する Registrar の2つのコンポーネントを作ってみます。</p>
+<div class="section" id="id1">
+<h2>UI コンポーネントの作り方<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>まず最初に、UI コンポーネントの作り方の基礎を解説します。</p>
+<div class="section" id="id2">
+<h3>UI コンポーネントの基本骨格<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id2" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>UI コンポーネントはおおよそ次のような基本骨格を持ちます。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {goog.dom.DomHelper=} opt_domHelper</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.ui.Component}</span>
+<span class="cm"> */</span>
+<span class="nx">MyComponent</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opt_renderer</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">opt_renderer</span><span class="p">);</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {Element}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$someElement_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {string}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">someField_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inhertis</span><span class="p">(</span><span class="nx">MyComponent</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Component</span><span class="p">);</span>
+
+<span class="cm">/** @override */</span>
+<span class="nx">MyComponent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">canDecorate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'canDecorate'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+    <span class="p">...</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+<span class="cm">/** @override */</span>
+<span class="nx">MyComponent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">decorateInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'decorateInternal'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$someElement_</span> <span class="o">=</span> <span class="p">...;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">someField_</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="p">};</span>
+
+<span class="cm">/** @override */</span>
+<span class="nx">MyComponent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">disposeInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">someField_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$someElement_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'disposeInternal'</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="cm">/** @override */</span>
+<span class="nx">MyComponent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enterDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'enterDocument'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(...);</span>
+<span class="p">};</span>
+
+<span class="cm">/** @override */</span>
+<span class="nx">MyComponent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">exitDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="c1">// optional</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'exitDocument'</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>コンストラクタ<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {goog.dom.DomHelper=} opt_domHelper</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.ui.Component}</span>
+<span class="cm"> */</span>
+<span class="nx">MyComponent</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opt_domHelper</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">opt_domHelper</span><span class="p">);</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {Element}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$someElement_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {string}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">someField_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inhertis</span><span class="p">(</span><span class="nx">MyComponent</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Component</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>UI コンポーネントは、<tt class="docutils literal"><span class="pre">goog.ui.Component</span></tt> (もしくはその派生クラス) を継承して作ります。</p>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">@constructor</span></tt> アノテーションを付与する</dt>
+<dd><p class="first last">コンストラクタ関数は、UpperCamelCaseで命名します。
+コンストラクタ関数には、コンストラクタ関数である旨を明示する必要があります。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">@extends</span></tt> アノテーションで、継承元クラスを明示する</dt>
+<dd><p class="first last">継承元のクラスは適宜選択してください。
+HUE Bootcamp では、<tt class="docutils literal"><span class="pre">goog.ui.Component</span></tt> を利用していますが、それに限りません。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">goog.dom.DomHelper</span></tt> 型の DOM Helper を引数に受け取る (省略可能な引数として)</dt>
+<dd><p class="first last">省略可能な引数名は、opt_lowerCamelCase で命名する必要があります。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>フィールド変数はアノテーションで型を指定し、初期化する</dt>
+<dd><p class="first last">型指定は <tt class="docutils literal"><span class="pre">@type</span></tt> アノテーションを使います。
+値が (decorate() が呼び出されるまで) 定まらない場合は、null などを代入しておきます
+(以降、null リセットと表記しますが、型によっては null 以外の値 (0、false など) を設定します)。
+UI コンポーネント内部で使う HTML 要素はフィールド変数にコピーしておくと便利です。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">goog.inhertis()</span></tt> で prototype 継承する</dt>
+<dd><p class="first last"><tt class="docutils literal"><span class="pre">goog.inherits(継承先コンストラクタ関数,</span> <span class="pre">継承元コンストラクタ関数)</span></tt> です。
+継承元コンストラクタは <tt class="docutils literal"><span class="pre">@extends</span></tt> アノテーションで指定したものと同じにしなければなりません。</p>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+<div class="section" id="candecorate">
+<h3>canDecorate()<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#candecorate" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">MyComponent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">canDecorate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'canDecorate'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+    <span class="p">...</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>コンポーネントが満たすべき前提条件をチェックします。
+例えば、コンポーネントが特定の要素でなければならない、特定の子要素を持っていなければならない、
+などのチェックを行います。</p>
+<p>なお、<tt class="docutils literal"><span class="pre">goog.ui.Component</span></tt> を継承する限りにおいては、<tt class="docutils literal"><span class="pre">goog.base()</span></tt> は不要 (常に <tt class="docutils literal"><span class="pre">true</span></tt> なので) なのですが、
+何らかのクラスを継承するように変更した場合などを考慮することを加味して、
+忘れずに <tt class="docutils literal"><span class="pre">goog.base()</span></tt> を呼び出すようにしてください。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last"><tt class="docutils literal"><span class="pre">@override</span></tt> が付与されているメソッドは、例外なく <tt class="docutils literal"><span class="pre">goog.base()</span></tt> を呼び出してください。</p>
+</div>
+</div>
+<div class="section" id="decorateinternal">
+<h3>decorateInternal()<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#decorateinternal" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">MyComponent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">decorateInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'decorateInternal'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$someElement_</span> <span class="o">=</span> <span class="p">...;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">someField_</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>実際のコンポーネントの初期化を行います。
+<tt class="docutils literal"><span class="pre">canDecorate()</span></tt> の結果が <tt class="docutils literal"><span class="pre">true</span></tt> の場合にのみ呼び出されます。
+すなわち、必要な全ての DOM 要素が揃っていることが保証されます。</p>
+<p>もともと、Closure Library は <tt class="docutils literal"><span class="pre">decorateInternal()</span></tt> 中に DOM を編集することを前提に設計されています。
+そのため、Closure Library のソースコードを読むと、多くの DOM 操作が確認できます。
+しかし、HUE 開発においては、DOM 操作に相当する全てはサーバーサイドで行うことで速度を稼ぐ戦略を取っているので、
+<tt class="docutils literal"><span class="pre">decorateInternal()</span></tt> では DOM の「修飾」を行うのではなく、単に DOM の状態の「読み取り」に専念してください。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">代わりに、<tt class="docutils literal"><span class="pre">canDecorate()</span></tt> での前提条件チェックを丁寧に行うと良いでしょう。</p>
+</div>
+</div>
+<div class="section" id="disposeinternal">
+<h3>disposeInternal()<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#disposeinternal" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">MyComponent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">disposeInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'disposeInternal'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">someField_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$someElement_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>コンポーネントの破棄を行います。
+<tt class="docutils literal"><span class="pre">decorateInternal()</span></tt> とセットで記述します。</p>
+<p>原則として、コンストラクタで null リセットした全てのフィールドには、
+<tt class="docutils literal"><span class="pre">decorateInternal()</span></tt> で実効的な値が代入され、
+<tt class="docutils literal"><span class="pre">disposeInternal()</span></tt> で再び null リセットされるものと覚えておきましょう。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">nullリセットは、メモリリークを防ぐために必要です。
+ページのリロードでメモリリークを解消する戦略が取れないので、不必要なポインタ参照が残っていると、
+様々なオブジェクトがガベージコレクションの対象とならずにメモリ中に残り続けることに繋がってしまいます。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">コンストラクタで null など以外の値が代入された場合 (オプション引数など) の取り扱いについても、
+現時点では <tt class="docutils literal"><span class="pre">disposeInternal()</span></tt> で null リセットすることにします。
+この場合、不要になったコンポーネントインスタンスを別の要素に <tt class="docutils literal"><span class="pre">decorate()</span></tt> して再利用する
+flyweight パターンはそのままでは利用できませんが、
+一旦はメモリリークの防止の方を優先するものとします。</p>
+</div>
+</div>
+<div class="section" id="enterdocument">
+<h3>enterDocument()<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#enterdocument" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>コンポーネント内部で利用するのイベントハンドラの設定を行います。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>もともとの Closure Library の設計では、 <tt class="docutils literal"><span class="pre">decorateInternal()</span></tt> で DOM 編集を行い、
+<tt class="docutils literal"><span class="pre">enterDocument()</span></tt> では操作された DOM に対してイベントハンドラを設定することになっています。</p>
+<p class="last">しかし、HUE 開発では <tt class="docutils literal"><span class="pre">decorateInternal()</span></tt> で DOM 編集は行わないので、
+<tt class="docutils literal"><span class="pre">decorateInternal()</span></tt>、<tt class="docutils literal"><span class="pre">enterDocument()</span></tt> を分割する必然性は薄いと言えます。
+これらのメソッドで行うべき処理内容については、将来的に変更される可能性があることに留意してください。</p>
+</div>
+</div>
+<div class="section" id="exitdocument">
+<h3>exitDocument()<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#exitdocument" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>このメソッドは <tt class="docutils literal"><span class="pre">enterDocument()</span></tt> とセットで記述します。
+目的はイベントハンドラの開放が期待されるのですが・・・。
+しかし、<tt class="docutils literal"><span class="pre">enterDocument()</span></tt> で <tt class="docutils literal"><span class="pre">this.getHandler()</span></tt> を介して設定したイベントハンドラは、
+自動的に解放されるように設計されています。</p>
+<p>そのため、ほとんどのケースでは <tt class="docutils literal"><span class="pre">exitDocument()</span></tt> で処理が必要になることはないでしょう。</p>
+<p><tt class="docutils literal"><span class="pre">exitDocument()</span></tt> で何の処理もしない場合は、<tt class="docutils literal"><span class="pre">exitDocument()</span></tt> メソッドごと削除してください。
+<tt class="docutils literal"><span class="pre">goog.base()</span></tt> の呼び出ししかしない <tt class="docutils literal"><span class="pre">@override</span></tt> メソッドは事故の元にしかなりません。</p>
+</div>
+<div class="section" id="id4">
+<h3>コンポーネントのライフサイクル<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id4" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>コンポーネントは次のライフサイクルで生成・破棄されます。</p>
+<ul>
+<li><p class="first">初期化時: decorate()</p>
+<p class="blockdiag">
+<img src="./UI コンポーネントを作ってみよう 2— HUE BT documents 1.0 ドキュメント_files/blockdiag-6791f8f309a425f25c321dca8fc94f3b14f73ae5.png" alt="None" width="640" height="120">
+</p>
+</li>
+<li><p class="first">破棄時: dispose()</p>
+<p class="blockdiag">
+<img src="./UI コンポーネントを作ってみよう 2— HUE BT documents 1.0 ドキュメント_files/blockdiag-67eee08ffbbbfd3836c8fea86bcca6f30b894582.png" alt="None" width="448" height="120">
+</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>Closure Library の goog.ui.Component#disposeInternal() を読むと、
+Closure Library の継承構造上、
+disposeInternal() 内部で exitDocument() が呼ばれるようになっています</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">SomeComponent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">disposeInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// (1)</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'disposeInternal'</span><span class="p">);</span>
+
+  <span class="c1">// (4)</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">xxx_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">yyy_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">SomeComponent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">exitDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// (2)</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'exitDocument'</span><span class="p">);</span>
+
+  <span class="c1">// (3)</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">unlisten</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">xxx_</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">unlisten</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">yyy_</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p class="last">HUE Bootcamp では、本体の処理が (3) exitDocument → (4) disposeInternal
+の順に実行されるという意味で、上記ライフサイクルを定義しています。</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="wap-bootcamp-todolist-ui-foldable">
+<h2>wap.bootcamp.todolist.ui.Foldable<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#wap-bootcamp-todolist-ui-foldable" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>基本的な知識を頭に叩き込んだところで、実際のコンポーネント制作に移ります。
+まず最初に作成するのは、折りたたみ式の UI コンポーネントです。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">Closure Library には等々の機能を持った goog.ui.Zippy コンポーネントが用意されています。
+教育目的のため、あえて車輪の再発明を行いますが、通常は、安易にコンポーネントを増やすのではなく、
+すでに適切なコンポーネントが提供されていないかを探すことを心がけてください。</p>
+</div>
+<p>このコンポーネントは折りたたみ機構を次のように実現します。</p>
+<ul class="simple">
+<li>ヘッダー部と内容部の 2 つにわかれている</li>
+<li>ヘッダーをクリックした際、全体の要素のクラスが「展開 (foldable-expanded)」、「収縮 (foldable-contracted)」の間で切り替わる</li>
+<li>クラスに「収縮」が設定されている時、CSS により内容部が表示されない (display: none; が適用される)</li>
+</ul>
+<p>要するに、クリックする度にクラスが切り替わる単純なコンポーネントです。</p>
+<div class="section" id="html-css">
+<h3>HTML と CSS を用意しよう<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#html-css" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>まず、Foldable を単体で動かすための HTML と CSS を用意します。</p>
+<p>sandbox/foldable.html にひな形が用意されているので、&lt;header&gt; 要素の後に次の HTML を流し込みます。</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;section&gt;</span>
+  <span class="nt">&lt;h2&gt;</span>wap.bootcamp.todolist.ui.foldable<span class="nt">&lt;/h2&gt;</span>
+  <span class="nt">&lt;fieldset</span> <span class="na">id=</span><span class="s">"my-foldable"</span> <span class="na">class=</span><span class="s">"foldable foldable-expanded"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;legend</span> <span class="na">class=</span><span class="s">"foldable-header"</span><span class="nt">&gt;</span>LOREM IPSUM<span class="nt">&lt;/legend&gt;</span>
+    <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"foldable-content"</span><span class="nt">&gt;</span>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    <span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;/fieldset&gt;</span>
+<span class="nt">&lt;/section&gt;</span>
+</pre></div>
+</div>
+<p>また、最後の &lt;script&gt; 要素に次の初期化コードを流し込みます。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">foldable</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">$foldable</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(</span><span class="s1">'my-foldable'</span><span class="p">);</span>
+<span class="nx">foldable</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="nx">$foldable</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>表示を切り替えるための CSS は既に todolist.css に用意されています。main/css 内を確認してください。</p>
+<div class="highlight-css"><div class="highlight"><pre><span class="nc">.foldable</span> <span class="p">{</span>
+  <span class="k">border</span><span class="o">:</span> <span class="m">0</span> <span class="k">none</span><span class="p">;</span>
+  <span class="k">padding</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nc">.foldable-toggle-button</span><span class="nd">:hover</span> <span class="p">{</span>
+  <span class="k">font-weight</span><span class="o">:</span> <span class="k">bold</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nc">.foldable-expanded</span> <span class="o">&gt;</span> <span class="nc">.foldable-header</span><span class="nd">:before</span> <span class="p">{</span>
+  <span class="k">content</span><span class="o">:</span> <span class="s1">'▲ '</span><span class="p">;</span>
+  <span class="k">font-size</span><span class="o">:</span> <span class="m">50</span><span class="o">%</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nc">.foldable-contracted</span> <span class="o">&gt;</span> <span class="nc">.foldable-header</span><span class="nd">:before</span> <span class="p">{</span>
+  <span class="k">content</span><span class="o">:</span> <span class="s1">'▼ '</span><span class="p">;</span>
+  <span class="k">font-size</span><span class="o">:</span> <span class="m">50</span><span class="o">%</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nc">.foldable-contracted</span> <span class="o">&gt;</span> <span class="nc">.foldable-content</span> <span class="p">{</span>
+  <span class="k">display</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">今回は演習を容易にするために親子要素を利用していますが、
+CSS (LESS) セレクタの使用ルールについては、最新のルールを確認の上、それに従ってください。</p>
+</div>
+<p>この状態で「▲ LOREM IPSUM」の部分をクリックして動作・・・するわけはありません。
+まだ実際のコンポーネントのソースコードは書いていませんから。</p>
+<p>コンポーネントのひな形はすでに次のように用意されています。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">main/js/bootcamp.todolist/ui/foldable.js を確認してください。</p>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">goog</span><span class="p">.</span><span class="nx">provide</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.ui.Foldable'</span><span class="p">);</span>
+
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.dom'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.dom.classlist'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.events.EventType'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.ui.Component'</span><span class="p">);</span>
+
+
+
+<span class="cm">/**</span>
+<span class="cm"> * Foldable UI Component</span>
+<span class="cm"> *</span>
+<span class="cm"> * Note: This component is for UI component development. Generally use goog.ui.Zippy instead.</span>
+<span class="cm"> * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.ui.Component}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opt_domHelper</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">opt_domHelper</span><span class="p">);</span>
+
+  <span class="c1">// TODO: implement method if needed</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Component</span><span class="p">);</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @type {string}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">CSS_CLASS</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'foldable'</span><span class="p">);</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @enum {string}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">CSS_CLASSES</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">HEADER</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'foldable-header'</span><span class="p">),</span>
+  <span class="nx">CONTENT</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'foldable-content'</span><span class="p">),</span>
+  <span class="nx">EXPANDED</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'foldable-expanded'</span><span class="p">),</span>
+  <span class="nx">CONTRACTED</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'foldable-contracted'</span><span class="p">)</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">canDecorate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'canDecorate'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="kc">true</span> <span class="c1">// TODO: implement method if needed</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">decorateInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'decorateInternal'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+  <span class="c1">// TODO: implement method if needed</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">disposeInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// TODO: implement method if needed</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'disposeInternal'</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enterDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'enterDocument'</span><span class="p">);</span>
+  <span class="c1">// TODO: implement method if needed</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @return {boolean}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">isExpanded</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kc">true</span><span class="p">;</span> <span class="c1">// TODO: implement method if needed</span>
+
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {boolean} expanded</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setExpanded</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">expanded</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// TODO: implement method if needed</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> *</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toggleExpanded</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">setExpanded</span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">isExpanded</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="goog-getcssname">
+<h3>goog.getCssName() とは<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#goog-getcssname" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>ここで新しく出てきた要素として、
+goog.getCssName() というのがあります。</p>
+<p>例えば、</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">CSS_CLASS</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'foldable'</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>の部分は、事実上</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">CSS_CLASS</span> <span class="o">=</span> <span class="s1">'foldable'</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>と同じものを指します。ここの <tt class="docutils literal"><span class="pre">foldable</span></tt> という文字列は、HTML 要素のクラス名と一致します。
+定数を直接記述する代わりに <tt class="docutils literal"><span class="pre">goog.getCssName()</span></tt> で包むのは、Closure Library がクラス名を圧縮する機能も持っているためです。</p>
+<p>HTML、CSS、JavaScript 全ての協調動作が必要となりますが、最適化によってクラス名が <tt class="docutils literal"><span class="pre">foldable-header</span></tt> → <tt class="docutils literal"><span class="pre">f-h</span></tt> のように短くなります。
+それにより、データ転送量が小さくなり、(地味だけれども重要な) 速度改善が望めます。</p>
+<p>現時点では HUE フレームワークはクラス名の短縮には対応していませんが、
+将来的にクラス名を短縮する場合の移行を容易にするため、全てのクラス名は必ず <tt class="docutils literal"><span class="pre">goog.getCssName()</span></tt> で包むようにしてください。</p>
+</div>
+<div class="section" id="foldable-ui">
+<h3>Foldable UI コンポーネントの開発<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#foldable-ui" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>まずは、コンストラクタから。</p>
+<p>Foldable UI コンポーネントは、「展開・収縮」の状態を管理します。
+この状態は最終的には DOM 要素の class 属性を読み取って取得できますが、
+コンポーネントにフィールドとして持たせておくことにします。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * Foldable UI Component</span>
+<span class="cm"> *</span>
+<span class="cm"> * Note: This component is for UI component development. Generally use goog.ui.Zippy instead.</span>
+<span class="cm"> * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.ui.Component}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opt_domHelper</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">opt_domHelper</span><span class="p">);</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {?boolean}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">expanded_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Component</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>ここでは、expanded フィールドとします。
+内部状態を外部に公開する必要はない (むしろ勝手に書き換えられたら困る) ので、private フィールドとします。
+必ずアノテーションで型を指定してください。</p>
+<p>今回定義した expanded フィールドは、null 許容型 (boolean または null を格納する。型名の頭に「?」を付ける)としました。
+boolean 型の変数を null 許容にする必然性は全くありません。
+普通は、ただの boolean 型にして、false で初期化すれば十分です。</p>
+<p>ここでは、後でClosure Compiler の型チェックを実感してもらうためだけに敢えてこのようにしています。</p>
+<p>続いて decorateInternal() の実装です。
+decorate 時に要素に foldable-expanded、foldable-contracted のいずれが指定されているかで
+expanded フィールドの初期値が変わるので、その処理を書きます。</p>
+<p>ある HTML 要素に特定のクラスが含まれているかどうかをチェックするには、
+<tt class="docutils literal"><span class="pre">goog.dom.classlist.contains()</span></tt> を使います。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">decorateInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'decorateInternal'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">expanded_</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(),</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">EXPANDED</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>decorate する要素は <tt class="docutils literal"><span class="pre">goog.base(this,</span> <span class="pre">'decorateInternal',</span> <span class="pre">$element)</span></tt> を呼び出した後は <tt class="docutils literal"><span class="pre">this.getElement()</span></tt> で取得できます。
+もちろん、$element を用いても構いません。
+ここでは、コンポーネント内部での表記を統一することを優先するため、<tt class="docutils literal"><span class="pre">this.getElement()</span></tt> を使うようにしています。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">Closure Compiler の Advanced コンパイルを行った後は、<tt class="docutils literal"><span class="pre">this.getElement()</span></tt> の呼び出しはプライベート変数
+<tt class="docutils literal"><span class="pre">this.element_</span></tt> の呼び出しにインライン展開されます。</p>
+</div>
+<p>decorateInternal() を記述したら、必ずセットで disposeInternal() を記述します。
+disposeInternal() で行うのはフィールドのクリアです。
+今回登場したフィールドは expanded だけですが、忘れずにクリアします。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">boolean 型などについては、クリアしなくてもメモリ消費に影響はありません。
+気にしないといけないのは、フィールド変数が DOM 要素などを保持している場合です。
+しかし、メモリリークの可能性を、それぞれのフィールド変数の型をチェックしていかないと確認できない状況は健全ではないでしょう。
+変数の型によらず、すべてのフィールドをクリアする癖をつけていれば済むのですから。</p>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">disposeInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">expanded_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'disposeInternal'</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>つづいて enterDocument() です。
+「UI コンポーネントを使ってみよう」 ではイベントハンドラの設定に <tt class="docutils literal"><span class="pre">goog.events.listen()</span></tt> を利用しましたが、
+コンポーネントでは代わりに <tt class="docutils literal"><span class="pre">this.getHandler().listen()</span></tt> を使います。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>先に説明したとおり、<tt class="docutils literal"><span class="pre">this.getHandler().listen()</span></tt> でイベントハンドラを設定する場合は、
+コンポーネントのライフサイクルに合わせてイベントハンドラの開放が自動的に行われます。</p>
+<p><tt class="docutils literal"><span class="pre">goog.events.listen()</span></tt> を使うと、イベントハンドラの開放は自動的には行われないので、
+<tt class="docutils literal"><span class="pre">exitDocument()</span></tt> で自分でイベントハンドラの開放コードを書かなければなりません。
+あるいは、ゴミのイベントハンドラがブラウザに蓄積していき、プログラムの動作が徐々に重たくなってしまいます。</p>
+<p class="last">そのため、必ず <tt class="docutils literal"><span class="pre">goog.events.listen()</span></tt> ではなく <tt class="docutils literal"><span class="pre">this.getHandler().listen()</span></tt> を使うようにしてください。</p>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enterDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'enterDocument'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">findHeaderElement_</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">()),</span>
+    <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">CLICK</span><span class="p">,</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">toggleExpanded</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {Element} $element</span>
+<span class="cm"> * @return {Element}</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findHeaderElement_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span>
+    <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">HEADER</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">this.getHandler().listen()</span></tt> の引数は <tt class="docutils literal"><span class="pre">goog.events.listen()</span></tt> と同様です。</p>
+<p>ここでは、新しく <tt class="docutils literal"><span class="pre">this.getDomHelper()</span></tt> というのが出てきました。
+DOM 上の要素を取得するメソッドとして、既に <tt class="docutils literal"><span class="pre">goog.dom</span></tt> を学習しましたが、
+コンポーネント内部では、<tt class="docutils literal"><span class="pre">goog.events</span></tt> の代わりに <tt class="docutils literal"><span class="pre">this.getHandler()</span></tt> を使うようにするのと同様、
+<tt class="docutils literal"><span class="pre">goog.dom</span></tt> の代わりに <tt class="docutils literal"><span class="pre">this.getDomHelper()</span></tt> を使います。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">なお、<tt class="docutils literal"><span class="pre">goog.dom.classlist</span></tt> は対応する操作が <tt class="docutils literal"><span class="pre">this.getHandler()</span></tt> には提供されていませんので、
+<tt class="docutils literal"><span class="pre">goog.dom</span></tt> を使います。</p>
+</div>
+<p><tt class="docutils literal"><span class="pre">this.getDomHelper().getElementByClass()</span></tt> の引数は次の通りです。</p>
+<ul class="simple">
+<li>第1引数: 選択したいクラス名を指定します。</li>
+<li>第2引数: 検索のルートとなる要素を指定します。<tt class="docutils literal"><span class="pre">this.getElement()</span></tt> を指定すれば問題ありません。
+無指定だと document 全体となってしまいます (なぜそんな設計に?)。</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last"><tt class="docutils literal"><span class="pre">this.getDomHelper().getElement(s)ByClass()</span></tt> を使って要素を取得するロジックは、
+コンポーネントを設計する際には必ず 2 回以上登場するので、
+<tt class="docutils literal"><span class="pre">findXXXElement_()</span></tt> のようにプライベートメソッドとして切り出しておくとよいでしょう。
+この際、引数で <tt class="docutils literal"><span class="pre">$element</span></tt> を受け取れるようにしておくのがポイントです。</p>
+</div>
+<p>これで、foldable-header が指定された要素がクリックされると、<tt class="docutils literal"><span class="pre">this.toggleExpanded</span></tt> が呼び出されます。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last"><tt class="docutils literal"><span class="pre">this.toggleExpanded</span></tt> を指定する第3引数に、無名関数で処理を直接書き下すのはやめましょう。
+コードが読みづらくなります。
+あくまで、イベントハンドラを設定することだけに徹します。</p>
+</div>
+<p><tt class="docutils literal"><span class="pre">enterDocument()</span></tt> では、<tt class="docutils literal"><span class="pre">this.getHandler()</span></tt> を経由したイベントハンドラの設定しか行っていないので、
+対応する <tt class="docutils literal"><span class="pre">exitDocument()</span></tt> は不要です。</p>
+<p>最後に、コンポーネント固有の処理を書いてゆきます。まずは <tt class="docutils literal"><span class="pre">isExpanded()</span></tt>。
+これは <tt class="docutils literal"><span class="pre">expanded</span></tt> フィールドの内容をそのまま返却すればよいでしょう。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @return {boolean}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">isExpanded</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">expanded_</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">toggleExpanded()</span></tt> は内部で <tt class="docutils literal"><span class="pre">setExpanded()</span></tt> を呼びだせばいいはずです。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> *</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toggleExpanded</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">setExpanded</span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">isExpanded</span><span class="p">());</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>続いて <tt class="docutils literal"><span class="pre">setExpanded()</span></tt> です。
+唯一 UI コンポーネントとしての実態となるソースコードですが、やることは、
+<tt class="docutils literal"><span class="pre">this.getElement()</span></tt> の要素のクラスを <tt class="docutils literal"><span class="pre">foldable-expanded</span></tt> ／ <tt class="docutils literal"><span class="pre">folable-contracted</span></tt> を付け替えるだけです。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {boolean} expanded</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setExpanded</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">expanded</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">expanded_</span> <span class="o">=</span> <span class="nx">expanded</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">expanded</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">swap</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(),</span>
+        <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">CONTRACTED</span><span class="p">,</span>
+        <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">EXPANDED</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">swap</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(),</span>
+        <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">EXPANDED</span><span class="p">,</span>
+        <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">CONTRACTED</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>最後に、<tt class="docutils literal"><span class="pre">canDecorate()</span></tt> を完成させます。
+<tt class="docutils literal"><span class="pre">canDecorate()</span></tt> は、ここまでの一連のコンポーネントのコードにおいて、
+DOM の満たすべき前提条件を確認します。</p>
+<ul>
+<li><p class="first">ルート要素 ($element に渡される HTML 要素) に <tt class="docutils literal"><span class="pre">foldable</span></tt> クラスが付与されている
+* これは、現時点での JavaScript ソースコード上必要とする要件ではありませんが、</p>
+<blockquote>
+<div><p>「コンポーネント名に対応するクラスが付与されている」チェックは全てのコンポーネントでチェックしておく方が無難です</p>
+</div></blockquote>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">foldable-header</span></tt> クラスが付与された子(孫)要素が存在する</p>
+</li>
+</ul>
+<p>この他、動作上必須ではありませんが、</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">foldable-content</span></tt> クラスが付与された子(孫)要素が存在する</li>
+<li>ルート要素に <tt class="docutils literal"><span class="pre">foldable-extended</span></tt> 、 <tt class="docutils literal"><span class="pre">foldable-contracted</span></tt> いずれかのクラスが付与されている</li>
+</ul>
+<p>などを丁寧にチェックしてもよいでしょう。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">基本的に <tt class="docutils literal"><span class="pre">canDecorate()</span></tt> が false になることは HUE フレームワーク上は起こらないはずなので、
+このチェックはある程度は適当でも構いません。</p>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">canDecorate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'canDecorate'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="nx">$element</span><span class="p">,</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">CSS_CLASS</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="nb">Boolean</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findHeaderElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">))</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last"><tt class="docutils literal"><span class="pre">findXXXElement_()</span></tt> を切り出しておくと、ここで役立ちます。</p>
+</div>
+<p>さて、これで Foldable コンポーネントはほぼ完成です。
+実際に sandbox/foldable.html を開いて動作を確認してみましょう。</p>
+</div>
+<div class="section" id="closure-linter-compiler">
+<h3>Closure Linter &amp; Compiler で最終チェック<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#closure-linter-compiler" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>最後は、Closure Compiler で適切にコンパイルされるかどうかをチェックします。</p>
+<p>この研修コンテンツでは、</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gulp check
+</pre></div>
+</div>
+<p>とすることで、プロジェクト全体のチェックができます。</p>
+<p>ただし、現時点では、プログラムのほとんどが穴あき状態なので、全体チェックが役に立ちません。</p>
+<p>個別の JavaScript ファイルのチェックを行うために、<tt class="docutils literal"><span class="pre">gulp</span> <span class="pre">check:individual</span></tt> コマンドを用意しました。</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gulp check:individual --js bootcamp/todolist/ui/foldable.js
+</pre></div>
+</div>
+<p>と bootcamp ディレクトリ以下のパスを設定して実行してみましょう。</p>
+<p>ここまでの課題を忠実に作っていれば、コンパイラ警告が1つだけ発生します。</p>
+<div class="highlight-python"><div class="highlight"><pre>bootcamp/todolist/ui/foldable.js:90: WARNING - inconsistent return type
+found   : (boolean|null)
+required: boolean
+  return this.expanded_;
+         ^
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">isExpanded()</span></tt> の型が合っていないと怒られますね。
+<tt class="docutils literal"><span class="pre">isExpanded()</span></tt> は boolean 型を返すと宣言しています。一方、<tt class="docutils literal"><span class="pre">this.expanded_</span></tt> の型は null 許容 boolean です。
+<tt class="docutils literal"><span class="pre">this.expanded_</span></tt> が null の場合に boolean じゃない値が返るのでダメなようです。</p>
+<p>幾つか修正方針があります。</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">this.expanded_</span></tt> を null 非許容の (つまり、通常の) boolean 型にする
+(その場合、初期値は true/false のいずれかにします。どちらでも大して影響はありません)。</li>
+<li><tt class="docutils literal"><span class="pre">this.expanded_</span></tt> を boolean 型に変換する<ul>
+<li><tt class="docutils literal"><span class="pre">return</span> <span class="pre">Boolean(this.expanded_);</span></tt> (この場合、null → false)</li>
+<li><tt class="docutils literal"><span class="pre">return</span> <span class="pre">!!this.expanded_;</span></tt> (同上。「!!」は「Boolean()」と同じくtruthy/falsy を true/false に変換するイディオム)</li>
+<li><tt class="docutils literal"><span class="pre">return</span> <span class="pre">this.expanded_</span> <span class="pre">===</span> <span class="pre">null</span> <span class="pre">?</span> <span class="pre">false</span> <span class="pre">:</span> <span class="pre">this.expanded_;</span></tt></li>
+</ul>
+</li>
+<li><tt class="docutils literal"><span class="pre">this.expanded_</span></tt> が null の場合に例外を発生させる<ul>
+<li><tt class="docutils literal"><span class="pre">decorate()</span></tt> していないのに <tt class="docutils literal"><span class="pre">xxxExpanded()</span></tt> メソッド呼ぶな!</li>
+</ul>
+</li>
+</ul>
+<p>今後の課題進行にはどの方針でも一切影響しませんので、どれかの方法を取ってエラーを除いてしまいます。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>Eclipse の COMPANY js formatter を利用すると、この他にも Lint エラーが発生する可能性があります。</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>/c/Users/worksap/workspace/hue-bootcamp/cs-i/practice/main/js/bootcamp/todolist/ui/foldable.js</dt>
+<dd>line 51: Binary operator should go on previous line “&amp;&amp;”</dd>
+</dl>
+</div></blockquote>
+<p class="last">現時点ではEclipse のフォーマッターが完全に Closure Linter に対応してはいません。
+この場合、Closure Linter (に限らず、自動化されたチェックツール) を優先してください。</p>
+</div>
+<p>すべてのエラーを除いたら、Foldable UI コンポーネントの完成です。</p>
+</div>
+</div>
+<div class="section" id="wap-bootcamp-todolist-ui-registrar">
+<h2>wap.bootcamp.todolist.ui.Registrar<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#wap-bootcamp-todolist-ui-registrar" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>次に、プロジェクト・タスクの登録部分の UI コンポーネントを作ります。</p>
+<p>挙動としては、[ADD] ボタンが押されたら、イベントが発生し、
+(そのイベントがキャンセルされなかった場合に) テキストボックスの内容をクリアするものになります。</p>
+<div class="section" id="id5">
+<h3>HTML と CSS を用意しよう<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id5" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>まず、Registrar を単体で動かすための HTML と CSS を用意します。</p>
+<p>sandbox/registrar.html にひな形が用意されているので、&lt;header&gt; 要素の後に次の HTML を流し込みます。</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="nt">&lt;section&gt;</span>
+  <span class="nt">&lt;h2&gt;</span>wap.bootcamp.todolist.ui.Registrar<span class="nt">&lt;/h2&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"my-registrar"</span> <span class="na">class=</span><span class="s">"registrar"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">class=</span><span class="s">"registrar-text"</span> <span class="na">type=</span><span class="s">"text"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">class=</span><span class="s">"registrar-add-button"</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">value=</span><span class="s">"ADD"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/section&gt;</span>
+</pre></div>
+</div>
+<p>また、最後の &lt;script&gt; 要素に次のサンプルコードを流し込みます。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">registrar</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">$registrar</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(</span><span class="s1">'my-registrar'</span><span class="p">);</span>
+<span class="nx">registrar</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="nx">$registrar</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">registrar</span><span class="p">,</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ADD</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">goog</span><span class="p">.</span><span class="nx">string</span><span class="p">.</span><span class="nx">isEmptySafe</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">text</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">text</span> <span class="o">===</span> <span class="s1">'cancel'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="s1">'Event will be cancelled.'</span><span class="p">);</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nx">alert</span><span class="p">(</span><span class="nx">goog</span><span class="p">.</span><span class="nx">string</span><span class="p">.</span><span class="nx">format</span><span class="p">(</span><span class="s1">'[ADD] button clicked: %s'</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">text</span><span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>表示を切り替えるための CSS は既に todolist.css に用意されています。</p>
+<div class="highlight-css"><div class="highlight"><pre><span class="nc">.registrar-text</span> <span class="p">{</span>
+  <span class="k">border</span><span class="o">:</span> <span class="m">1px</span> <span class="k">solid</span> <span class="n">grey</span><span class="p">;</span>
+  <span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">5px</span><span class="p">;</span>
+  <span class="k">padding</span><span class="o">:</span> <span class="m">5px</span><span class="p">;</span>
+  <span class="k">width</span><span class="o">:</span> <span class="n">calc</span><span class="p">(</span><span class="m">100</span><span class="o">%</span> <span class="o">-</span>  <span class="m">70px</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nc">.registrar-add-button</span> <span class="p">{</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">50px</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>この状態で、</p>
+<ul class="simple">
+<li>テキストボックスが空の場合に [ADD] ボタンを押しても何も起こらない<ul>
+<li>という部分は上記サンプルコードによって実現されています。</li>
+</ul>
+</li>
+<li>テキストボックスに「cancel」と入力してから [ADD] ボタンを押した場合、
+「Event will be cancelled.」 と表示される。
+その際、<em>テキストボックスの中身はクリアされない</em></li>
+<li>それ以外の内容をテキストボックスに入力してから [ADD] ボタンを押した場合、
+「[ADD] button clicked: sample text」のように表示される。
+その後、<em>テキストボックスの中身がクリアされる</em></li>
+</ul>
+<p>を実現してください。</p>
+</div>
+<div class="section" id="id6">
+<h3>コンポーネントのライフサイクルを制御する<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id6" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>コンストラクタ、<tt class="docutils literal"><span class="pre">canDecorate()</span></tt>、 <tt class="docutils literal"><span class="pre">decorateInternal()</span></tt>、 <tt class="docutils literal"><span class="pre">disposeInternal()</span></tt>、 <tt class="docutils literal"><span class="pre">enterDocument()</span></tt>
+は先ほどと同様に作れます。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {goog.dom.DomHelper=} opt_domHelper</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.ui.Component}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opt_domHelper</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">opt_domHelper</span><span class="p">);</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {Element}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Component</span><span class="p">);</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">canDecorate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'canDecorate'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="nx">$element</span><span class="p">,</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASS</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="nb">Boolean</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findTextElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">))</span> <span class="o">&amp;&amp;</span>
+      <span class="nb">Boolean</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findAddButtonElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">))</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">decorateInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'decorateInternal'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findTextElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">disposeInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'disposeInternal'</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enterDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">findAddButtonElement_</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">()),</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">CLICK</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">fireAddEvent_</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {Element} $element</span>
+<span class="cm"> * @return {Element}</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findTextElement_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span>
+    <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">TEXT</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {Element} $element</span>
+<span class="cm"> * @return {Element}</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findAddButtonElement_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span>
+    <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">ADD_BUTTON</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">[ADD] ボタンをクリックした際に呼び出されるイベントハンドラは、
+今回は外部から呼び出される必要がないので private メソッドにします。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">テキストボックスの要素は ([ADD] ボタンを押すたびに) 繰り返し利用されるので、
+<tt class="docutils literal"><span class="pre">$text_</span></tt> フィールドに保持しておきます。</p>
+</div>
+</div>
+<div class="section" id="id7">
+<h3>新しいイベントを定義する<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id7" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>UI コンポーネントがイベントを発生させる場合は、<tt class="docutils literal"><span class="pre">goog.events.Event</span></tt> クラスを継承した新しいイベントクラスを作ります。
+今回は、Registerer コンポーネントのインナークラスとして作ります。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {string} text</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.events.Event}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">AddEvent</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ADD</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">text</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">AddEvent</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">Event</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">goog.events.Event</span></tt> クラスのコンストラクタはイベント種別を引数で受け取れる汎用的なクラスとなっています。
+<tt class="docutils literal"><span class="pre">AddEvent</span></tt> クラスはイベント種別 <tt class="docutils literal"><span class="pre">wap.bootcamp.todolist.ui.Registrar.EventType.ADD</span></tt> に特化したクラスなので、
+<tt class="docutils literal"><span class="pre">goog.base()</span></tt> で親コンストラクタに渡してしまいましょう。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">この内容は <tt class="docutils literal"><span class="pre">AddEvent</span></tt> インスタンスの <tt class="docutils literal"><span class="pre">type</span></tt> フィールドに格納されます。</p>
+</div>
+<p>このイベントクラスは、[ADD] ボタンが押された時のテキストボックスの内容を保持する <tt class="docutils literal"><span class="pre">text</span></tt> フィールドを持っています。</p>
+</div>
+<div class="section" id="id8">
+<h3>イベントを発火させる<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id8" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>イベントを発火させるには、コンポーネントで <tt class="docutils literal"><span class="pre">dispatchEvent()</span></tt> メソッドを呼びます。
+<tt class="docutils literal"><span class="pre">dispatchEvent()</span></tt> は、イベントがキャンセルされなかった
+(<tt class="docutils literal"><span class="pre">event.preventDefault()</span></tt> が呼ばれなかった) 場合に、
+<tt class="docutils literal"><span class="pre">true</span></tt> となります。</p>
+<p>今回は、イベントが正常終了した場合にのみテキストボックスのクリアを行います。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {goog.events.Event} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">fireAddEvent_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">addEvent</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">AddEvent</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="nx">addEvent</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>これで Registrar コンポーネントの完成です。
+Foldable コンポーネントと同様、全てのエラーを取り除いてください。</p>
+</div>
+</div>
+<div class="section" id="id9">
+<h2>目次<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id9" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>ステップ 1</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html"><em>UI コンポーネントを使ってみよう</em></a></td>
+</tr>
+<tr class="row-even"><td>ステップ 2</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html"><em>UI コンポーネントを作ってみよう</em></a></td>
+</tr>
+<tr class="row-odd"><td>ステップ 3</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html"><em>コンテナコンポーネントを作ってみよう</em></a></td>
+</tr>
+<tr class="row-even"><td>ステップ 4</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html"><em>コントローラーを作ろう</em></a></td>
+</tr>
+<tr class="row-odd"><td>ステップ 5</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html"><em>バリデーションロジックを加える</em></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#">UI コンポーネントを作ってみよう</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id1">UI コンポーネントの作り方</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id2">UI コンポーネントの基本骨格</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id3">コンストラクタ</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#candecorate">canDecorate()</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#decorateinternal">decorateInternal()</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#disposeinternal">disposeInternal()</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#enterdocument">enterDocument()</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#exitdocument">exitDocument()</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id4">コンポーネントのライフサイクル</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#wap-bootcamp-todolist-ui-foldable">wap.bootcamp.todolist.ui.Foldable</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#html-css">HTML と CSS を用意しよう</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#goog-getcssname">goog.getCssName() とは</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#foldable-ui">Foldable UI コンポーネントの開発</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#closure-linter-compiler">Closure Linter &amp; Compiler で最終チェック</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#wap-bootcamp-todolist-ui-registrar">wap.bootcamp.todolist.ui.Registrar</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id5">HTML と CSS を用意しよう</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id6">コンポーネントのライフサイクルを制御する</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id7">新しいイベントを定義する</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id8">イベントを発火させる</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html#id9">目次</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>このページ</h3>
+  <ul class="this-page-menu">
+    <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/_sources/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.txt" rel="nofollow">ソースコードを表示</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>クイック検索</h3>
+    <form class="search" action="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/search.html" method="get">
+      <input type="text" name="q">
+      <input type="submit" value="検索">
+      <input type="hidden" name="check_keywords" value="yes">
+      <input type="hidden" name="area" value="default">
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    検索キーワードは短い言葉に分割するとヒットしやすいです。(例)前提条件→前提 条件
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/genindex.html" title="総合索引">索引</a></li>
+        <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">HUE BT documents 1.0 ドキュメント</a> »</li>
+<li class="right">
+    <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html">English</a> |
+    
+</li>
+
+      </ul>
+    </div>
+    <div class="footer">
+        © Copyright 2013, Works Applications, Inc..
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2 で生成しました。
+    </div>
+  
+</body></html>

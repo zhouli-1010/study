@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<!-- saved from url=(0066)https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html -->
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+
+  <title>Java Advanced / Java発展編 — Bootcamp ServerSide Intermediate - latest</title>
+  <link rel="stylesheet" href="./Java発展編 t_files/normalize.css" type="text/css">
+  <link rel="stylesheet" href="./Java発展編 t_files/basic.css" type="text/css">
+  <link rel="stylesheet" href="./Java発展編 t_files/pygments.css" type="text/css">
+  <link rel="stylesheet" href="./Java発展編 t_files/solomon.css" type="text/css">
+  <link rel="index" title="索引" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/genindex.html">
+  <link rel="search" title="検索" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/search.html">
+  <link rel="top" title="Bootcamp ServerSide Intermediate - latest" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html">
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT:    '',
+      VERSION:     'latest',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE:  true
+    };
+  </script>
+  <script type="text/javascript" src="./Java発展編 t_files/jquery.js.ダウンロード"></script>
+  <script type="text/javascript" src="./Java発展編 t_files/underscore.js.ダウンロード"></script>
+  <script type="text/javascript" src="./Java発展編 t_files/doctools.js.ダウンロード"></script>
+  <script type="text/javascript" src="./Java発展編 t_files/translations.js.ダウンロード"></script>
+  <script src="./Java発展編 t_files/MathJax.js.ダウンロード" id=""></script>
+  <script type="text/javascript" src="./Java発展編 t_files/solomon.js.ダウンロード"></script>
+<style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+<body><div id="MathJax_Message" style="display: none;"></div><header id="global-header" class="both-side">
+  <div class="left">
+      <div class="vcenter">
+        <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html">
+          <img src="./Java発展編 t_files/bootcamp-logo.png" class="bland-logo">
+        </a>
+      </div>
+      <div class="vcenter">
+        <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html" class="master-link">
+          <h1>Bootcamp ServerSide Intermediate - latest</h1>
+        </a>
+      </div>
+    
+  </div>
+  
+  <div class="right">
+    <nav class="vcenter">
+      <ul class="rellinks">
+<li>
+    日本語
+  </li>
+<li>
+    <a href="https://webootcamp.worksap.co.jp/course/ss-i/en/advanced_java.html">
+    
+    English
+    </a>
+    
+  </li>
+        <li>
+          <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/genindex.html" title="総合索引" accesskey="I">索引</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+  <div class="both-side main-layout">
+    <div class="left"><nav class="related-nav" aria-label="related navigation">
+
+  <ul class="breadcrumb-list">
+    <li>
+      <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html">Bootcamp ServerSide Intermediate - latest</a>
+    </li>
+  </ul>
+
+</nav>
+      <main>
+  <div class="section" id="java-advanced-java">
+<h1>Java Advanced / Java発展編<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#java-advanced-java" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>Here, we introduce you useful grammar tips for Java.</p>
+<p>ここでは、使いこなせると便利なJavaの文法項目について解説します。</p>
+<div class="section" id="java-nio">
+<h2>java.nio<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#java-nio" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="reading-text-files">
+<h3>Reading Text Files / テキストファイルを読み込みたい<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#reading-text-files" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>java.nio package now has new APIs to handle files easily.</p>
+<p>java.nioパッケージでは、ファイル取り扱いを容易にするAPIが追加されています。</p>
+<div class="section" id="old-style">
+<h4>Old Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#old-style" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>In Java 6, you had to write such source code as following to read text files into List&lt;String&gt;.</p>
+<p>Java 6では、テキストファイルをList&lt;String&gt;に読み込むために次のようなソースコードを書きました。</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="cm">/** Old style (Java 6) **/</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">readFromFile</span><span class="o">(</span><span class="n">String</span> <span class="n">fileName</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">FileReader</span> <span class="n">fr</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">BufferedReader</span> <span class="n">br</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+                <span class="n">fr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileReader</span><span class="o">(</span><span class="n">fileName</span><span class="o">);</span>
+                <span class="n">br</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="n">fr</span><span class="o">);</span>
+                <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">br</span><span class="o">);</span>
+
+                <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+                <span class="k">while</span> <span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">hasNextLine</span><span class="o">())</span> <span class="o">{</span>
+                        <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">nextLine</span><span class="o">());</span>
+                <span class="o">}</span>
+                <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+                <span class="n">closeSilently</span><span class="o">(</span><span class="n">scanner</span><span class="o">);</span>
+                <span class="n">closeSilently</span><span class="o">(</span><span class="n">br</span><span class="o">);</span>
+                <span class="n">closeSilently</span><span class="o">(</span><span class="n">fr</span><span class="o">);</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">closeSilently</span><span class="o">(</span><span class="n">Closeable</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+                <span class="n">target</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p><code class="docutils literal"><span class="pre">br.close()</span></code> and <code class="docutils literal"><span class="pre">fr.close()</span></code> are reactively called when you call <code class="docutils literal"><span class="pre">scanner.close()</span></code> .
+Thus, it does not fail to release the resources even without writing <code class="docutils literal"><span class="pre">closeSilently(br)</span></code> and/or <code class="docutils literal"><span class="pre">closeSilently(fr)</span></code> .
+However, it is still recommended to write them explicitly.</p>
+<p class="last">なお、<code class="docutils literal"><span class="pre">scanner.close()</span></code> 時に <code class="docutils literal"><span class="pre">br.close()</span></code>、<code class="docutils literal"><span class="pre">fr.close()</span></code> が連鎖的に呼び出されるので、
+<code class="docutils literal"><span class="pre">closeSilently(br)</span></code>、<code class="docutils literal"><span class="pre">closeSilently(fr)</span></code> は記述しなくてもリソースの開放漏れが発生することはありませんが、明示的に記述することが望ましいです。</p>
+</div>
+<p>You can write the equivalent code as following, using try-with-resources, which is introduced in Java 7.</p>
+<p>Java 7で導入されたtry-with-resourcesを使うと以下のように書くことも出来ます。</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="cm">/** Old style (Java 7 without java.nio package) **/</span>
+<span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">readFromFile</span><span class="o">(</span><span class="n">String</span> <span class="n">fileName</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">(</span>
+                <span class="n">FileReader</span> <span class="n">fr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileReader</span><span class="o">(</span><span class="n">fileName</span><span class="o">);</span>
+                <span class="n">BufferedReader</span> <span class="n">br</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="n">fr</span><span class="o">);</span>
+                <span class="n">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">br</span><span class="o">)</span>
+        <span class="o">)</span> <span class="o">{</span>
+                <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+                <span class="k">while</span> <span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">hasNextLine</span><span class="o">())</span> <span class="o">{</span>
+                        <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">scanner</span><span class="o">.</span><span class="na">nextLine</span><span class="o">());</span>
+                <span class="o">}</span>
+                <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p>If you use try-with-resources, all the resources will be correctly closed, even if exceptions are thrown, including during initialization.</p>
+<p class="last">try-with-resourcesを使えば、初期化時を含めて途中で例外が発生しても正しくクローズしてくれます。</p>
+</div>
+</div>
+<div class="section" id="new-style">
+<h4>New Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#new-style" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>If you use <code class="docutils literal"><span class="pre">java.nio.file.Files</span></code> class, you are able to write your programs simply, as following.</p>
+<p><code class="docutils literal"><span class="pre">java.nio.file.Files</span></code> クラスを使うと、次のようにシンプルにプログラムを作ることが出来ます</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="cm">/** New style (Java 7) **/</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">readFromFile</span><span class="o">(</span><span class="n">String</span> <span class="n">fileName</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">Files</span><span class="o">.</span><span class="na">readAllLines</span><span class="o">(</span><span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">fileName</span><span class="o">));</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<ul class="last simple">
+<li>Files: java.nio.file.Files</li>
+<li>Paths: java.nio.file.Paths</li>
+</ul>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">参考</p>
+<p><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/java8.html"><span class="doc">Java8</span></a></p>
+<p>In Java 8, it can process to read line-by-line, using Stream API.</p>
+<p class="last">Java 8ではStream APIを利用して1行ずつ読み込む処理を行うことが出来ます。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="handling-objects-more-easily">
+<h2>Handling Objects More Easily / オブジェクト操作をより容易に<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#handling-objects-more-easily" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>java.util.Objects provides static utility methods for operating on objects including null-safe or null-tolerance methods.</p>
+<div class="section" id="comparing-two-objects">
+<h3>Comparing Two Objects<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#comparing-two-objects" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>Objects.equals(a, b) is the replacement of a.equals(b). Objects.equals() is null tolerant.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%">
+<col width="22%">
+<col width="56%">
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">a</th>
+<th class="head">b</th>
+<th class="head">Objects.equals(a, b)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>non-null</td>
+<td>non-null</td>
+<td>a.equals(b)</td>
+</tr>
+<tr class="row-odd"><td>non-null</td>
+<td>null</td>
+<td>false</td>
+</tr>
+<tr class="row-even"><td>null</td>
+<td>non-null</td>
+<td>false</td>
+</tr>
+<tr class="row-odd"><td>null</td>
+<td>null</td>
+<td>true</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="id1">
+<h4>Old Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id1" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">(</span><span class="s">"enabled"</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">param</span><span class="o">))</span> <span class="o">{</span> <span class="c1">// param can be null</span>
+        <span class="c1">// do something</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">(</span><span class="n">param</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">param</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"enabled"</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// do something</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h4>New Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id2" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">(</span><span class="n">Objects</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">param</span><span class="o">,</span> <span class="s">"enabled"</span><span class="o">))</span> <span class="o">{</span>
+        <span class="c1">// do something</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="generating-hash-codes">
+<h3>Generating Hash Codes<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#generating-hash-codes" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>Objects.hash() is the utility method to generate hash code.</p>
+<div class="section" id="id3">
+<h4>Old Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id3" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Dto</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">hoge</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">fuga</span><span class="o">;</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span> <span class="c1">// generated by IDE</span>
+                <span class="kd">final</span> <span class="kt">int</span> <span class="n">prime</span> <span class="o">=</span> <span class="mi">31</span><span class="o">;</span>
+                <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">prime</span> <span class="o">*</span> <span class="n">result</span> <span class="o">+</span> <span class="o">((</span><span class="n">hoge</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">fuga</span><span class="o">.</span><span class="na">hashCode</span><span class="o">());</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">prime</span> <span class="o">*</span> <span class="n">result</span> <span class="o">+</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="o">(</span><span class="n">id</span> <span class="o">^</span> <span class="o">(</span><span class="n">id</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">32</span><span class="o">));</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">prime</span> <span class="o">*</span> <span class="n">result</span> <span class="o">+</span> <span class="o">((</span><span class="n">name</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">hoge</span><span class="o">.</span><span class="na">hashCode</span><span class="o">());</span>
+                <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h4>New Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id4" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Dto</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">hoge</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">fuga</span><span class="o">;</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">Objects</span><span class="o">.</span><span class="na">hash</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">hoge</span><span class="o">,</span> <span class="n">fuga</span><span class="o">);</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="converting-to-string">
+<h3>Converting to String<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#converting-to-string" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>Use Objects.toString(o, nullDefault).</p>
+<div class="section" id="id5">
+<h4>Old Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id5" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Dto</span> <span class="n">dto</span> <span class="o">=</span> <span class="n">dao</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">dto</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="s">"[No record found]"</span> <span class="o">:</span> <span class="n">dto</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h4>New Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id6" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Dto</span> <span class="n">dto</span> <span class="o">=</span> <span class="n">dao</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Objects</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">dao</span><span class="o">,</span> <span class="s">"[No record found]"</span><span class="o">));</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="constructor-with-non-null-required-parameters">
+<h3>Constructor with Non-Null-Required Parameters<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#constructor-with-non-null-required-parameters" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>Objects.requireNonNull() will provide you to check if the parameters is null.</p>
+<div class="section" id="old-style-too-complex-code">
+<h4>Old Style (Too complex code)<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#old-style-too-complex-code" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Name</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">firstName</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">familyName</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">Name</span><span class="o">(</span><span class="n">String</span> <span class="n">firstName</span><span class="o">,</span> <span class="n">String</span> <span class="n">familyName</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">firstName</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">throw</span> <span class="k">new</span> <span class="n">NullPointerException</span><span class="o">(</span><span class="s">"firstName must not be null"</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">familyName</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">throw</span> <span class="k">new</span> <span class="n">NullPointerException</span><span class="o">(</span><span class="s">"familyName must not be null"</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="n">firstName</span><span class="o">;</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">familyName</span> <span class="o">=</span> <span class="n">familyName</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">firstName</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">" "</span> <span class="o">+</span> <span class="n">familyName</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span> <span class="c1">// safe from NullPointerException</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="old-style-unsafe-code">
+<h4>Old Style (Unsafe code)<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#old-style-unsafe-code" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Name</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">firstName</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">familyName</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">Name</span><span class="o">(</span><span class="n">String</span> <span class="n">firstName</span><span class="o">,</span> <span class="n">String</span> <span class="n">familyName</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="n">firstName</span><span class="o">;</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">familyName</span> <span class="o">=</span> <span class="n">familyName</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">firstName</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">" "</span> <span class="o">+</span> <span class="n">familyName</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span> <span class="c1">// NullPointerException can be raised</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id7">
+<h4>New Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id7" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Name</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">firstName</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">familyName</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">Name</span><span class="o">(</span><span class="n">String</span> <span class="n">firstName</span><span class="o">,</span> <span class="n">String</span> <span class="n">familyName</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="n">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">firstName</span><span class="o">,</span> <span class="s">"firstName must not be null"</span><span class="o">);</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">familyName</span> <span class="o">=</span> <span class="n">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">familyName</span><span class="o">,</span> <span class="s">"familyName must not be null"</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">firstName</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">" "</span> <span class="o">+</span> <span class="n">familyName</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span> <span class="c1">// safe from NullPointerException</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="handling-collections">
+<h2>Handling Collections / コレクション操作<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#handling-collections" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="making-new-lists">
+<h3>Making New Lists / リストを作成する<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#making-new-lists" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="section" id="id8">
+<h4>Old Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id8" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">numbers</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+<span class="n">numbers</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+<span class="n">numbers</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+<span class="n">numbers</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+<span class="n">numbers</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">7</span><span class="o">);</span>
+<span class="n">numbers</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">9</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id9">
+<h4>New Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id9" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">numbers</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">9</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>You can make lists of any types, as well as Integer.</p>
+<p>Integer型の他、任意の型のリストを作ることが出来ます。</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">Hoge</span><span class="o">&gt;</span> <span class="n">hogeList</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span>
+        <span class="k">new</span> <span class="n">Hoge</span><span class="o">(...),</span>
+        <span class="k">new</span> <span class="n">Hoge</span><span class="o">(...),</span>
+        <span class="k">new</span> <span class="n">Hoge</span><span class="o">(...),</span>
+        <span class="o">...</span>
+<span class="o">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p>Arrays.asList() will generate lists that do not allow addition.
+It is impossible to call .add() and/or .remove(); UnsupportedOperationException exception occurs.</p>
+<p class="last">Arrays.asList()で生成したリストは追加不能なリストです。
+.add()や.remove()などを呼び出すことは出来ません（UnsupportedOperationException例外が発生します）。</p>
+</div>
+</div>
+</div>
+<div class="section" id="immutable-collections">
+<h3>Immutable Collections / 変更不能なコレクション<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#immutable-collections" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>If you want to block the modification of the list defensively, set, and map, you can use those collections that do not allow modification after once created.</p>
+<div class="section" id="id10">
+<h4>New Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id10" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">mutableList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+<span class="n">mutableList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+<span class="n">mutableList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+<span class="n">mutableList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+
+<span class="c1">// make immutable list from mutable list</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">immutableList</span> <span class="o">=</span> <span class="n">Collections</span><span class="o">.</span><span class="na">unmodifiableList</span><span class="o">(</span><span class="n">mutableList</span><span class="o">);</span>
+
+<span class="n">immutableList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">7</span><span class="o">);</span> <span class="c1">// will result in UnsupportedOperationException</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p>オリジナルの変更可能リストに対する変更は、生成された変更不能リストに対しても反映されてしまいます。</p>
+<p>The changes for original mutable lists will also affect on the generated immutable lists.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">mutableList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+<span class="n">mutableList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+<span class="n">mutableList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+<span class="n">mutableList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+
+<span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">immutableList</span> <span class="o">=</span> <span class="n">Collections</span><span class="o">.</span><span class="na">unmodifiableList</span><span class="o">(</span><span class="n">mutableList</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">immutableList</span><span class="o">);</span> <span class="c1">// [1, 3, 5]</span>
+
+<span class="n">mutableList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">7</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">immutableList</span><span class="o">);</span> <span class="c1">// [1, 3, 5, 7]</span>
+</pre></div>
+</div>
+<p>メソッド引数でリストが渡された場合などは特にですが、必要に応じてリストのコピーを作成する必要があります。</p>
+<p>You have to create new copies of the lists, if necessary, especially when mutable lists are given via method arguments.</p>
+<div class="last highlight-java"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">mutableList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+<span class="n">mutableList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+<span class="n">mutableList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+<span class="n">mutableList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+
+<span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">immutableList</span>
+                <span class="o">=</span> <span class="n">Collections</span><span class="o">.</span><span class="na">unmodifiableList</span><span class="o">(</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">(</span><span class="n">mutableList</span><span class="o">));</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">immutableList</span><span class="o">);</span> <span class="c1">// [1, 3, 5]</span>
+
+<span class="n">mutableList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">7</span><span class="o">);</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">immutableList</span><span class="o">);</span> <span class="c1">// still [1, 3, 5]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="typical-usage">
+<h4>Typical Usage<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#typical-usage" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>典型的な利用方法としては、作業用の変更可能リストからメソッドの戻り値として変更不能リストを生成することが挙げられます。</p>
+<p>One of the typical usages of the immutable collections is to generate immutable lists as returned values from the methods, from mutable work lists.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">fizzBuzz</span><span class="o">(</span><span class="kt">int</span> <span class="n">to</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">to</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">15</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"FizzBuzz"</span><span class="o">);</span>
+                <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"Fizz"</span><span class="o">);</span>
+                <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"Buzz"</span><span class="o">);</span>
+                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                        <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Integer</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
+                <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">// Finally, make a result list as an immutable list.</span>
+        <span class="k">return</span> <span class="n">Collections</span><span class="o">.</span><span class="na">unmodifiableList</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="method-list">
+<h4>Method List<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#method-list" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>You can make unmodifiable views of (general) collections, maps, sets, sorted maps, and sorted sets, as well as that of lists.</p>
+<ul class="simple">
+<li>Collections.unmodifiableCollection()</li>
+<li>Collections.unmodifiableList()</li>
+<li>Collections.unmodifiableMap()</li>
+<li>Collections.unmodifiableSet()</li>
+<li>Collections.unmodifiableSortedMap()</li>
+<li>Collections.unmodifiableSortedSet()</li>
+</ul>
+</div>
+</div>
+<div class="section" id="empty-collections">
+<h3>Empty Collections / 空のコレクション<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#empty-collections" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>You can get empty collections:</p>
+<div class="section" id="id11">
+<h4>Old Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id11" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">emptyList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+<span class="n">Set</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">emptySet</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id12">
+<h4>New Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id12" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">emptyList</span> <span class="o">=</span> <span class="n">Collections</span><span class="o">.</span><span class="na">emptyList</span><span class="o">();</span>
+<span class="n">Set</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">emptySet</span> <span class="o">=</span> <span class="n">Collections</span><span class="o">.</span><span class="na">emptySet</span><span class="o">();</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p class="last">As Collections.emptyXXX() returns an immutable collection,
+you are not allowed to execute any mutable operations.</p>
+</div>
+</div>
+<div class="section" id="id13">
+<h4>Method List<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id13" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<ul class="simple">
+<li>Collections.emptyList()</li>
+<li>Collections.emptySet()</li>
+<li>Collections.emptyMap()</li>
+</ul>
+</div>
+</div>
+<div class="section" id="enumset">
+<h3>EnumSet<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#enumset" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>列挙型のセットにはEnumSetを利用します。内部的にビットフラグが利用されており、HashSetよりも高速に動作します。また、EnumSetはセットを生成するための有用なメソッドを提供しています。</p>
+<p>Use EnumSet to generate enum-type sets.
+It works faster than HashSet, and provides several useful methods.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">enum</span> <span class="n">Weekday</span> <span class="o">{</span> <span class="n">SUNDAY</span><span class="o">,</span> <span class="n">MONDAY</span><span class="o">,</span> <span class="n">TUESDAY</span><span class="o">,</span> <span class="n">WEDNESDAY</span><span class="o">,</span> <span class="n">THURSDAY</span><span class="o">,</span> <span class="n">FRIDAY</span><span class="o">,</span> <span class="n">SATURDAY</span> <span class="o">}</span>
+</pre></div>
+</div>
+<div class="section" id="id14">
+<h4>Old Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id14" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Weekday</span><span class="o">&gt;</span> <span class="n">weekdays</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Weekday</span><span class="o">&gt;();</span>
+<span class="n">weekdays</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Weekday</span><span class="o">.</span><span class="na">MONDAY</span><span class="o">);</span>
+<span class="n">weekdays</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Weekday</span><span class="o">.</span><span class="na">TUESDAY</span><span class="o">);</span>
+<span class="n">weekdays</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Weekday</span><span class="o">.</span><span class="na">WEDNESDAY</span><span class="o">);</span>
+<span class="n">weekdays</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Weekday</span><span class="o">.</span><span class="na">THURSDAY</span><span class="o">);</span>
+<span class="n">weekdays</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Weekday</span><span class="o">.</span><span class="na">FRIDAY</span><span class="o">);</span>
+
+<span class="n">Set</span><span class="o">&lt;</span><span class="n">Weekday</span><span class="o">&gt;</span> <span class="n">holidays</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Weekday</span><span class="o">&gt;();</span>
+<span class="n">holidays</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Weekday</span><span class="o">.</span><span class="na">SUNDAY</span><span class="o">);</span>
+<span class="n">holidays</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Weekday</span><span class="o">.</span><span class="na">SATURDAY</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id15">
+<h4>New Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id15" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Weekday</span><span class="o">&gt;</span> <span class="n">weekdays</span> <span class="o">=</span> <span class="n">EnumSet</span><span class="o">.</span><span class="na">of</span><span class="o">(</span>
+                <span class="n">Weekday</span><span class="o">.</span><span class="na">MONDAY</span><span class="o">,</span>
+                <span class="n">Weekday</span><span class="o">.</span><span class="na">TUESDAY</span><span class="o">,</span>
+                <span class="n">Weekday</span><span class="o">.</span><span class="na">WEDNESDAY</span><span class="o">,</span>
+                <span class="n">Weekday</span><span class="o">.</span><span class="na">THURSDAY</span><span class="o">,</span>
+                <span class="n">Weekday</span><span class="o">.</span><span class="na">FRIDAY</span>
+<span class="o">);</span>
+
+<span class="n">Set</span><span class="o">&lt;</span><span class="n">Weekday</span><span class="o">&gt;</span> <span class="n">holidays</span> <span class="o">=</span> <span class="n">EnumSet</span><span class="o">.</span><span class="na">of</span><span class="o">(</span>
+                <span class="n">Weekday</span><span class="o">.</span><span class="na">SUNDAY</span><span class="o">,</span>
+                <span class="n">Weekday</span><span class="o">.</span><span class="na">SATURDAY</span>
+<span class="o">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p>EnumSetはSetのサブクラスなので、weekdays、holidaysはEnumSet&lt;Weekday&gt;として宣言しても構いません。</p>
+<p class="last">It is okay to declare “weekdays” and “holidays” as EnumSet&lt;Weekday&gt;, for EnumSet is a subclass of Set.</p>
+</div>
+<p>「○○から××まで」というセットを作成する場合にはEnumSet.range()を使うことが出来ます。また、「△△以外」というセットを作成する場合には、EnumSet.complementOf()を使うことが出来ます。</p>
+<p>次のソースコードは同じセットを生成します。</p>
+<p>You can use EnumSet.range() to create sets like “from XX to YY.”
+Also, you can use EnumSet.complementOf() to create sets like “except ZZZ.”</p>
+<p>Following codes generate the same set.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="c1">// weekdays are from monday to friday</span>
+<span class="n">EnumSet</span><span class="o">&lt;</span><span class="n">Weekday</span><span class="o">&gt;</span> <span class="n">weekdays</span> <span class="o">=</span> <span class="n">EnumSet</span><span class="o">.</span><span class="na">range</span><span class="o">(</span><span class="n">Weekday</span><span class="o">.</span><span class="na">MONDAY</span><span class="o">,</span> <span class="n">Weekday</span><span class="o">.</span><span class="na">FRIDAY</span><span class="o">);</span>
+
+<span class="c1">// holidays are non-weekday</span>
+<span class="n">Set</span><span class="o">&lt;</span><span class="n">Weekday</span><span class="o">&gt;</span> <span class="n">holidays</span> <span class="o">=</span> <span class="n">EnumSet</span><span class="o">.</span><span class="na">complementOf</span><span class="o">(</span><span class="n">weekdays</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p>EnumSet.complementOf()は、EnumSetを引数に取ります。そのため、weekdaysはSet&lt;Weekday&gt;ではなく、EnumSet&lt;Weekday&gt;として宣言しています。</p>
+<p class="last">EnumSet.complementOf() requires an argument of EnumSet.
+That’s why weekdays is declared as EnumSet&lt;Weekday&gt;, not Set&lt;Weekday&gt;.</p>
+</div>
+</div>
+<div class="section" id="id16">
+<h4>Method List<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id16" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<ul class="simple">
+<li>EnumSet.of(e1, e2, ...)</li>
+<li>EnumSet.noneOf()</li>
+<li>EnumSet.allOf()</li>
+<li>EnumSet.range()</li>
+<li>EnumSet.copyOf(): useful to convert from a normal Set (Collection) to a EnumSet.</li>
+<li>EnumSet.complementOf()</li>
+</ul>
+</div>
+</div>
+<div class="section" id="enummap">
+<h3>EnumMap<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#enummap" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>列挙型をキーとしたマップに最適化されたEnumMapクラスがあります。使い方は他のMap (HashMap、TreeMapなど)と同じです。</p>
+<p>EnumMap is a specialized Map implementation for use with enum type keys.
+Usage of EnumMap is the same as other map implementations such as HashMap and TreeMap.</p>
+</div>
+<div class="section" id="cast">
+<h3>Cast<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#cast" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>Class cast method.</p>
+<p>It suppress warning. But throw ClassCastException.</p>
+<div class="section" id="id17">
+<h4>Old Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id17" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+<span class="n">Hoge</span> <span class="n">hoge</span> <span class="o">=</span> <span class="o">(</span><span class="n">Hoge</span><span class="o">)</span> <span class="n">arg</span><span class="o">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id18">
+<h4>New Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id18" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Hoge</span> <span class="n">hoge</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">cast</span><span class="o">(</span><span class="n">arg</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="generics">
+<h2>Generics / ジェネリクス<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#generics" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="declaring-generic-methods">
+<h3>Declaring Generic Methods / ジェネリックなメソッドを宣言する<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#declaring-generic-methods" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>If you want to make a versatile method about types, define generic method with type parameters.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="nf">addToList</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">list</span><span class="o">,</span> <span class="n">T</span> <span class="n">element</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">element</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>In the above example, T is the type parameter, which is declared with surrounded &lt;&gt;.
+Type parameter T will be bound to any types.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">strings</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">addToList</span><span class="o">(</span><span class="n">strings</span><span class="o">,</span> <span class="s">"abc"</span><span class="o">);</span> <span class="c1">// type parameter T is bound to String</span>
+
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">numbers</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">addToList</span><span class="o">(</span><span class="n">numbers</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span> <span class="c1">// type parameter T in bound to Integer</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="declaring-generic-classes">
+<h3>Declaring Generic Classes / ジェネリックなクラスを宣言する<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#declaring-generic-classes" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>You can define the generic class with type parameters.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Pair</span><span class="o">&lt;</span><span class="n">A</span><span class="o">,</span> <span class="n">B</span><span class="o">&gt;</span> <span class="o">{</span> <span class="c1">// two type parameter A and B are defined.</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">A</span> <span class="n">a</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="kd">final</span> <span class="n">B</span> <span class="n">b</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">Pair</span><span class="o">(</span><span class="n">A</span> <span class="n">a</span><span class="o">,</span> <span class="n">B</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">;</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">A</span> <span class="nf">getA</span><span class="o">()</span> <span class="o">{</span> <span class="c1">// you don't need to define type parameter like `&lt;A&gt;`, it is already defined above.</span>
+                <span class="k">return</span> <span class="n">a</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">B</span> <span class="nf">getB</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">b</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="s">"("</span> <span class="o">+</span> <span class="n">a</span> <span class="o">+</span> <span class="s">", "</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="s">")"</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+                <span class="o">(</span><span class="n">OMIT</span><span class="o">)</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
+                <span class="o">(</span><span class="n">OMIT</span><span class="o">)</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>In the class Pair, two type parameter A and B are defined.
+A and B are independently bound to concrete types.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Pair</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">stringIntegerPair</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Pair</span><span class="o">&lt;&gt;(</span><span class="s">"abc"</span><span class="o">,</span> <span class="mi">10</span><span class="o">);</span> <span class="c1">// A is bound to String, B is bound to Integer</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">stringIntegerPair</span><span class="o">);</span>
+
+        <span class="n">Pair</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">integerPair</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Pair</span><span class="o">&lt;&gt;(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">20</span><span class="o">);</span> <span class="c1">// both A and B are bound to Integer</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">integerPair</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-unbounded-wildcard">
+<h3>Use unbounded wildcard(?)<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#use-unbounded-wildcard" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>You should limit type with type parameters, if you can. But If you can’t do this. You can use wildcard(?).</p>
+<p>This topic will help you when you need to conversion under java1.4 codes.</p>
+<div class="section" id="id19">
+<h4>Old Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id19" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">private</span> <span class="n">List</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">();</span>
+
+<span class="kd">public</span> <span class="n">Object</span> <span class="nf">exists</span><span class="o">(</span><span class="n">Object</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(!(</span><span class="n">target</span> <span class="k">instanceof</span> <span class="n">Hoge</span><span class="o">))</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">ii</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">ii</span> <span class="o">&lt;</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">ii</span><span class="o">++)</span> <span class="o">{</span>
+    <span class="n">Object</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">ii</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">temp</span> <span class="k">instanceof</span> <span class="n">Hoge</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(((</span><span class="n">Hoge</span><span class="o">)</span> <span class="n">temp</span><span class="o">).</span><span class="na">same</span><span class="o">(</span><span class="n">target</span><span class="o">))</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">temp</span><span class="o">;</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="new-style-better">
+<h4>New Style(Better)<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#new-style-better" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Hoge</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+<span class="kd">public</span> <span class="n">Hoge</span> <span class="nf">exists</span><span class="o">(</span><span class="n">Hoge</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">for</span> <span class="o">(</span><span class="n">Hoge</span> <span class="n">temp</span> <span class="o">:</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">temp</span><span class="o">.</span><span class="na">same</span><span class="o">(</span><span class="n">target</span><span class="o">))</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">temp</span><span class="o">;</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id20">
+<h4>New Style<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id20" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>If you can’t beleve argument type is unique(Hoge).</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">private</span> <span class="n">List</span><span class="o">&lt;?&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+<span class="kd">public</span> <span class="n">Hoge</span> <span class="nf">exists</span><span class="o">(</span><span class="n">Object</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(!(</span><span class="n">target</span> <span class="k">instanceof</span> <span class="n">Hoge</span><span class="o">))</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="k">for</span> <span class="o">(</span><span class="n">Object</span> <span class="n">temp</span> <span class="o">:</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">temp</span> <span class="k">instanceof</span> <span class="n">Hoge</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">Hoge</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">cast</span><span class="o">(</span><span class="n">temp</span><span class="o">).</span><span class="na">same</span><span class="o">(</span><span class="n">target</span><span class="o">))</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">temp</span><span class="o">;</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Actually, in this case it is OK to use Object.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+</pre></div>
+</div>
+<p>But if you need to add @SuppressWarnings, you should use wildcard.</p>
+</div>
+<div class="section" id="use-suppresswarnings">
+<h4>Use @SuppressWarnings<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#use-suppresswarnings" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">someMethod</span><span class="o">(</span><span class="n">Object</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">value</span> <span class="k">instanceof</span> <span class="n">List</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">cast</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
+      <span class="o">:</span>
+      <span class="o">:</span>
+      <span class="o">:</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-wildcard">
+<h4>Use wildcard<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#use-wildcard" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">someMethod</span><span class="o">(</span><span class="n">Object</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">value</span> <span class="k">instanceof</span> <span class="n">List</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">List</span><span class="o">&lt;?&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">cast</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
+      <span class="o">:</span>
+      <span class="o">:</span>
+      <span class="o">:</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="other-java-7-tips-java-7-tips">
+<h2>Other Java 7 Tips / その他のJava 7 tips<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#other-java-7-tips-java-7-tips" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="try-with-resources">
+<h3>try-with-resources<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#try-with-resources" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">課題</p>
+<p class="last">まだ出来てないのでググってください。</p>
+</div>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">課題</p>
+<p class="last">This section is not yet written. Look it up with google for a while.</p>
+</div>
+</div>
+<div class="section" id="multi-catch">
+<h3>multi-catch<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#multi-catch" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">課題</p>
+<p class="last">まだ出来てないのでググってください。</p>
+</div>
+<div class="admonition-todo admonition" id="index-3">
+<p class="first admonition-title">課題</p>
+<p class="last">This section is not yet written. Look it up with google for a while.</p>
+</div>
+</div>
+<div class="section" id="diamond-operators">
+<h3>Diamond Operators<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#diamond-operators" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-todo admonition" id="index-4">
+<p class="first admonition-title">課題</p>
+<p class="last">まだ出来てないのでググってください。</p>
+</div>
+<div class="admonition-todo admonition" id="index-5">
+<p class="first admonition-title">課題</p>
+<p class="last">This section is not yet written. Look it up with google for a while.</p>
+</div>
+</div>
+<div class="section" id="string-switch">
+<h3>String switch<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#string-switch" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-todo admonition" id="index-6">
+<p class="first admonition-title">課題</p>
+<p class="last">まだ出来てないのでググってください。</p>
+</div>
+<div class="admonition-todo admonition" id="index-7">
+<p class="first admonition-title">課題</p>
+<p class="last">This section is not yet written. Look it up with google for a while.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+      </main><nav class="related-nav" aria-label="related navigation">
+
+  <ul class="breadcrumb-list">
+    <li>
+      <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html">Bootcamp ServerSide Intermediate - latest</a>
+    </li>
+  </ul>
+
+</nav>
+    </div>
+    <div class="right">
+
+<nav class="sidebar" aria-label="main navigation"><section class="side-widget localtoc">
+  <h3>目次</h3>
+  <div class="side-widget-content">
+    <ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#">Java Advanced / Java発展編</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#java-nio">java.nio</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#reading-text-files">Reading Text Files / テキストファイルを読み込みたい</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#old-style">Old Style</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#new-style">New Style</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#handling-objects-more-easily">Handling Objects More Easily / オブジェクト操作をより容易に</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#comparing-two-objects">Comparing Two Objects</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id1">Old Style</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id2">New Style</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#generating-hash-codes">Generating Hash Codes</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id3">Old Style</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id4">New Style</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#converting-to-string">Converting to String</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id5">Old Style</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id6">New Style</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#constructor-with-non-null-required-parameters">Constructor with Non-Null-Required Parameters</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#old-style-too-complex-code">Old Style (Too complex code)</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#old-style-unsafe-code">Old Style (Unsafe code)</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id7">New Style</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#handling-collections">Handling Collections / コレクション操作</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#making-new-lists">Making New Lists / リストを作成する</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id8">Old Style</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id9">New Style</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#immutable-collections">Immutable Collections / 変更不能なコレクション</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id10">New Style</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#typical-usage">Typical Usage</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#method-list">Method List</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#empty-collections">Empty Collections / 空のコレクション</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id11">Old Style</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id12">New Style</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id13">Method List</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#enumset">EnumSet</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id14">Old Style</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id15">New Style</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id16">Method List</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#enummap">EnumMap</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#cast">Cast</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id17">Old Style</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id18">New Style</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#generics">Generics / ジェネリクス</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#declaring-generic-methods">Declaring Generic Methods / ジェネリックなメソッドを宣言する</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#declaring-generic-classes">Declaring Generic Classes / ジェネリックなクラスを宣言する</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#use-unbounded-wildcard">Use unbounded wildcard(?)</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id19">Old Style</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#new-style-better">New Style(Better)</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#id20">New Style</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#use-suppresswarnings">Use @SuppressWarnings</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#use-wildcard">Use wildcard</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#other-java-7-tips-java-7-tips">Other Java 7 Tips / その他のJava 7 tips</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#try-with-resources">try-with-resources</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#multi-catch">multi-catch</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#diamond-operators">Diamond Operators</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/advanced_java.html#string-switch">String switch</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</section>
+<section class="side-widget searchbox" role="search">
+  <h3>クイック検索</h3>
+  <div class="side-widget-content">
+    <form class="search" action="https://webootcamp.worksap.co.jp/course/ss-i/ja/search.html" method="get">
+      <input type="text" name="q">
+      <input type="submit" value="検索">
+      <input type="hidden" name="check_keywords" value="yes">
+      <input type="hidden" name="area" value="default">
+    </form>
+    <p class="searchtip">
+      モジュール、クラス、または関数名を入力してください
+    </p>
+  </div>
+</section>
+<div role="note" aria-label="source link" class="side-widget source-link">
+  
+  <div class="side-widget-content">
+    <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/_sources/advanced_java.txt" rel="nofollow">ソースコードを表示</a>
+  </div>
+</div>
+
+</nav>
+    </div>
+  </div><footer id="global-footer">
+      © Copyright 2016, Works Applications Co., Ltd..
+    このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8 で生成しました。
+</footer>
+
+
+</body></html>

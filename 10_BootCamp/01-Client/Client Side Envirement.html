@@ -1,0 +1,533 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0119)https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    
+    <title>Client Side 開発環境の構築 — HUE BT documents 1.0 ドキュメント</title>
+    
+    <link rel="stylesheet" href="./Client Side 開発環境の構築 — HUE BT documents 1.0 ドキュメント_files/proBlue.css" type="text/css">
+    <link rel="stylesheet" href="./Client Side 開発環境の構築 — HUE BT documents 1.0 ドキュメント_files/pygments.css" type="text/css">
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="./Client Side 開発環境の構築 — HUE BT documents 1.0 ドキュメント_files/jquery.js.ダウンロード"></script>
+    <script type="text/javascript" src="./Client Side 開発環境の構築 — HUE BT documents 1.0 ドキュメント_files/underscore.js.ダウンロード"></script>
+    <script type="text/javascript" src="./Client Side 開発環境の構築 — HUE BT documents 1.0 ドキュメント_files/doctools.js.ダウンロード"></script>
+    <script type="text/javascript" src="./Client Side 開発環境の構築 — HUE BT documents 1.0 ドキュメント_files/translations.js.ダウンロード"></script>
+    <link rel="top" title="HUE BT documents 1.0 ドキュメント" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html"> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/genindex.html" title="総合索引" accesskey="I">索引</a></li>
+        <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">HUE BT documents 1.0 ドキュメント</a> »</li>
+<li class="right">
+    <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/bootcamp/clientSide/textbook/client-side-environment-setup.html">English</a> |
+    
+</li>
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="client-side">
+<h1>Client Side 開発環境の構築<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#client-side" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id1">
+<h2>インストール<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p><a class="reference external" href="http://huewiki/mediawiki/index.php/Preparation_Before_Development#Build_Client_Environment">HUE - Build Client Environment</a></p>
+<p>追加で以下のプログラムのインストールが必要になります。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%">
+<col width="10%">
+<col width="30%">
+<col width="40%">
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">ソフト名</th>
+<th class="head">推奨バージョン</th>
+<th class="head">インストール方法 （ダウンロードサイト、npm コマンド）</th>
+<th class="head">注意点</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Gulp</td>
+<td>3.8.10</td>
+<td><tt class="docutils literal"><span class="pre">npm</span> <span class="pre">install</span> <span class="pre">-g</span> <span class="pre">gulp@3.8.10</span></tt></td>
+<td>Console2 上で実行してください。</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p class="last">Console2を起動するには必ず <tt class="docutils literal"><span class="pre">C:\HUE\WorkSpace\Develop\console2.bat</span></tt> を実行してください。
+<tt class="docutils literal"><span class="pre">C:\HUE\Application\Console2-&lt;version&gt;\Console.exe</span></tt> を起動すると、
+環境の設定が行われないため、コマンドが正しく実行できません。</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p class="last">HUE アカウントが発行されていない場合は、この方法での HUE 環境構築は出来ません。
+以下の「HUE アカウントを持っていない場合」に従ってセットアップを行ってください。</p>
+</div>
+<div class="section" id="hue-windows">
+<h3>HUE アカウントを持っていない場合 (Windows)<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#hue-windows" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>HUE アカウントを持っていない場合は、以下のプログラムを手動でインストールする必要があります。
+ただし、パスの設定などトラブルが多いので、頑張ってください。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%">
+<col width="10%">
+<col width="30%">
+<col width="40%">
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">ソフト名</th>
+<th class="head">推奨バージョン</th>
+<th class="head">インストール方法 （ダウンロードサイト、npm コマンド）</th>
+<th class="head">注意点</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Java 8</td>
+<td>最新版</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>Python 2</td>
+<td>2.7.5-2.7.7</td>
+<td><a class="reference external" href="https://www.python.org/download/releases/2.7.6/">https://www.python.org/download/releases/2.7.6/</a></td>
+<td><em>Python 3 系では動作しません</em> ので注意してください。
+Python 2 および Python 3 とが共存する環境で実施する場合、
+Python コマンドをフルパスで指定するか、Python コマンドへのパスを適切に切り替えてください。</td>
+</tr>
+<tr class="row-even"><td>Node.js</td>
+<td>v0.10.15-v0.10.33</td>
+<td><a class="reference external" href="http://nodejs.jp/nodejs.org_ja/docs/v0.10/#download">http://nodejs.jp/nodejs.org_ja/docs/v0.10/#download</a></td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>npm</td>
+<td>1.2.0-1.4.28</td>
+<td>Node.js インストール時に同時にインストール</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>Git</td>
+<td>1.8.5-1.9.5</td>
+<td>Git for Windows &lt;<a class="reference external" href="https://msysgit.github.io/">https://msysgit.github.io/</a>&gt;</td>
+<td>Git for Windows の代わりに Cygwin を使っても動作すると思われます(未検証)。</td>
+</tr>
+<tr class="row-odd"><td>Gulp</td>
+<td>3.8.10</td>
+<td><tt class="docutils literal"><span class="pre">npm</span> <span class="pre">install</span> <span class="pre">-g</span> <span class="pre">gulp@3.8.10</span></tt></td>
+<td>Git をインストールした際に同時にインストールされる
+Console2 (Cygwin Terminal も可。以下の説明では Console2 に統一) 上で実行してください。</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">「Console2」は「Git BASH」もしくは「Cygwin Terminal」と読み替えてください</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">これ以外のバージョンでもおそらく動作すると思われます。</p>
+</div>
+</div>
+<div class="section" id="hue-linux">
+<h3>HUE アカウントを持っていない場合 (Linux)<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#hue-linux" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>Linux の場合は、追加でインストールするソフトウェアは少なくなります。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%">
+<col width="10%">
+<col width="30%">
+<col width="40%">
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">ソフト名</th>
+<th class="head">推奨バージョン</th>
+<th class="head">インストール方法 （ダウンロードサイト、npm コマンド）</th>
+<th class="head">注意点</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Java 8</td>
+<td>最新版</td>
+<td>&nbsp;</td>
+<td>Oracle JDK を推奨。</td>
+</tr>
+<tr class="row-odd"><td>Node.js</td>
+<td>v0.10.15-v0.10.33</td>
+<td><tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">nodejs</span></tt> (deb系)
+<tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">yum</span> <span class="pre">install</span> <span class="pre">nodejs</span></tt> (rpm系)</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>npm</td>
+<td>1.2.0-1.4.28</td>
+<td><tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">npm</span></tt> (deb系)
+<tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">yum</span> <span class="pre">install</span> <span class="pre">npm</span></tt> (rpm系)</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>Git</td>
+<td>1.8.5-1.9.5</td>
+<td><tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">git</span> <span class="pre">gitk</span></tt> (deb系)
+<tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">yum</span> <span class="pre">install</span> <span class="pre">git</span></tt> (rpm系)</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>Gulp</td>
+<td>3.8.10</td>
+<td><tt class="docutils literal"><span class="pre">npm</span> <span class="pre">install</span> <span class="pre">-g</span> <span class="pre">gulp@3.8.10</span></tt></td>
+<td>npm をインストールした後に端末より実行します。</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">「Console2」は利用中の端末プログラム名に読み替えてください。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last"><tt class="docutils literal"><span class="pre">apt-get</span> <span class="pre">install</span></tt> もしくは、<tt class="docutils literal"><span class="pre">yum</span> <span class="pre">install</span></tt> で該当パッケージが存在しないエラーがでるかもしれません。
+適宜ダウンロード元のリポジトリを追加してください。</p>
+</div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>課題の展開<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>演習及び判定試験で配布している zip ファイルを適当なディレクトリに展開します。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">ここでは、<tt class="docutils literal"><span class="pre">C:\Users\works\hue-bootcamp\</span></tt> ディレクトリ以下に展開されるものとします。
+必要に応じて適宜読み替えてください。</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p class="last">Eclipseのワークスペースディレクトリには展開しないでください。
+いったん別のディレクトリに展開しておいて、後でEclipseにインポートします。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>初期化<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ol class="arabic simple">
+<li>Console2 より、展開した zip ファイルの課題ディレクトリ (例: cs-i-practice) に移動する</li>
+</ol>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<blockquote>
+<div>Console2 は console2.bat から起動してください。
+そうしないと環境変数がセットされず色々なものが動作しません。</div></blockquote>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> /c/Users/works/hue-bootcamp/cs-i-practice/
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">package.json および gulpfile.js が保存されているディレクトリです</p>
+</div>
+<div class="last admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">「$」はプロンプト文字列 (入力受付中を意味する、BASH が出力する文字) は入力しません。</p>
+</div>
+</div>
+<ol class="arabic simple" start="2">
+<li>以下の初期化コマンドを実行する</li>
+</ol>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>npm install
+<span class="nv">$ </span>gulp init
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">Closure Libraryの取得などが行われます。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p><tt class="docutils literal"><span class="pre">npm</span> <span class="pre">install</span></tt> 実行時に、次のような警告が表示されます。
+この警告は無視して問題ありません。</p>
+<div class="last highlight-bash"><div class="highlight"><pre>npm WARN package.json bootcamp-cs-c-examination-webeditor@0.1.1 No repository field.
+npm WARN package.json bootcamp-cs-c-examination-webeditor@0.1.1 No README data
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>ビルドツール Gulp は、タスクを並行して実行します。
+そのため、一見するとタスクが終了しているにも関わらず、制御が帰ってこないように見えることがあります。</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gulp init
+<span class="o">[</span>18:18:50<span class="o">]</span> Using gulpfile /c/Users/works/workspace/hue-bootcamp/cs-i/practice/gulpfile.js
+<span class="o">[</span>18:18:50<span class="o">]</span> Starting <span class="s1">'init:mkdir'</span>...
+<span class="o">[</span>18:18:50<span class="o">]</span> Finished <span class="s1">'init:mkdir'</span> after 1.01 ms
+<span class="o">[</span>18:18:50<span class="o">]</span> Starting <span class="s1">'init:download-gcl'</span>...
+<span class="o">[</span>18:18:50<span class="o">]</span> Starting <span class="s1">'init:download-gcc'</span>...
+<span class="o">[</span>gulp<span class="o">]</span> Downloading http://dl.google.com/closure-compiler/compiler-latest.zip... Done
+<span class="o">[</span>18:18:51<span class="o">]</span> Finished <span class="s1">'init:download-gcc'</span> after 1.33 s
+</pre></div>
+</div>
+<p>この例では、’init:download-gcc’ タスクが終了したタイミング（18:18:51）では、
+‘init:download-gcl’ タスク（18:18:50）が実行中なので、しばらくの間この状態で固まります。
+10秒から1分ほど待つと、次のようにタスクが終了し、制御が戻ってきます。</p>
+<div class="last highlight-bash"><div class="highlight"><pre>[18:19:04]  Cloning into 'closure-library'...
+
+[18:19:04]  Note: checking out 'fb35d5232edef340dd9a7c6e479556829d0fa452'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b new_branch_name
+
+HEAD is now at fb35d52... Merge branch 'moe_writing_branch_from_8f3a53ea581ad3589000c226c8e7b0bce609f1fd'
+
+[18:19:04] Finished 'init:download-gcl' after 14 s
+[18:19:04] Starting 'init'...
+[18:19:04] Finished 'init' after 7.57 μs
+
+$
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="eclipse">
+<h2>Eclipse プロジェクトの作成<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#eclipse" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>Eclipse で、新しい JavaScript プロジェクトを作成します。
+以下の手順で作成してください。</p>
+<ol class="arabic simple">
+<li>Eclipseで新しいJavaScript Projectを作成<ul>
+<li>[Project name]以外の設定は変更せずに[Finish]ボタンを押下し、
+空のJavaScriptプロジェクトを作成してください。</li>
+</ul>
+</li>
+<li>[Project Explorer]でプロジェクトを右クリックして[Properties]を選択</li>
+<li>[JavaScript]＞[Include Path]を選択し、[Source]タブを選択</li>
+<li>[Source files and folders in the Global Scope:]で[Excluded: (None)]を選択し、[Edit]ボタンを押下</li>
+<li>二つある[Add]ボタンのうち、下の方の[Add]ボタンを押下</li>
+<li>[Exclusion patter]に「node_modules/**/*.js」と入力して[OK]ボタンを押下</li>
+<li>[Finish]ボタンや[OK]ボタンを押下してすべてのダイアログを閉じる</li>
+<li>[Project Explorer]でプロジェクトを右クリックして[Import]を選択</li>
+<li>[General]&gt;[File System]を選択して[Next]ボタンを押下</li>
+<li>[From directory]に <tt class="docutils literal"><span class="pre">C:\Users\works\hue-bootcamp\cs-i-practice</span></tt> を指定</li>
+<li><tt class="docutils literal"><span class="pre">cs-i-practice</span></tt> のディレクトリツリーが表示されるので[cs-i-practice]ディレクトリをチェックして[Finish]ボタンを押下</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">Eclipse 以外の任意のテキストエディタを使用しても構いません。</p>
+</div>
+<div class="section" id="auto-formatter-setting-xml-for-hue-javascript">
+<h3>Auto formatter setting XML for HUE JavaScript<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#auto-formatter-setting-xml-for-hue-javascript" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p><a class="reference download internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/_downloads/HUE_JavaScript.xml"><tt class="xref download docutils literal"><span class="pre">HUE</span> <span class="pre">JavaScript</span> <span class="pre">Formatter</span> <span class="pre">Setting</span></tt></a></p>
+<ol class="arabic simple">
+<li>Download Setting file (Named HUE_JavaScript.xml)</li>
+<li>Start your Eclipse</li>
+<li>Window &gt; Preference &gt; JavaScript &gt; Code Style &gt; Formatter</li>
+<li>Import setting file</li>
+<li>Select profile COMPANY js format</li>
+<li>Try Ctrl+A -&gt; Shift+Ctrl+F to format your JavaScript file</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">In your environment, this file may be imporeted by Environment Manager.
+If you don’t have this setting, please try this steps.</p>
+</div>
+</div>
+<div class="section" id="eclipse-gjslint">
+<h3>Eclipse GJSLintプラグインのインストールと設定<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#eclipse-gjslint" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>プラグインのインストールをします。</p>
+<ol class="arabic simple">
+<li><a class="reference download internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/_downloads/com.worksap.bootcamp.eclipse.zip"><tt class="xref download docutils literal"><span class="pre">GJSLintプラグイン</span></tt></a> をダウンロード</li>
+<li>zipファイルを適当なフォルダに展開</li>
+<li>com.worksap.bootcamp.eclipse_&lt;version&gt;.jarをEclipseのpluginsディレクトリ(Ex: <tt class="docutils literal"><span class="pre">C:\Develop\Application\eclipse-4.4.0-20141017\eclipse\plugins</span></tt> )にコピー</li>
+<li>Eclipseを起動</li>
+<li>メインメニューの[Window]&gt;[Preferences]を選択</li>
+<li>[WAP BC GJSLint]を選択</li>
+<li>[gjslint path]にgjslint.exeのパス(Ex: <tt class="docutils literal"><span class="pre">C:\Develop\Application\python-27\Scripts\gjslint.exe</span></tt> )を入力</li>
+</ol>
+<p>インポートしたプロジェクトの設定をします。</p>
+<ol class="arabic simple">
+<li>[Package Excplorer]でプロジェクトを右クリック</li>
+<li>[Configure]&gt;[Enable WAP BC GJSLint]を選択</li>
+<li>[Package Excplorer]でプロジェクトを右クリック</li>
+<li>[Properties]を選択</li>
+<li>[WAP BC GJSLint]を選択</li>
+<li>[Inclusion patterns]に”**.js”、[Exclusion patterns]に”**/node_modules/**, **/lib/**, **/webeditor.js, **/todolist.js, **/gulpfile.js”入力 (最初と最後の「”」は入力しないでください)</li>
+</ol>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>課題のビルド<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>Google Closure Compilerによるコンパイルは、Console2 の課題ディレクトリ上で次のコマンドを実行します。</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gulp build
+</pre></div>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">加えて、ソースコードマップの生成 (ブラウザのデバッガでコンパイル前のソースコードを用いてデバッグする機能) など、
+より快適に課題を進めることができるようになっていますので、積極的に活用してください。</p>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>課題のチェック<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id5" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>課題のチェックは、Console2 の課題ディレクトリ上で次のコマンドを実行します。</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gulp check
+</pre></div>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>判定試験課題は、このチェックコマンドにより一切の警告およびエラーが発生しないことが最低条件になります。
+何らかの警告やエラーが発生した場合、機械的に不合格になり、以降の評価が行われないことに注意してください。</p>
+<p class="last">なお、このチェックにはビルドチェック (<tt class="docutils literal"><span class="pre">gulp</span> <span class="pre">build</span></tt> コマンド) も含まれています。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>課題の提出<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id6" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>判定試験課題は、Console2 の課題ディレクトリ上で次のコマンドを実行します。</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gulp package
+</pre></div>
+</div>
+</div></blockquote>
+<p>同じディレクトリに生成された zip ファイルを、研修管理システムなどより提出してください。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">この時、同時にエラーチェックが行われます。必ずチェックが通っていることを確認してください。</p>
+</div>
+</div>
+<div class="section" id="id7">
+<h2>トラブルが発生したら<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id7" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">calcdeps.py:</span> <span class="pre">Finding</span> <span class="pre">Closure</span> <span class="pre">dependencies...</span></tt> の後に <tt class="docutils literal"><span class="pre">Traceback</span> <span class="pre">(most</span> <span class="pre">recent</span> <span class="pre">call</span> <span class="pre">last):</span></tt> から始まるエラーメッセージが表示される</p>
+<blockquote>
+<div><p>「最後にインストールした」Java が古いバージョンの場合
+（例えば、Java 8 をインストールした後、プロダクトの開発環境をセットアップした場合など）、
+Closure Tools の python コマンドから java コマンドの実行に失敗するケースがあります。
+(エラーメッセージに <tt class="docutils literal"><span class="pre">proc</span> <span class="pre">=</span> <span class="pre">subprocess.Popen(['java',</span> <span class="pre">'-version'],</span> <span class="pre">stderr=subprocess.PIPE)</span></tt> の行が見つかるはずです)</p>
+<p>この場合、Java 8 を一度アンインストールしてから、再度 Java 8 をインストールし直してください。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">Java は基本的には後方互換性を持っているため、Java 8 で既存プロダクトが動作しないとは考えにくいですが、
+どうしても Java 8 のインストールが出来ない場合は相談してください。</p>
+</div>
+</div></blockquote>
+<p><tt class="docutils literal"><span class="pre">'python'</span> <span class="pre">□□A□□...</span></tt> のような文字化けしたエラーメッセージが表示される</p>
+<blockquote>
+<div>Windows の環境変数 PATH に python のプログラムが見つからない可能性が高いです。
+環境変数を設定して「コマンドプロンプト」から <tt class="docutils literal"><span class="pre">python</span> <span class="pre">--version</span></tt> コマンドが正常実行できるようにしてから
+再度実行してください。</div></blockquote>
+<p>ソースコードに何らかのトラブルが発生した場合、Console2 の課題ディレクトリ上で次のコマンドを実行します。</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gulp clean
+</pre></div>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last"><tt class="docutils literal"><span class="pre">gulp</span> <span class="pre">build</span></tt> コマンドで生成されたファイルが削除されます。</p>
+</div>
+<p>これでも解決しない場合は、以下のコマンドを実行します。</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gulp clean:all
+<span class="nv">$ </span>gulp init
+</pre></div>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last"><tt class="docutils literal"><span class="pre">gulp</span> <span class="pre">clean</span></tt> コマンドに加え、<tt class="docutils literal"><span class="pre">gulp</span> <span class="pre">init</span></tt> コマンドで取得・生成した初期ファイルが削除されます。
+このため、再び <tt class="docutils literal"><span class="pre">gulp</span> <span class="pre">init</span></tt> コマンドの実行が必要になります。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">いずれのコマンドも、基本的にはみなさんが変更を加えたファイルをリセットすることはありませんが、
+念の為に、コマンド実行前にはバックアップ (課題ディレクトリのコピー) を取っておくことをおすすめします。
+Git (など) でのソースコードのバージョン管理の練習を行うのも良いでしょう。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#">Client Side 開発環境の構築</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id1">インストール</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#hue-windows">HUE アカウントを持っていない場合 (Windows)</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#hue-linux">HUE アカウントを持っていない場合 (Linux)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id2">課題の展開</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id3">初期化</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#eclipse">Eclipse プロジェクトの作成</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#auto-formatter-setting-xml-for-hue-javascript">Auto formatter setting XML for HUE JavaScript</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#eclipse-gjslint">Eclipse GJSLintプラグインのインストールと設定</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id4">課題のビルド</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id5">課題のチェック</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id6">課題の提出</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/textbook/client-side-environment-setup.html#id7">トラブルが発生したら</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>このページ</h3>
+  <ul class="this-page-menu">
+    <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/_sources/bootcamp/clientSide/textbook/client-side-environment-setup.txt" rel="nofollow">ソースコードを表示</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>クイック検索</h3>
+    <form class="search" action="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/search.html" method="get">
+      <input type="text" name="q">
+      <input type="submit" value="検索">
+      <input type="hidden" name="check_keywords" value="yes">
+      <input type="hidden" name="area" value="default">
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    検索キーワードは短い言葉に分割するとヒットしやすいです。(例)前提条件→前提 条件
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/genindex.html" title="総合索引">索引</a></li>
+        <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">HUE BT documents 1.0 ドキュメント</a> »</li>
+<li class="right">
+    <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/bootcamp/clientSide/textbook/client-side-environment-setup.html">English</a> |
+    
+</li>
+
+      </ul>
+    </div>
+    <div class="footer">
+        © Copyright 2013, Works Applications, Inc..
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2 で生成しました。
+    </div>
+  
+</body></html>

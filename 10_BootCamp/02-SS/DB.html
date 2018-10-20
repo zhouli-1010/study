@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<!-- saved from url=(0063)https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html -->
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+
+  <title>データベース — Bootcamp ServerSide Intermediate - latest</title>
+  <link rel="stylesheet" href="./DB_files/normalize.css" type="text/css">
+  <link rel="stylesheet" href="./DB_files/basic.css" type="text/css">
+  <link rel="stylesheet" href="./DB_files/pygments.css" type="text/css">
+  <link rel="stylesheet" href="./DB_files/solomon.css" type="text/css">
+  <link rel="index" title="索引" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/genindex.html">
+  <link rel="search" title="検索" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/search.html">
+  <link rel="top" title="Bootcamp ServerSide Intermediate - latest" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html">
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT:    '',
+      VERSION:     'latest',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE:  true
+    };
+  </script>
+  <script type="text/javascript" src="./DB_files/jquery.js.ダウンロード"></script>
+  <script type="text/javascript" src="./DB_files/underscore.js.ダウンロード"></script>
+  <script type="text/javascript" src="./DB_files/doctools.js.ダウンロード"></script>
+  <script type="text/javascript" src="./DB_files/translations.js.ダウンロード"></script>
+  <script src="./DB_files/MathJax.js.ダウンロード" id=""></script>
+  <script type="text/javascript" src="./DB_files/solomon.js.ダウンロード"></script>
+<style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+<body><div id="MathJax_Message" style="display: none;"></div><header id="global-header" class="both-side">
+  <div class="left">
+      <div class="vcenter">
+        <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html">
+          <img src="./DB_files/bootcamp-logo.png" class="bland-logo">
+        </a>
+      </div>
+      <div class="vcenter">
+        <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html" class="master-link">
+          <h1>Bootcamp ServerSide Intermediate - latest</h1>
+        </a>
+      </div>
+    
+  </div>
+  
+  <div class="right">
+    <nav class="vcenter">
+      <ul class="rellinks">
+<li>
+    日本語
+  </li>
+<li>
+    <a href="https://webootcamp.worksap.co.jp/course/ss-i/en/server_dbs.html">
+    
+    English
+    </a>
+    
+  </li>
+        <li>
+          <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/genindex.html" title="総合索引" accesskey="I">索引</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+  <div class="both-side main-layout">
+    <div class="left"><nav class="related-nav" aria-label="related navigation">
+
+  <ul class="breadcrumb-list">
+    <li>
+      <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html">Bootcamp ServerSide Intermediate - latest</a>
+    </li>
+  </ul>
+
+</nav>
+      <main>
+  <div class="section" id="id1">
+<h1>データベース<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>COMPANY は多数の情報を扱います。それを管理するのがデータベース (以下 DB) です。
+Oracle や DB2 といった RDB (リレーショナル・データベース) を従来の COMPANY では使っています。しかし、 HUE では新たに Redis と EhCache という DB を使います。</p>
+<p>本章では従来の RDB の HUE における使い方を解説します。その上で加えて新しい Redis と EhCache の使い方を解説します。前者については従来どおりの使い方ですが、後者についてはキャッシュとして用いることになります。</p>
+<p>尚、キャッシュは caShe ではなく caChe と英語では書きます。</p>
+<div class="section" id="id2">
+<h2>データを高速に取り扱うには？<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="line-block">
+<div class="line">巨大なデータを取り扱うアプリケーションでは、ほとんどの場合そのボトルネックはデータ I/O になります。</div>
+<div class="line">データ I/O とは文字通り、データの In と Out ですから、この問題は本質的には、やりとりするデータの量と頻度を減らすことで解決せざるをえません。</div>
+<div class="line">（DB からデータが返ってこないような SQL も、DB の中を観察してみると、不適切な指示のために、DB 中のメモリとデータが書かれている HDD 間のデータのやり取りが巨大になっているケースがほとんどです）</div>
+</div>
+<div class="section" id="id3">
+<h3>初期状態<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">とはいえ、最初から最適なデータアクセスは難しいので、まずはきちんと分割され、動作する状態を目指してください。</div>
+<div class="line">この状態のものから計測を行いながら徐々に改善をしていくのが推奨される手順です。</div>
+<div class="line"><br></div>
+<div class="line">この手順の実現のためには</div>
+<div class="line">「分割をきちんと行うこと」</div>
+<div class="line">「ビジネスロジックで必要なデータ構造を永続化されたデータ構造と切り離して考えること」</div>
+<div class="line">が必要で、これらを行うと、DAO インターフェースは後者のデータを受け取ったり返したりする設計になるはずです。</div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>データ取得の改善<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id4" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="section" id="id5">
+<h4>データ取得量を減らす<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id5" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">処理に必要のない項目まで常に取得していませんか？</div>
+<div class="line"><br></div>
+<div class="line">テーブル変更時に修正箇所が増えないよう、DAO をひとつだけ作って使いまわすことがありますが、処理に必要な項目だけを取得している場合、新しい項目が処理になければ追加されても取得する必要はありませんし、処理に必要な項目が増えている場合には、ビジネスロジックも含めてまとめて修正・テストしなければならないので項目 1 つの取得の追加がそれほど大変なことにはならないはずです。</div>
+<div class="line"><br></div>
+<div class="line">何らかの必要があってテーブルがまとまっているにしても、（特に取得時には）Java 側でまとめて扱わなければいけないわけではありません。</div>
+<div class="line">全項目取得していても速い場合にはまだいいのですが、遅い場合には DAO を分けてデータ取得量を減らしましょう。</div>
+</div>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">BASEBALL_COL01</span><span class="p">,</span>
+       <span class="n">BASEBALL_COL02</span><span class="p">,</span>
+       <span class="n">BASEBALL_COL03</span><span class="p">,</span>
+           <span class="p">:</span>
+           <span class="p">:</span>
+           <span class="p">:</span>
+       <span class="n">BASEBALL_COL50</span><span class="p">,</span>
+       <span class="n">SOCCER_COL01</span><span class="p">,</span>
+       <span class="n">SOCCER_COL02</span><span class="p">,</span>
+       <span class="n">SOCCER_COL03</span><span class="p">,</span>
+           <span class="p">:</span>
+           <span class="p">:</span>
+           <span class="p">:</span>
+       <span class="n">SOCCER_COL50</span>
+<span class="k">FROM</span> <span class="n">PRESS_STAFF</span>
+<span class="k">WHERE</span> <span class="n">OFFICE</span> <span class="o">=</span> <span class="s1">'Brasil'</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">ブラジル・ワールドカップの取材スタッフを検索……にしては明らかに余計な項目が混ざっていますね。</div>
+<div class="line">SOCCER_xxx カラムだけを取得することでデータ量が半分ぐらいに減らせるのではないでしょうか？</div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p>業務シナリオテストを行ってください</p>
+<div class="last line-block">
+<div class="line">SQL で難しいのは RDBMS が持っているキャッシュの存在です。</div>
+<div class="line">バインド変数を使用するよう推奨するときに言われるように、一言一句同じ SQL は（同じ文字列）はキャッシュされます。これは読み込まれたレコードのキャッシュもあります。</div>
+<div class="line">このキャッシュにヒットする方が、ヒットしないよりも（RDBMS の内部での処理は）早いです。</div>
+<div class="line">「RDBMS の内部での処理は」としたように、キャッシュにヒットすると早いのは、HDD からデータを取り出す部分です。外に送り出す、つまりデータ通信の問題としては、当然ですが、データが多いほうが遅いです。</div>
+<div class="line">また、このキャッシュは有限の資産であり、常にヒットすることを期待はできないことも考えなければいけません。</div>
+<div class="line"><br></div>
+<div class="line">机上では「ユーザーの一連のオペレーションの中で、RDBMS の内部、RDBMS と AP、AP とクライアントというすべてのデータのやり取りを最小化する」作業が必要、というたいへん難しい話になるのですが、実践的には、まず、ある一連の業務オペレーションの中での処理速度を測りながら、どういう方法が一連の処理を一番速くできるか？　改善していく、というアプローチを取るとよいでしょう。</div>
+</div>
+</div>
+</div>
+<div class="section" id="join">
+<h4>JOIN を正しく理解する<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#join" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>執筆中</p>
+</div>
+<div class="section" id="id6">
+<h4>送ったデータを受け取らない<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id6" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">WHERE 条件に指定する値はすでに知っている値です。</div>
+<div class="line">SELECT 句に同じカラムを指定して取得していないですか？</div>
+<div class="line">1 レコードの読み込みであればたいしたことはありませんが、数千レコードを読み込む場合差が出てくることがあります。修正して試してみてください。</div>
+</div>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">CORP_ID</span><span class="p">,</span>
+       <span class="n">CORP_NAME</span><span class="p">,</span>
+       <span class="n">CORP_ADDRESS</span><span class="p">,</span>
+       <span class="n">CORP_GROUP_ID</span><span class="p">,</span>
+           <span class="p">:</span>
+           <span class="p">:</span>
+           <span class="p">:</span>
+<span class="k">FROM</span> <span class="n">CORP_MASTER</span>
+<span class="k">WHERE</span> <span class="n">CORP_GROUP_ID</span> <span class="o">=</span> <span class="s1">'WORKS'</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">CORP_GROUP_ID はすでに知っていますから、SELECT 句から省くことができます。</div>
+<div class="line">WHERE 条件がたくさんある場合、すでに似たようなエンティティが大部分の情報を持っている場合などには考慮してください。取得してくるデータが多い場合にはもちろんです。</div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p>必ずはやくなるわけではないの？</p>
+<div class="last line-block">
+<div class="line">経験則ですが、Oracle では必ずはやくなるわけではありません。</div>
+<div class="line">ORDER BY 句で並び替えを行ったレコードがデータ量が増えても通信量がそれほど増えている感じがしないので、同じカラムデータが複数行にわたって連続している場合には、圧縮されているのではないかと推測しています。</div>
+<div class="line"><br></div>
+<div class="line">いずれも、経験＆推測の話なので（Oracle の場合、ライセンス的にリバースエンジニアリングが禁止されているので調査は気を付けてください）必ず実際に計測して比較して選択してください。</div>
+<div class="line">（もちろん無駄なやり取りではあるので、遅くなければ原則省略した方がよいのですが）</div>
+</div>
+</div>
+</div>
+<div class="section" id="id7">
+<h4>データ取得回数を減らす<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id7" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">同じテーブルの同じレコードを 2 回以上読み込んでいませんか？</div>
+<div class="line"><br></div>
+<div class="line">検索条件が異なる場合などは仕方がありませんが、プログラムを泥縄的に修正してできた 2 度読みであればまとめましょう。</div>
+<div class="line">ただし、データアクセス回数は少なければ少ないほどよい、というほど単純なものではありません。必ず速度を計測して、速くなることを確認してから修正を行いましょう。</div>
+</div>
+</div>
+<div class="section" id="id8">
+<h4>マスタのデータ取得回数を減らす<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id8" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">まったく同じデータを複製しがちなのがマスタデータの取得です。</div>
+<div class="line">Java の中でマスタのエンティティへの参照を持っていればひとつで済むデータが、SELECT 節で指定されて、取得してこられてエンティティも分かれては、かなりの量に膨らんでしまいます。</div>
+<div class="line"><br></div>
+<div class="line">マスタの結合を JOIN で行わず、トランザクションの取得時に ResultSet のループの中で取得するキーだけを持ったエンティティの Map を生成し、それを IN 句を使ってまとめて取得すると良いでしょう。</div>
+<div class="line">プログラムのイメージは以下のような感じになります。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">SomeDTO</span><span class="o">&gt;</span> <span class="nf">load</span><span class="o">()</span> <span class="o">{</span>
+  <span class="k">while</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="na">next</span><span class="o">())</span> <span class="o">{</span>
+    <span class="n">SomeDTO</span> <span class="n">record</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SomeDTO</span><span class="o">();</span>
+    <span class="n">HogeMstDTO</span> <span class="n">hogeMst</span> <span class="o">=</span> <span class="n">getHogeMst</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="na">getLong</span><span class="o">(</span><span class="mi">0</span><span class="o">));</span>
+    <span class="c1">// エンティティへの参照はセットしてしまう</span>
+    <span class="n">record</span><span class="o">.</span><span class="na">setHogeMst</span><span class="o">(</span><span class="n">hogeMst</span><span class="o">);</span>
+        <span class="o">:</span>
+        <span class="o">:</span>
+  <span class="o">}</span>
+  <span class="c1">// hogeMstMap を元に HOGE_MST へアクセスしてエンティティを完成させる</span>
+<span class="o">}</span>
+
+<span class="kd">private</span> <span class="n">HogeMstDTO</span> <span class="nf">getHogeMst</span><span class="o">(</span><span class="kt">long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">HogeMstDTO</span> <span class="n">result</span> <span class="o">=</span> <span class="n">hogeMstMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+
+  <span class="k">if</span> <span class="o">(</span><span class="n">rsult</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 無ければエンティティを生成（この時点ではキーしか分からない）</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HogeMstDTO</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="n">hogeMstMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">後述するキャッシュと組み合わせ、上手に取得回数を減らしましょう。</div>
+</div>
+</div>
+<div class="section" id="sql">
+<h4>SQL 関数をやめてみる<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#sql" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">SQL 関数の使用は一長一短があって一概に述べるのは難しいのですが、遅い場合には Java プログラムでの処理に書きかえてみてください。</div>
+<div class="line">特に文字列の処理（空白落としや長さの調整など）などは SQL 関数があまり得意ではない処理です。</div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p>WHERE 条件での SQL 関数</p>
+<div class="last line-block">
+<div class="line">WHERE 条件でカラムに SQL 関数を使うのは原則禁止です。</div>
+<div class="line">カラムにある値をそのまま使えない場合、インデックスが利かなくなります。</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id9">
+<h3>データ更新の改善<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id9" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>執筆中</p>
+</div>
+</div>
+<div class="section" id="spring-jdbc">
+<h2>Spring JDBC<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#spring-jdbc" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="line-block">
+<div class="line">Spring-jdbc は Spring framework の O/R マッピングライブラリです。</div>
+<div class="line">O/R マッピングは Java の世界（Object）とデータベースの世界（relational）との間に入って、データベースをオブジェクトっぽく扱えるようにしてくれるものです。</div>
+<div class="line"><br></div>
+<div class="line">Spring-jdbc は Spring-core の DI の機能を活用しつつ、データベース操作に JDBC 標準 API を利用しているライブラリです。</div>
+</div>
+<div class="section" id="connection">
+<h3>Connection<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#connection" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">Spring-jdbc ではデータベースとの接続に標準の javax.sql.DataSource インターフェースを使います。</div>
+<div class="line"><br></div>
+<div class="line">標準技術なので、AP サーバの設定でコネクションプールのリソースとして設定し、そこから取得したものを使うこともできますが、簡単な DataSource の実装も持っているので、context.xml 上で接続設定を設定して動かすこともできます。</div>
+</div>
+<div class="highlight-xml"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xmlns:context=</span><span class="s">"http://www.springframework.org/schema/context"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans</span>
+<span class="s">                           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</span>
+<span class="s">                           http://www.springframework.org/schema/context</span>
+<span class="s">                           http://www.springframework.org/schema/context/spring-context-4.0.xsd"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;context:component-scan</span> <span class="na">base-package=</span><span class="s">"com.worksap.bootcamp.spring"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"dataSource"</span> <span class="na">class=</span><span class="s">"org.apache.commons.dbcp.BasicDataSource"</span> <span class="na">destroy-method=</span><span class="s">"close"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"driverClassName"</span> <span class="na">value=</span><span class="s">"oracle.jdbc.driver.OracleDriver"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"url"</span> <span class="na">value=</span><span class="s">"jdbc:oracle:thin:@localhost:1521:oracle"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">value=</span><span class="s">"scott"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"password"</span> <span class="na">value=</span><span class="s">"tiger"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+<span class="nt">&lt;/beans&gt;</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">DataSource は context.xml で設定した場合、DI することができます。</div>
+<div class="line">context.xml 上で注入もできますし、アノテーションを使った注入もできます。</div>
+<div class="line">（コネクションプールを利用する場合はそれぞれの取得方法に従って取得してください）</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@Repository</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleDaoImpl</span> <span class="kd">implements</span> <span class="n">SampleDao</span> <span class="o">{</span>
+  <span class="nd">@Autowired</span>
+  <span class="kd">private</span> <span class="n">DataSource</span> <span class="n">dataSource</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">Spring では DAO にあたるクラスには @Component ではなく、@Repository アノテーションを付けます。</div>
+</div>
+</div>
+<div class="section" id="transaction">
+<h3>Transaction<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#transaction" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">Spring-jdbc ではトランザクションも設定で行うことができます。</div>
+<div class="line">「宣言的トランザクション管理」と呼ばれています。</div>
+<div class="line"><br></div>
+<div class="line">宣言的トランザクションでは、トランザクションは宣言したメソッドの開始と同時に始まり、終了と共に commit されます（デフォルトでは）。</div>
+<div class="line">rollback したい場合にはメソッドを正常に終了させず、何らかの非チェック例外を投げる必要があります（デフォルトでは）。</div>
+<div class="line">チェック例外を投げる場合には注意してください。チェック例外でメソッドを終了するとそこまでのトランザクションをすべて commit します（デフォルトでは）。</div>
+</div>
+<div class="section" id="context-xml">
+<h4>context.xml を使う方法<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#context-xml" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">いろいろな設定を行う context.xml にトランザクションの設定も行うことができます。</div>
+</div>
+<div class="highlight-xml"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xmlns:aop=</span><span class="s">"http://www.springframework.org/schema/aop"</span>
+       <span class="na">xmlns:tx=</span><span class="s">"http://www.springframework.org/schema/tx"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/aop</span>
+<span class="s">                           http://www.springframework.org/schema/aop/spring-aop-4.0.xsd</span>
+<span class="s">                           http://www.springframework.org/schema/beans</span>
+<span class="s">                           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</span>
+<span class="s">                           http://www.springframework.org/schema/tx</span>
+<span class="s">                           http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"dataSource"</span> <span class="na">class=</span><span class="s">"org.apache.commons.dbcp.BasicDataSource"</span> <span class="na">destroy-method=</span><span class="s">"close"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"driverClassName"</span> <span class="na">value=</span><span class="s">"oracle.jdbc.driver.OracleDriver"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"url"</span> <span class="na">value=</span><span class="s">"jdbc:oracle:thin:@localhost:1521:oracle"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">value=</span><span class="s">"scott"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"password"</span> <span class="na">value=</span><span class="s">"tiger"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+
+  <span class="c">&lt;!-- DAO --&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"dampleDao"</span> <span class="na">class=</span><span class="s">"com.worksap.bootcamp.spring.dao.SampleDaoImpl"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"dataSource"</span> <span class="na">ref=</span><span class="s">"dataSource"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+
+  <span class="c">&lt;!-- Transaction --&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"transactionManager"</span> <span class="na">class=</span><span class="s">"org.springframework.jdbc.datasource.DataSourceTransactionManager"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"dataSource"</span> <span class="na">ref=</span><span class="s">"dataSource"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+
+  <span class="nt">&lt;aop:config</span> <span class="na">proxy-target-class=</span><span class="s">"false"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;aop:advisor</span> <span class="na">pointcut=</span><span class="s">"execution(* com.worksap.bootcamp.spring.service.*(..))"</span> <span class="na">advice-ref=</span><span class="s">"txAdvice"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/aop:config&gt;</span>
+
+  <span class="nt">&lt;tx:advice</span> <span class="na">id=</span><span class="s">"txAdvice"</span> <span class="na">transaction-manager=</span><span class="s">"transactionManager"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;tx:attributes&gt;</span>
+      <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"find*"</span> <span class="na">read-only=</span><span class="s">"true"</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"*"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/tx:attributes&gt;</span>
+  <span class="nt">&lt;/tx:advice&gt;</span>
+<span class="nt">&lt;/beans&gt;</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">かなり長い設定になっていますが、これは Spring が Bean 定義ベースでトランザクションを設定する時、AOP を使うからで、そのために spring-aop も必要になっています。</div>
+<div class="line"><br></div>
+<div class="line">aop:config タグの中で、どのクラスに対して（pointcut）どの bean による処理を行うか（advice-ref）を設定しています。</div>
+<div class="line">pointcut の書式ですが、execution(returnType package.Class.method(argumentType)) という形で表現します。</div>
+<div class="line">今回の例では、戻り値の型を問わず、com.worksap.bootcamp.spring.service パッケージ以下の、すべてのクラスの、すべてのメソッド（引数も問わず）を対象としています。</div>
+<div class="line">ただし、実際には com.worksap.bootcamp.spring.service パッケージ以下の（インターフェースの）実装クラスの bean について、その public メソッドが処理対象となります。</div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p>どうして？</p>
+<div class="last line-block">
+<div class="line">spring-aop はこの場合、対象クラスのインターフェースを実装した別のクラスを作って AOP を実現します。</div>
+<div class="line">この別のクラスは、対象クラスを内部に所持していて、指定したメソッドの呼び出しを受けると、対象クラスの該当したメソッドを呼び出しています。この内部的な呼び出しの前後に、指定した処理を挟み込んでいるのです。</div>
+<div class="line">このため、インターフェースが必須になり、処理を注入できるメソッドは public なものに限られ、インスタンスを捕まえられるよう、対象クラスは bean となっている必要があるのです。</div>
+<div class="line"><br></div>
+<div class="line">なお、あたりまえですがインスタンスの実装を instance of でチェックして分岐しているようなプログラムは失敗します。</div>
+<div class="line">インターフェースを切り出して振る舞いを変化させているのにそれを利用する側でまだ実装毎の分岐が必要なのは、設計がうまくできていない場合に発生します。ほとんどの場合、難しいことをしなくても処理できるように修正できるので、よく考えてみてください。</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line">トランザクション処理を行う本体が tx:advice タグの定義です。</div>
+<div class="line">トランザクションの管理を行う対象を DataSourceTransactionManager とし、その DataSourceTransactionManager は指定した DB への接続となっています。</div>
+<div class="line">この transaction-manager 属性は省略可能で、その場合には「transactionManager」という ID で登録されている bean が使われます。</div>
+<div class="line"><br></div>
+<div class="line">また、メソッドの名前が find で始まる場合、これは読み取りを行う処理ですから、読み込み専用として宣言しています。</div>
+<div class="line">そして、それ以外のメソッドについて、トランザクションが発生するように設定しています。</div>
+</div>
+</div>
+<div class="section" id="id10">
+<h4>問題1<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id10" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">com.worksap.bootcamp.spring.dao 以下のクラスについて、load ではじまるメソッドは読み込み専用の、それ以外のメソッドについては通常のトランザクションが発生するように設定してください。</div>
+</div>
+</div>
+<div class="section" id="id11">
+<h4>解答<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id11" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<script type="text/javascript">
+    function showhide(element){
+        if (!document.getElementById)
+            return
+
+        if (element.style.display == "block")
+            element.style.display = "none"
+        else
+            element.style.display = "block"
+    };
+</script>
+<a href="javascript:showhide(document.getElementById(&#39;hiddencodeblock45&#39;))">+ show/hide code</a><br><div id="hiddencodeblock45" style="display: none"><div class="highlight-xml"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xmlns:aop=</span><span class="s">"http://www.springframework.org/schema/aop"</span>
+       <span class="na">xmlns:tx=</span><span class="s">"http://www.springframework.org/schema/tx"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/aop</span>
+<span class="s">                           http://www.springframework.org/schema/aop/spring-aop-4.0.xsd</span>
+<span class="s">                           http://www.springframework.org/schema/beans</span>
+<span class="s">                           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</span>
+<span class="s">                           http://www.springframework.org/schema/tx</span>
+<span class="s">                           http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"dataSource"</span> <span class="na">class=</span><span class="s">"org.apache.commons.dbcp.BasicDataSource"</span> <span class="na">destroy-method=</span><span class="s">"close"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"driverClassName"</span> <span class="na">value=</span><span class="s">"oracle.jdbc.driver.OracleDriver"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"url"</span> <span class="na">value=</span><span class="s">"jdbc:oracle:thin:@localhost:1521:oracle"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">value=</span><span class="s">"scott"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"password"</span> <span class="na">value=</span><span class="s">"tiger"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+
+  <span class="c">&lt;!-- DAO --&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"dampleDao"</span> <span class="na">class=</span><span class="s">"com.worksap.bootcamp.spring.dao.SampleDaoImpl"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"dataSource"</span> <span class="na">ref=</span><span class="s">"dataSource"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+
+  <span class="c">&lt;!-- Transaction --&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"transactionManager"</span> <span class="na">class=</span><span class="s">"org.springframework.jdbc.datasource.DataSourceTransactionManager"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"dataSource"</span> <span class="na">ref=</span><span class="s">"dataSource"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+
+  <span class="nt">&lt;aop:config</span> <span class="na">proxy-target-class=</span><span class="s">"false"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;aop:advisor</span> <span class="na">pointcut=</span><span class="s">"execution(* com.worksap.bootcamp.spring.dao.*(..))"</span> <span class="na">advice-ref=</span><span class="s">"txAdvice"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/aop:config&gt;</span>
+
+  <span class="nt">&lt;tx:advice</span> <span class="na">id=</span><span class="s">"txAdvice"</span> <span class="na">transaction-manager=</span><span class="s">"transactionManager"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;tx:attributes&gt;</span>
+      <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"load*"</span> <span class="na">read-only=</span><span class="s">"true"</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"*"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/tx:attributes&gt;</span>
+  <span class="nt">&lt;/tx:advice&gt;</span>
+<span class="nt">&lt;/beans&gt;</span>
+</pre></div>
+</div>
+</div></div>
+<div class="section" id="id12">
+<h4>アノテーションを使う方法<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id12" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">bean がアノテーションで登録できたように、トランザクションもアノテーションで制御できます。</div>
+<div class="line">まずは context.xml を以下のようにします。</div>
+</div>
+<div class="highlight-xml"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xmlns:context=</span><span class="s">"http://www.springframework.org/schema/context"</span>
+       <span class="na">xmlns:tx=</span><span class="s">"http://www.springframework.org/schema/tx"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans</span>
+<span class="s">                           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</span>
+<span class="s">                           http://www.springframework.org/schema/context</span>
+<span class="s">                           http://www.springframework.org/schema/context/spring-context-4.0.xsd</span>
+<span class="s">                           http://www.springframework.org/schema/tx</span>
+<span class="s">                           http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"dataSource"</span> <span class="na">class=</span><span class="s">"org.apache.commons.dbcp.BasicDataSource"</span> <span class="na">destroy-method=</span><span class="s">"close"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"driverClassName"</span> <span class="na">value=</span><span class="s">"oracle.jdbc.driver.OracleDriver"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"url"</span> <span class="na">value=</span><span class="s">"jdbc:oracle:thin:@localhost:1521:oracle"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">value=</span><span class="s">"scott"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"password"</span> <span class="na">value=</span><span class="s">"tiger"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+
+  <span class="c">&lt;!-- Transaction --&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"transactionManager"</span> <span class="na">class=</span><span class="s">"org.springframework.jdbc.datasource.DataSourceTransactionManager"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"dataSource"</span> <span class="na">ref=</span><span class="s">"dataSource"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+
+  <span class="nt">&lt;context:component-scan</span> <span class="na">base-package=</span><span class="s">"com.worksap.bootcamp.spring"</span> <span class="nt">/&gt;</span>
+
+  <span class="nt">&lt;tx:annotation-driven</span> <span class="na">transaction-manager=</span><span class="s">"transactionManager"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/beans&gt;</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">Transaction を設定する DAO ではアノテーションを使ってトランザクションを宣言します。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@Repository</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleDaoImpl</span> <span class="kd">implements</span> <span class="n">SampleDao</span> <span class="o">{</span>
+  <span class="nd">@Autowired</span>
+  <span class="kd">private</span> <span class="n">DataSource</span> <span class="n">dataSource</span><span class="o">;</span>
+
+  <span class="nd">@Override</span>
+  <span class="nd">@Transactional</span><span class="o">(</span><span class="n">readOnly</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">SampleDto</span> <span class="nf">loadSampleDto</span><span class="o">(</span><span class="kt">int</span> <span class="n">sampleId</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">SampleDto</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">:</span>
+    <span class="o">:</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="nd">@Transactional</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteSampleDto</span><span class="o">(</span><span class="kt">int</span> <span class="n">sampleId</span><span class="o">)</span> <span class="o">{</span>
+    <span class="o">:</span>
+    <span class="o">:</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id13">
+<h4>問題2<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id13" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">上記 context.xml が設定されている環境で、以下のインターフェースを実装したクラスにトランザクションを設定してください。</div>
+<div class="line">参照用の find～ メソッドは読み取り専用に、その他のメソッドは通常のトランザクションを設定してください。</div>
+<div class="line"><br></div>
+<div class="line">なお、各メソッドの実装は行わず // TODO implement it コメントだけで構いません。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">com.worksap.bootcamp.spring.service</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">SampleService</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="n">SampleDto</span> <span class="nf">findSampleDto</span><span class="o">(</span><span class="kt">int</span> <span class="n">sampleId</span><span class="o">);</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteSampleDto</span><span class="o">(</span><span class="kt">int</span> <span class="n">sampleId</span><span class="o">);</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">updateSampleDto</span><span class="o">(</span><span class="n">SampleDto</span> <span class="n">newRecord</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id14">
+<h4>解答<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id14" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<script type="text/javascript">
+    function showhide(element){
+        if (!document.getElementById)
+            return
+
+        if (element.style.display == "block")
+            element.style.display = "none"
+        else
+            element.style.display = "block"
+    };
+</script>
+<a href="javascript:showhide(document.getElementById(&#39;hiddencodeblock46&#39;))">+ show/hide code</a><br><div id="hiddencodeblock46" style="display: none"><div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">com.worksap.bootcamp.spring.service</span><span class="o">;</span>
+
+<span class="nd">@Service</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleServiceImple</span> <span class="kd">implements</span> <span class="n">SampleService</span> <span class="o">{</span>
+  <span class="nd">@Override</span>
+  <span class="nd">@Transactional</span><span class="o">(</span><span class="n">readOnly</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">SampleDto</span> <span class="nf">findSampleDto</span><span class="o">(</span><span class="kt">int</span> <span class="n">sampleId</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// TODO implement it</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="nd">@Transactional</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deleteSampleDto</span><span class="o">(</span><span class="kt">int</span> <span class="n">sampleId</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// TODO implement it</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="nd">@Transactional</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">updateSampleDto</span><span class="o">(</span><span class="n">SampleDto</span> <span class="n">newRecord</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// TODO implement it</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * Service 層でもトランザクションを設定できます。</span>
+<span class="cm"> * なお、今回は永続層ではないので、@Repository ではなく、@Service を使いましょう。</span>
+<span class="cm"> */</span>
+</pre></div>
+</div>
+</div><div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p>禁止</p>
+<div class="last line-block">
+<div class="line">ただし HUE 開発では暗黙にコントローラー層とサービス層の境界でトランザクションを発生させます。</div>
+<div class="line">開発者が独自にトランザクションを生成することは原則禁止です。</div>
+</div>
+</div>
+</div>
+<div class="section" id="id15">
+<h4>トランザクションに関する注意<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id15" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">冒頭で書いたように、デフォルトではチェック例外でメソッドを終えた場合、トランザクションは commit されます。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@Override</span>
+<span class="nd">@Transactional</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">doManyThings</span><span class="o">(</span><span class="n">SampleDto</span> <span class="n">newReocrd</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+  <span class="k">try</span> <span class="o">{</span>
+    <span class="n">SampleDto</span> <span class="n">oldRecord</span> <span class="o">=</span> <span class="n">readSampleDto</span><span class="o">(</span><span class="n">newReocrd</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+    <span class="n">deleteOldRecord</span><span class="o">(</span><span class="n">newReocrd</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+    <span class="n">insertNewRecord</span><span class="o">(</span><span class="n">newReocrd</span><span class="o">);</span>
+    <span class="n">recalcTotal</span><span class="o">(</span><span class="n">newRecord</span><span class="o">,</span> <span class="n">oldRecord</span><span class="o">);</span>
+  <span class="o">}</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">throw</span> <span class="n">e</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">このメソッドの insertNewRecord がチェック例外を投げてきた場合、それは catch 節で処理され、呼び出し元に投げ渡されます。そのとき、チェック例外によりメソッドを終了するため、このトランザクションは commit され……旧レコードが削除されてしまいます。</div>
+<div class="line"><br></div>
+<div class="line">この問題にはロールバック終了する例外を追加することで対処します。</div>
+<div class="line">よく行われる方法は以下のように、チェック例外すべてを追加する方法です。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@Override</span>
+<span class="nd">@Transactional</span><span class="o">(</span><span class="n">rollbackFor</span><span class="o">=</span><span class="n">Exception</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">doManyThings</span><span class="o">(</span><span class="n">SampleDto</span> <span class="n">newReocrd</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+  <span class="k">try</span> <span class="o">{</span>
+    <span class="n">SampleDto</span> <span class="n">oldRecord</span> <span class="o">=</span> <span class="n">readSampleDto</span><span class="o">(</span><span class="n">newReocrd</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+    <span class="n">deleteOldRecord</span><span class="o">(</span><span class="n">newReocrd</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+    <span class="n">insertNewRecord</span><span class="o">(</span><span class="n">newReocrd</span><span class="o">);</span>
+    <span class="n">recalcTotal</span><span class="o">(</span><span class="n">newRecord</span><span class="o">,</span> <span class="n">oldRecord</span><span class="o">);</span>
+  <span class="o">}</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">throw</span> <span class="n">e</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">宣言的トランザクションは自分で例外処理を書くよりも手軽で便利なものではありますが、それによりトランザクション単位を考えなくてよくなるものではありません。</div>
+<div class="line">DAO に適当にアノテーションをはっていると、処理したいまとまりでのトランザクションが存在せず（適切な入れ子構造が作られず）、複数の DAO をまとめて処理しているつもりが、個別に commit/rollback されることになっているプログラムもできてしまいます。</div>
+<div class="line">きちんと処理のまとまりを意識しながらアノテーションを付けていきましょう。</div>
+</div>
+</div>
+</div>
+<div class="section" id="jdbctemplate">
+<h3>JdbcTemplate<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#jdbctemplate" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">spring-jdbc の CRUD 操作の基本は JdbcTemplate を使う方法です。</div>
+<div class="line">JdbcTemplate は DataSource を引数に渡して</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">JdbcTemplate</span> <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">のように生成します。</div>
+<div class="line"><br></div>
+<div class="line">JdbcTemplate を使った Insert(CRUD の C)は以下のように書きます。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">JdbcTemplate</span> <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+<span class="n">template</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="s">"insert into hoge(col1, col2) values(?, ?)"</span><span class="o">,</span>
+    <span class="n">newRecord</span><span class="o">.</span><span class="na">getCol1</span><span class="o">(),</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getCol2</span><span class="o">());</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">try ... catch ブロックがありませんが、書き忘れではありません。</div>
+<div class="line">これは spring-jdbc の特色のひとつで、CRUD 操作では SQLException のようなチェック例外ではなく DataAccessException という非チェック例外を投げるようになっています。そして、spring-jdbc の宣言的トランザクションは非チェック例外でメソッドを終了するとトランザクションを rollback するので、プログラム全体から try ... catch ブロックを削除することができるのです。</div>
+<div class="line"><br></div>
+<div class="line">これは適切なエラーハンドリングをしなくていい、ということではありません。エラーの変更やロギングが必要であれば、きちんと try ... catch ブロックを作ってください。</div>
+<div class="line"><br></div>
+<div class="line">update() メソッドの第二引数は、Java5 以降の可変長引数の書式なので、</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">JdbcTemplate</span> <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+<span class="n">template</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="s">"insert into hoge(col1, col2) values(?, ?)"</span><span class="o">,</span>
+    <span class="k">new</span> <span class="n">Object</span><span class="o">[]{</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getCol1</span><span class="o">(),</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getCol2</span><span class="o">()</span> <span class="o">});</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">と呼び出すことも可能です。</div>
+<div class="line">（使う必要はありませんが、古いサンプルではこちらの例が紹介されていることも多いので覚えておきましょう）</div>
+<div class="line"><br></div>
+<div class="line">順番が前後しますが、同じ update を使う JdbcTemplate を使った Update(CRUD の U)は以下のように書きます。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">JdbcTemplate</span> <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+<span class="n">template</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="s">"update hoge set col2 = ? where col1 = ?"</span><span class="o">,</span>
+    <span class="n">newRecord</span><span class="o">.</span><span class="na">getCol2</span><span class="o">(),</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getCol1</span><span class="o">());</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">ほとんど変わりませんね。では Delete(CRUD の D) も見てみましょう。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">JdbcTemplate</span> <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+<span class="n">template</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="s">"delete from hoge where col1 = ?"</span><span class="o">,</span> <span class="n">newReoced</span><span class="o">.</span><span class="na">getCol1</span><span class="o">());</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">このように、CRUD のうちの R、Select 以外は update() メソッドで実現します。</div>
+</div>
+<div class="section" id="id16">
+<h4>問題3<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id16" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">下記エンティティ SampleDTO の新規登録、更新、削除を行う SampleDAO の実装、SampleDAOImpl を完成させてください。</div>
+<div class="line">なお、エンティティとテーブルは 1 対 1 で紐付いており、テーブル名は sample、カラム名は _ 区切りをキャメルケースに直してあります。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleDTO</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kt">long</span> <span class="n">sampleId</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="n">String</span> <span class="n">value</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">SampleDTO</span><span class="o">(</span><span class="kt">long</span> <span class="n">sampleId</span><span class="o">,</span> <span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">sampleId</span> <span class="o">=</span> <span class="n">sampleId</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getSampleId</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">sampleId</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getValue</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">value</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setSampleId</span><span class="o">(</span><span class="kt">long</span> <span class="n">sampleId</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">sampleId</span> <span class="o">=</span> <span class="n">sampleId</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setValue</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">SampleDAO</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="kt">long</span> <span class="n">targetId</span><span class="o">);</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">insert</span><span class="o">(</span><span class="n">SampleDTO</span> <span class="n">newRecord</span><span class="o">);</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">(</span><span class="n">SampleDTO</span> <span class="n">newRecord</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">また、context.xml は以下のようになっているものとします。</div>
+</div>
+<div class="highlight-xml"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xmlns:context=</span><span class="s">"http://www.springframework.org/schema/context"</span>
+       <span class="na">xmlns:tx=</span><span class="s">"http://www.springframework.org/schema/tx"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans</span>
+<span class="s">                           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</span>
+<span class="s">                           http://www.springframework.org/schema/context</span>
+<span class="s">                           http://www.springframework.org/schema/context/spring-context-4.0.xsd</span>
+<span class="s">                           http://www.springframework.org/schema/tx</span>
+<span class="s">                           http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"dataSource"</span> <span class="na">class=</span><span class="s">"org.apache.commons.dbcp.BasicDataSource"</span> <span class="na">destroy-method=</span><span class="s">"close"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"driverClassName"</span> <span class="na">value=</span><span class="s">"oracle.jdbc.driver.OracleDriver"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"url"</span> <span class="na">value=</span><span class="s">"jdbc:oracle:thin:@localhost:1521:oracle"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">value=</span><span class="s">"scott"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"password"</span> <span class="na">value=</span><span class="s">"tiger"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+
+  <span class="c">&lt;!-- Transaction --&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"transactionManager"</span> <span class="na">class=</span><span class="s">"org.springframework.jdbc.datasource.DataSourceTransactionManager"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"dataSource"</span> <span class="na">ref=</span><span class="s">"dataSource"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+
+  <span class="nt">&lt;context:component-scan</span> <span class="na">base-package=</span><span class="s">"com.worksap.bootcamp.spring"</span> <span class="nt">/&gt;</span>
+
+  <span class="nt">&lt;tx:annotation-driven</span> <span class="na">transaction-manager=</span><span class="s">"transactionManager"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/beans&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id17">
+<h4>解答<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id17" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<script type="text/javascript">
+    function showhide(element){
+        if (!document.getElementById)
+            return
+
+        if (element.style.display == "block")
+            element.style.display = "none"
+        else
+            element.style.display = "block"
+    };
+</script>
+<a href="javascript:showhide(document.getElementById(&#39;hiddencodeblock47&#39;))">+ show/hide code</a><br><div id="hiddencodeblock47" style="display: none"><div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@Repository</span>
+<span class="nd">@Transactional</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleDAOImpl</span> <span class="kd">implements</span> <span class="n">SampleDAO</span> <span class="o">{</span>
+  <span class="nd">@Autowired</span>
+  <span class="kd">private</span> <span class="n">DataSource</span> <span class="n">dataSource</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="n">JdbcTemplate</span> <span class="n">template</span><span class="o">;</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="kt">long</span> <span class="n">targetId</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">template</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="s">"delete from sample where sample_id = ?"</span><span class="o">,</span> <span class="n">targetId</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">insert</span><span class="o">(</span><span class="n">SampleDTO</span> <span class="n">newRecord</span><span class="o">)</span> <span class="o">{</span>
+     <span class="n">template</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="s">"insert into sample(sample_id, value) values(?, ?)"</span><span class="o">,</span>
+        <span class="n">newRecord</span><span class="o">.</span><span class="na">getSampleId</span><span class="o">(),</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">(</span><span class="n">SampleDTO</span> <span class="n">newRecord</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">template</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="s">"update sample set value = ? where sample_id = ?"</span><span class="o">,</span>
+        <span class="n">newRecord</span><span class="o">.</span><span class="na">getValue</span><span class="o">(),</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getSampleId</span><span class="o">());</span>
+  <span class="o">}</span>
+
+  <span class="nd">@PostConstruct</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * トランザクションを設定するのを忘れないでください。</span>
+<span class="cm"> * 今回は検索系のメソッドが無いので、クラスに @Transactional をつけてみました。</span>
+<span class="cm"> * このアノテーションをクラスにつけると、そのクラスのメソッド全てがトランザクションの対象となります。</span>
+<span class="cm"> *</span>
+<span class="cm"> * JdbcTemplate を各メソッドの中で毎回作るのでない場合、context.xml で bean にして</span>
+<span class="cm"> * @Autowired できればいいのですが、今回のように context.xml を修正できない場合、</span>
+<span class="cm"> * bean が生成された時に呼ばれるメソッドで初期化します。</span>
+<span class="cm"> * bean が生成された時に呼ばれるメソッドは、anotation-scan される bean の場合、</span>
+<span class="cm"> * メソッドに @PostConstruct アノテーションを付ける事で表現します。</span>
+<span class="cm"> */</span>
+</pre></div>
+</div>
+</div><div class="line-block">
+<div class="line">update メソッドにはより JDBC 寄りのものもあり、引数に PreparedStatementSetter を渡すことで、内部的に作られる PreparedStatement に直接データをセットできます。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">JdbcTemplate</span> <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+<span class="n">template</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="s">"insert into hoge(col1, col2) values(?, ?)"</span><span class="o">,</span>
+    <span class="k">new</span> <span class="n">PreparedStatementSetter</span><span class="o">()</span> <span class="o">{</span>
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setValues</span><span class="o">(</span><span class="n">PreparedStatement</span> <span class="n">ps</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">SQLException</span> <span class="o">{</span>
+        <span class="n">ps</span><span class="o">.</span><span class="na">setString</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getCol1</span><span class="o">());</span>
+        <span class="n">ps</span><span class="o">.</span><span class="na">setString</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getCol2</span><span class="o">());</span>
+      <span class="o">}</span>
+    <span class="o">});</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">無名内部クラス（匿名クラス）を使っていますが、PreparedStatementSetter はメソッドをひとつしか持たないインターフェースなので、Java8 からはラムダ式でも書けます。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">JdbcTemplate</span> <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+<span class="n">template</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="s">"insert into hoge(col1, col2) values(?, ?)"</span><span class="o">,</span>
+    <span class="n">ps</span> <span class="o">-&gt;</span> <span class="o">{</span>
+      <span class="n">ps</span><span class="o">.</span><span class="na">setString</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getCol1</span><span class="o">());</span>
+      <span class="n">ps</span><span class="o">.</span><span class="na">setString</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getCol2</span><span class="o">());</span>
+    <span class="o">});</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">一括登録・更新・削除については batchUpdate() メソッドが INSERT / UPDATE / DELETE のすべて対応します。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">JdbcTemplate</span> <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">[]&gt;</span> <span class="n">record</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+<span class="n">record</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Object</span><span class="o">[]{</span> <span class="n">newRecord1</span><span class="o">.</span><span class="na">getCol1</span><span class="o">(),</span> <span class="n">newRecord1</span><span class="o">.</span><span class="na">getCol2</span><span class="o">()</span> <span class="o">});</span>
+<span class="n">record</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Object</span><span class="o">[]{</span> <span class="n">newRecord2</span><span class="o">.</span><span class="na">getCol1</span><span class="o">(),</span> <span class="n">newRecord2</span><span class="o">.</span><span class="na">getCol2</span><span class="o">()</span> <span class="o">});</span>
+<span class="n">template</span><span class="o">.</span><span class="na">batchUpdate</span><span class="o">(</span><span class="s">"insert into hoge(col1, col2) values(?, ?)"</span><span class="o">,</span> <span class="n">record</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p>禁止</p>
+<div class="last line-block">
+<div class="line">HUE 開発では JdbcTemplate を直接使うことは禁止され薄いラッパクラスの JdbcManager を使います。</div>
+<div class="line">また、平均的に一番早いので、チューニング時にきっちり検査して変更するのでない限り、引数に PreparedStatementSetter や BatchPreparedStatementSetter を使う update / batchUpdate メソッドを使ってください。</div>
+</div>
+</div>
+</div>
+<div class="section" id="id18">
+<h4>問題4<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id18" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">問題 3 で作った SampleDAOImpl の各メソッドを PreparedStatementSetter を使うものに書きかえてみましょう。</div>
+<div class="line">また、せっかくなので Java8 のラムダ式を使ってみましょう。</div>
+</div>
+</div>
+<div class="section" id="id19">
+<h4>解答<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id19" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<script type="text/javascript">
+    function showhide(element){
+        if (!document.getElementById)
+            return
+
+        if (element.style.display == "block")
+            element.style.display = "none"
+        else
+            element.style.display = "block"
+    };
+</script>
+<a href="javascript:showhide(document.getElementById(&#39;hiddencodeblock48&#39;))">+ show/hide code</a><br><div id="hiddencodeblock48" style="display: none"><div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@Repository</span>
+<span class="nd">@Transactional</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleDAOImpl</span> <span class="kd">implements</span> <span class="n">SampleDAO</span> <span class="o">{</span>
+  <span class="nd">@Autowired</span>
+  <span class="kd">private</span> <span class="n">DataSource</span> <span class="n">dataSource</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="n">JdbcTemplate</span> <span class="n">template</span><span class="o">;</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="kt">long</span> <span class="n">targetId</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">template</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="s">"delete from sample where sample_id = ?"</span><span class="o">,</span>
+        <span class="n">ps</span> <span class="o">-&gt;</span> <span class="n">ps</span><span class="o">.</span><span class="na">setLong</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">targetId</span><span class="o">));</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">insert</span><span class="o">(</span><span class="n">SampleDTO</span> <span class="n">newRecord</span><span class="o">)</span> <span class="o">{</span>
+     <span class="n">template</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="s">"insert into sample(sample_id, value) values(?, ?)"</span><span class="o">,</span>
+        <span class="n">ps</span> <span class="o">-&gt;</span> <span class="o">{</span>
+          <span class="n">ps</span><span class="o">.</span><span class="na">setLong</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getSampleId</span><span class="o">());</span>
+          <span class="n">ps</span><span class="o">.</span><span class="na">setString</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+        <span class="o">});</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">(</span><span class="n">SampleDTO</span> <span class="n">newRecord</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">template</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="s">"update sample set value = ? where sample_id = ?"</span><span class="o">,</span>
+        <span class="n">ps</span> <span class="o">-&gt;</span> <span class="o">{</span>
+          <span class="n">ps</span><span class="o">.</span><span class="na">setString</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+          <span class="n">ps</span><span class="o">.</span><span class="na">setLong</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">newRecord</span><span class="o">.</span><span class="na">getSampleId</span><span class="o">());</span>
+        <span class="o">});</span>
+  <span class="o">}</span>
+
+  <span class="nd">@PostConstruct</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div><div class="line-block">
+<div class="line">続いて CRUD の R、Select も見てみましょう。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">JdbcTemplate</span> <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">HogeDTO</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="na">query</span><span class="o">(</span><span class="s">"select col1, col2 from hoge where col1 = ?"</span><span class="o">,</span>
+    <span class="k">new</span> <span class="n">RowMapper</span><span class="o">&lt;</span><span class="n">HogeDTO</span><span class="o">&gt;()</span> <span class="o">{</span>
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="n">HogeDTO</span> <span class="nf">mapRow</span><span class="o">(</span><span class="n">ResultSet</span> <span class="n">rs</span><span class="o">,</span> <span class="kt">int</span> <span class="n">recordIndex</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">SQLException</span><span class="o">,</span> <span class="n">DataAccessException</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">HogeDTO</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="mi">2</span><span class="o">));</span>
+      <span class="o">}</span>
+    <span class="o">},</span>
+    <span class="n">targetColId</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">RowMapper を使う query メソッドは複数件のリストを返します。</div>
+<div class="line">RowMapper のメソッドで、今回使っていない recordIndex は何行目のレコードを処理しているかを表します。</div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p>カラム名指定の getXxx() メソッドは遅いの？</p>
+<div class="last line-block">
+<div class="line">通常の JDBC ドライバであればカラム名とインデックスの HashMap が作られ、高速に処理されるので利用しても構いません。</div>
+<div class="line">ただし、そのような工夫をせずに毎回全取得カラム名リストをループして探索するような JDBC ドライバも存在するらしいので、COMPANY でよくあるカラム数が数百を超えるようなテーブルでの複数レコードのデータ取得がかなり遅くなります。</div>
+<div class="line">基本的には使用しないようにしましょう。</div>
+</div>
+</div>
+</div>
+<div class="section" id="id20">
+<h4>問題5<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id20" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">RowMapper もメソッド一つだけが宣言されたインターフェースなのでラムダ式にできます。</div>
+<div class="line">上のサンプルをラムダ式を使ったものに変更してみましょう。</div>
+</div>
+</div>
+<div class="section" id="id21">
+<h4>解答<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id21" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<script type="text/javascript">
+    function showhide(element){
+        if (!document.getElementById)
+            return
+
+        if (element.style.display == "block")
+            element.style.display = "none"
+        else
+            element.style.display = "block"
+    };
+</script>
+<a href="javascript:showhide(document.getElementById(&#39;hiddencodeblock49&#39;))">+ show/hide code</a><br><div id="hiddencodeblock49" style="display: none"><div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">JdbcTemplate</span> <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">HogeDTO</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="na">query</span><span class="o">(</span><span class="s">"select col1, col2 from hoge where col1 = ?"</span><span class="o">,</span>
+    <span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">recordIndex</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="n">HogeDTO</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="mi">2</span><span class="o">)),</span>
+    <span class="n">targetColId</span><span class="o">);</span>
+</pre></div>
+</div>
+</div><div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p>禁止</p>
+<div class="last line-block">
+<div class="line">List を取得するのであれば、JdbcTemplate#queryForList の方が戻ってくるのが List である事を明示していてよいのですが、遅いので HUE では原則禁止です。</div>
+<div class="line">またパラメータを引数に渡す形式も原則禁止です。</div>
+</div>
+</div>
+</div>
+<div class="section" id="id22">
+<h4>問題6<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id22" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">原則禁止、なので、PreparedStatementSetter を使った書き方に慣れましょう。</div>
+<div class="line">上のサンプルを PreparedStatementSetter を使った書き方に変更してみましょう。PreparedStatementSetter は第二引数、RowMapper は第三引数です。</div>
+<div class="line">ここでもラムダ式が使えます。</div>
+</div>
+</div>
+<div class="section" id="id23">
+<h4>解答<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id23" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<script type="text/javascript">
+    function showhide(element){
+        if (!document.getElementById)
+            return
+
+        if (element.style.display == "block")
+            element.style.display = "none"
+        else
+            element.style.display = "block"
+    };
+</script>
+<a href="javascript:showhide(document.getElementById(&#39;hiddencodeblock50&#39;))">+ show/hide code</a><br><div id="hiddencodeblock50" style="display: none"><div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">JdbcTemplate</span> <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">HogeDTO</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="na">query</span><span class="o">(</span><span class="s">"select col1, col2 from hoge where col1 = ?"</span><span class="o">,</span>
+    <span class="n">ps</span> <span class="o">-&gt;</span> <span class="n">ps</span><span class="o">.</span><span class="na">setString</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">targetColId</span><span class="o">),</span>
+    <span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">recordIndex</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="n">HogeDTO</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="mi">2</span><span class="o">)));</span>
+</pre></div>
+</div>
+</div><div class="line-block">
+<div class="line">JdbcTemplate には、キーでアクセスする場合に便利な queryForObject もあります。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">JdbcTemplate</span> <span class="n">template</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JdbcTemplate</span><span class="o">(</span><span class="n">datasource</span><span class="o">);</span>
+<span class="n">HogeDTO</span> <span class="n">result</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="na">queryForObject</span><span class="o">(</span><span class="s">"select col1, col2 from hoge where col1 = ?"</span><span class="o">,</span>
+    <span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">recordIndex</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="n">HogeDTO</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="mi">2</span><span class="o">)),</span>
+    <span class="n">targetColId</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">クラスを指定すると自動でマップしてくれる queryForObject もありますが、遅いので原則禁止です。</div>
+<div class="line">また、SELECT COUNT(*) 時に便利な queryForInt / queryForLong もあったのですが、こちらは spring で Deprecated になっているので、queryForObject を使いますが、PreparedStatementSetter が使えません。</div>
+<div class="line">遅い場合には、query で List を取得して get(0) するのと比較して、早いほうを採用してください。</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="spring-cache-abstraction">
+<h2>Spring Cache Abstraction<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#spring-cache-abstraction" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="line-block">
+<div class="line">Spring では Cache Abstraction という機能として、Cache を統一したインターフェースのもと、抽象的に扱えるようにしてくれています。</div>
+<div class="line">最後にその仕組みついて見ていきましょう。</div>
+</div>
+<div class="section" id="id24">
+<h3>キャッシュ<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id24" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">これまで COMPANY の開発では DB にアクセスにいかずにデータを高速に取得するための枠組み全般が「キャッシュ」と呼ばれていました。</div>
+<div class="line">その中には複雑な同期が必要なものが含まれており、一般に「キャッシュ」と呼ばれるものでどうやって最新のデータとの同期を実現していいのか分からないかもしれません。</div>
+<div class="line">結論から言ってしまえば、それらは「ローカルデータベース」とか「レプリケーションデータベース」のように呼ばれる、データベースの仲間であり、一般に言われる「キャッシュ」ではありません。</div>
+<div class="line">もしもそのような機能が必要な場合には、データベース関連のライブラリや実装を探すのが適切です。</div>
+<div class="line"><br></div>
+<div class="line">キャッシュの同期戦略は単純で、</div>
+</div>
+<ul class="simple">
+<li>データを揮発（自動的に削除）して正しい永続化先から新しいデータを取ってくるようにさせる</li>
+<li>イベントでトリガーできる場合には削除もする</li>
+</ul>
+<div class="line-block">
+<div class="line">という機能だけになります。</div>
+<div class="line"><br></div>
+<div class="line">一方で、揮発の機能は色々とあり、</div>
+</div>
+<ul class="simple">
+<li>キャッシュしておけるデータ総件数を超えたら削除</li>
+<li>アクセス頻度の低いデータから削除</li>
+<li>最後にアクセスされた時間が古いものから削除</li>
+<li>一定時間が経過したら削除</li>
+</ul>
+<div class="line-block">
+<div class="line">などのさまざまな条件が設定できるのでデータの特性を考えながら設定していくことになります。</div>
+<div class="line"><br></div>
+<div class="line">ローカルデータベースと比較した際の強みは、</div>
+</div>
+<ul class="simple">
+<li>キャッシュに入るデータ量を制限できる（＝メモリ使用量が読める）</li>
+<li>使わないデータは捨てられる（＝メモリを有効に活用できる）</li>
+</ul>
+<div class="line-block">
+<div class="line">あたりにあります。</div>
+<div class="line">一方で弱みは、</div>
+</div>
+<ul class="simple">
+<li>古いデータが表示されることがある（＝揮発戦略のミス、あるいは妥協）</li>
+<li>さまざまなデータを使う場合、まったく利かない</li>
+</ul>
+<div class="line-block">
+<div class="line">あたりになります。適切に使い分けられるようになりましょう。</div>
+</div>
+</div>
+<div class="section" id="cachemanager">
+<h3>CacheManager<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#cachemanager" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">CacheManager は Cache Abstraction の裏側で、キャッシュのコントロールを行ってくれているクラスになります。</div>
+<div class="line">CacheManager 自身はインターフェースなので、キャッシュ先に合わせた実装クラスを選んでDIします。</div>
+<div class="line">CacheManager には以下のようなものがあります。</div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="51%">
+<col width="49%">
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">クラス</th>
+<th class="head">説明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>org.springframework.cache.support.SimpleCacheManager</td>
+<td>CacheFactory を通じて操作する簡易キャッシュです</td>
+</tr>
+<tr class="row-odd"><td>org.springframework.cache.ehcache.EhCacheCacheManager</td>
+<td>EhCache というキャッシュサービスを使うキャッシュです</td>
+</tr>
+<tr class="row-even"><td>org.springframework.data.redis.cache.RedisCacheManager</td>
+<td>Redis という KVS を使うキャッシュです</td>
+</tr>
+</tbody>
+</table>
+<div class="line-block">
+<div class="line">ちょうど JDBC が接続先データベースを変えても同じ Java プログラムの API で DB を操作できるように、Cache 先を変えても Cache Abstraction の API を通してキャッシュを操作している限り、同じように操作できます。</div>
+<div class="line">（依存している SQL を使ったり、Oracle JDBC ドライバの機能を使った場合、修正が必要になるのと同様、各キャッシュ先の機能を直に使うと、修正が必要になります）</div>
+</div>
+<div class="section" id="ehcache">
+<h4>EhCache<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#ehcache" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">EhCache は有名なキャッシュの実装です。</div>
+<div class="line"><br></div>
+<div class="line">AP サーバ上で Java プログラムと同居する最小構成（OoM の原因になるかもしれませんが構成が簡単です）から、キャッシュサーバとして動作させる方法、さらにはクラスタを組むことまでできます。</div>
+<div class="line">また、キャッシュサーバー起動時に、以前終了時のデータを復旧させる機能や、クラスタ間でのデータの同期をサポートしています。</div>
+<div class="line">揮発の設定も多様な設定ができ、かなり本格的なキャッシュ実装といえるでしょう。</div>
+</div>
+<div class="section" id="id25">
+<h5>導入<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id25" title="このヘッドラインへのパーマリンク">¶</a></h5>
+<div class="line-block">
+<div class="line">最小構成として動かす場合にはライブラリを組み込むだけで動作します。</div>
+<div class="line">ehcache.xml という構成ファイルを書かなければならず、これが結構複雑ですが、とりあえず</div>
+</div>
+<div class="highlight-xml"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ehcache&gt;
+  &lt;defaultCache
+      maxElementsInMemory="1000"
+      eternal="false"
+      timeToIdleSeconds="600"
+      overflowToDisk="false" /&gt;
+  &lt;cache
+&lt;/ehcache&gt;
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">のように defaultCache を構成するだけでも動きます。</div>
+<div class="line">その上で、Spring 側で設定を行い、Java プログラムを実行すれば Spring Cache Abstraction の裏側で機能するので、本格的ながらお手軽に使い始めることができるキャッシュでもあります。</div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p>禁止</p>
+<div class="last line-block">
+<div class="line">このシンプルな構成は、ひとつのキャッシュ上に様々な種類のデータを混在させてしまうので禁止です。</div>
+<div class="line">また、各プロパティの値をよく調べずにコピペでキャッシュを増やすことも、無駄にキャッシュを圧迫するので禁止です。</div>
+<div class="line">（HUE では使用しないため、各プロパティの説明は作っていません。もしも使う場合にはきちんと調べて構成してください）</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="redis">
+<h4>Redis<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#redis" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">Redis (れでぃす) は KVS の一種です。</div>
+<div class="line"><br></div>
+<div class="line">キーから値を引く処理に特化したデータベースで、かつ、値の方の形式を比較的自由に変更できます。</div>
+<div class="line">（RDBMS で全部カラムで持っていたデータについて、不要な項目を持たない、といったことができます）</div>
+</div>
+<div class="section" id="id26">
+<h5>導入<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id26" title="このヘッドラインへのパーマリンク">¶</a></h5>
+<div class="line-block">
+<div class="line">まず Windows 用の Redis をダウンロードしてきます。</div>
+<div class="line">GitHub の <a class="reference external" href="https://github.com/MSOpenTech/redis">MSOpenTech/redis ・ GitHub</a> からダウンロードできます。</div>
+<div class="line">これを解凍すると以下のようになります。</div>
+<div class="line">（ヴァージョンの数字は2014年7月10日現在のものです）</div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>redis-2.8
+├─bin
+│  └─release
+│      └─redis-2.8.12.zip ←この中に起動ファイルがあります
+├─deps
+├─msvs
+├─src
+├─tests
+├─utils
+├─hyperloglog
+└─その他テキストファイルや MD ファイル、CONF ファイルなど
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">bin/release/</span></code> にある zip ファイルを展開すると以下のようになっています。</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>redis-2.8.12
+├─Redis on Windows.docx
+├─Redis Release Notes.docx
+├─redis-benchmark.exe
+├─redis-check-aof.exe
+├─redis-check-dump.exe
+├─redis-cli.exe
+├─redis-server.exe
+├─redis.windows.conf
+├─RedisQFork_3276.dat
+└─RedisService.docx
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">この <strong>redis-server.exe</strong> をダブルクリックすると Redis のサーバが起動します。以下のような表示が出るはずです。</div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>[3276] 10 Jul 16:42:00.024 # Warning: no config file specified, using the defaul
+t config. In order to specify a config file use C:\Develop\Application\redis-2.8
+\bin\release\redis-2.8.12\redis-server.exe /path/to/redis.conf
+                _._
+           _.-``__ ''-._
+      _.-``    `.  `_.  ''-._           Redis 2.8.12 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._
+ (    '      ,       .-`  | `,    )     Running in stand alone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 3276
+  `-._    `-._  `-./  _.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |           http://redis.io
+  `-._    `-._`-.__.-'_.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |
+  `-._    `-._`-.__.-'_.-'    _.-'
+      `-._    `-.__.-'    _.-'
+          `-._        _.-'
+              `-.__.-'
+
+[3276] 10 Jul 16:42:00.029 # Server started, Redis version 2.8.12
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">また、 <strong>redis-cli.exe</strong> をダブルクリックすると同様にクライアントが起動します。以下のような表示が出るはずです。</div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">6379</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">これでもう Redis を試すことが可能です。</div>
+<div class="line">簡単なアクセスをしてみましょう。redis-cli.exe で開いたウィンドウに</div>
+<div class="line"><code class="docutils literal"><span class="pre">SET</span> <span class="pre">FAVORITE_LANGUAGE</span> <span class="pre">Delphi</span></code> と入れてみます。上手く行くと OK と表示されるはずです。</div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">6379</span><span class="o">&gt;</span> <span class="n">SET</span> <span class="n">FAVORITE_LANGUAGE</span> <span class="n">Delphi</span>
+<span class="n">OK</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">続いて、 <code class="docutils literal"><span class="pre">GET</span> <span class="pre">FAVORITE_LANGUAGE</span></code> と入れてみましょう。</div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">6379</span><span class="o">&gt;</span> <span class="n">SET</span> <span class="n">FAVORITE_LANGUAGE</span> <span class="n">Delphi</span>
+<span class="n">OK</span>
+<span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">6379</span><span class="o">&gt;</span> <span class="n">GET</span> <span class="n">FAVORITE_LANGUAGE</span>
+<span class="s2">"Delphi"</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">ちなみに <strong>コマンドは大文字・小文字を区別しません</strong> が、 <strong>キーは大文字・小文字を区別します</strong> 。</div>
+<div class="line"><br></div>
+<div class="line">必要なライブラリを読み込み、RedisCacheManager を構成することで Redis をキャッシュサーバーとして使用できます。</div>
+</div>
+</div>
+</div>
+<div class="section" id="simplecachemanager">
+<h4>SimpleCacheManager<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#simplecachemanager" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<div class="line-block">
+<div class="line">本格的なキャッシュについては実際に使うときによく調べるとして、</div>
+<div class="line">まずは SimpleCacheManager と ConcurrentMapCacheFactoryBean を使って Spring Cache Abstraction の使い方を理解しましょう。</div>
+</div>
+<div class="highlight-xml"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans</span>
+<span class="s">                           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"cacheManager"</span> <span class="na">class=</span><span class="s">"org.springframework.cache.support.SimpleCacheManager"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"caches"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;set&gt;</span>
+        <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">"org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"name"</span> <span class="na">value=</span><span class="s">"default"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/bean&gt;</span>
+      <span class="nt">&lt;/set&gt;</span>
+    <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+<span class="nt">&lt;/beans&gt;</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p>禁止</p>
+<div class="last line-block">
+<div class="line">SimpleCacheManager と ConcurrentMapCacheFactoryBean の組み合わせは Java の ConcurrentHashMap にデータを保存します。</div>
+<div class="line">この構成は揮発の戦略が無く、OoM を引き起こすので、実際の製品の運用には使わないでください。</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id27">
+<h3>CacheManager を使ってみる<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id27" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">CacheManager は bean ですから、@Autowired で bean に注入することができます。</div>
+<div class="line"><br></div>
+<div class="line">@Autowired とアノテーションスキャンが有効になるように web.xml を構成しましょう。</div>
+</div>
+<div class="highlight-xml"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xmlns:context=</span><span class="s">"http://www.springframework.org/schema/context"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans</span>
+<span class="s">                           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</span>
+<span class="s">                           http://www.springframework.org/schema/context</span>
+<span class="s">                           http://www.springframework.org/schema/context/spring-context-4.0.xsd"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;context:annotation-config</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;context:component-scan</span> <span class="na">base-package=</span><span class="s">"com.worksap.bootcamp.spring"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"cacheManager"</span> <span class="na">class=</span><span class="s">"org.springframework.cache.support.SimpleCacheManager"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"caches"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;set&gt;</span>
+        <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">"org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"name"</span> <span class="na">value=</span><span class="s">"default"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/bean&gt;</span>
+      <span class="nt">&lt;/set&gt;</span>
+    <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+<span class="nt">&lt;/beans&gt;</span>
+</pre></div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">ApplicationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClassPathXmlApplicationContext</span><span class="o">(</span><span class="s">"applicationContext.xml"</span><span class="o">);</span>
+    <span class="n">Sample</span> <span class="n">test</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="n">Sample</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="n">test</span><span class="o">.</span><span class="na">show</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
+  <span class="nd">@Autowired</span>
+  <span class="kd">private</span> <span class="n">CacheManager</span> <span class="n">cacheManager</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">show</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">cacheManager</span><span class="o">.</span><span class="na">getCacheNames</span><span class="o">());</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">CacheManager が注入されており、cacheName “default” が登録されている事が分かると思います。</div>
+<div class="line">では実際に使ってみましょう。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">ApplicationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClassPathXmlApplicationContext</span><span class="o">(</span><span class="s">"applicationContext.xml"</span><span class="o">);</span>
+    <span class="n">Sample</span> <span class="n">test</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="n">Sample</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">test</span><span class="o">.</span><span class="na">findValueFromLargeList</span><span class="o">(</span><span class="s">"key1"</span><span class="o">));</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">test</span><span class="o">.</span><span class="na">findValueFromLargeList</span><span class="o">(</span><span class="s">"key1"</span><span class="o">));</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">test</span><span class="o">.</span><span class="na">findValueFromLargeList</span><span class="o">(</span><span class="s">"key1"</span><span class="o">));</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
+  <span class="nd">@Autowired</span>
+  <span class="kd">private</span> <span class="n">CacheManager</span> <span class="n">cacheManager</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">findValueFromLargeList</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"method is executed!"</span><span class="o">);</span>
+    <span class="k">return</span> <span class="s">"find result"</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">show</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">cacheManager</span><span class="o">.</span><span class="na">getCacheNames</span><span class="o">());</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>method is executed!
+find result
+method is executed!
+find result
+method is executed!
+find result
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">findValueFromLargeList メソッドの処理本体での出力と、結果の出力が交互に出ていますね。</div>
+<div class="line">findValueFromLargeList メソッドが重たい処理だとすると、まずはキャッシュに問い合わせ、もしもキャッシュに無かったら処理本体を実施し、結果をキャッシュしてデータを返す、というようなプログラムが書きたいところです。</div>
+<div class="line"><br></div>
+<div class="line">CacheManager は文字通り、複数のキャッシュをたばねているマネージャなので、キャッシュ名で使うキャッシュを取り出してあげる必要があります。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Cache</span> <span class="n">targetCache</span> <span class="o">=</span> <span class="n">cacheManager</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"default"</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">Cache は get メソッドを使ってキーで値を取り出せ……そうですが、get メソッドで返ってくるのは ValueWrapper というラップクラスになります。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Cache</span> <span class="n">targetCache</span> <span class="o">=</span> <span class="n">cacheManager</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"default"</span><span class="o">);</span>
+<span class="n">ValueWrapper</span> <span class="n">vw</span> <span class="o">=</span> <span class="n">targetCache</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">ValueWrapper から get メソッドで値を取り出せます。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Cache</span> <span class="n">targetCache</span> <span class="o">=</span> <span class="n">cacheManager</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"default"</span><span class="o">);</span>
+<span class="n">ValueWrapper</span> <span class="n">vw</span> <span class="o">=</span> <span class="n">targetCache</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+<span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span> <span class="n">vw</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">ValueWrapper は cache#get(key, targetClass) メソッドを使う場合、省略できます。</div>
+<div class="line">（が、CastException の時に少し面倒なことになります）</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Cache</span> <span class="n">targetCache</span> <span class="o">=</span> <span class="n">cacheManager</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"default"</span><span class="o">);</span>
+<span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">targetCache</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">まとめると……</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
+  <span class="nd">@Autowired</span>
+  <span class="kd">private</span> <span class="n">CacheManager</span> <span class="n">cacheManager</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">findValueFromLargeList</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">cacheManager</span><span class="o">.</span><span class="na">getCache</span><span class="o">(</span><span class="s">"default"</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">result</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"method is executed!"</span><span class="o">);</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="s">"find result"</span><span class="o">;</span>
+      <span class="n">cacheManager</span><span class="o">.</span><span class="na">getCache</span><span class="o">(</span><span class="s">"default"</span><span class="o">).</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">show</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">cacheManager</span><span class="o">.</span><span class="na">getCacheNames</span><span class="o">());</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">このようなプログラムになります。</div>
+<div class="line">実行してみましょう。</div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>method is executed!
+find result
+find result
+find result
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">Cache が利いていますね。</div>
+</div>
+</div>
+<div class="section" id="cacheable">
+<h3>@Cacheable<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#cacheable" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">Spring 3.1 からキャッシュの機能は大幅に強化されており、メソッドに <code class="docutils literal"><span class="pre">@Cacheable</span></code> アノテーションを加えるだけで簡単に利用することもできます。</div>
+<div class="line"><br></div>
+<div class="line">まずは web.xml の設定です。</div>
+</div>
+<div class="highlight-xml"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xmlns:cache=</span><span class="s">"http://www.springframework.org/schema/cache"</span>
+       <span class="na">xmlns:context=</span><span class="s">"http://www.springframework.org/schema/context"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans</span>
+<span class="s">                           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</span>
+<span class="s">                           http://www.springframework.org/schema/cache</span>
+<span class="s">                           http://www.springframework.org/schema/cache/spring-cache.xsd</span>
+<span class="s">                           http://www.springframework.org/schema/context</span>
+<span class="s">                           http://www.springframework.org/schema/context/spring-context-4.0.xsd"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;cache:annotation-driven</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;context:annotation-config</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;context:component-scan</span> <span class="na">base-package=</span><span class="s">"com.worksap.bootcamp.spring"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"cacheManager"</span> <span class="na">class=</span><span class="s">"org.springframework.cache.support.SimpleCacheManager"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"caches"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;set&gt;</span>
+        <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">"org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"name"</span> <span class="na">value=</span><span class="s">"default"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/bean&gt;</span>
+      <span class="nt">&lt;/set&gt;</span>
+    <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;/bean&gt;</span>
+<span class="nt">&lt;/beans&gt;</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">これで @Cacheable が使えます。さっそく試してみましょう。</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">ApplicationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClassPathXmlApplicationContext</span><span class="o">(</span><span class="s">"applicationContext.xml"</span><span class="o">);</span>
+    <span class="n">Sample</span> <span class="n">test</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="n">Sample</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">test</span><span class="o">.</span><span class="na">findValueFromLargeList</span><span class="o">(</span><span class="s">"key1"</span><span class="o">));</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">test</span><span class="o">.</span><span class="na">findValueFromLargeList</span><span class="o">(</span><span class="s">"key1"</span><span class="o">));</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">test</span><span class="o">.</span><span class="na">findValueFromLargeList</span><span class="o">(</span><span class="s">"key1"</span><span class="o">));</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
+  <span class="nd">@Cacheable</span><span class="o">(</span><span class="s">"default"</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">findValueFromLargeList</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"method is executed!"</span><span class="o">);</span>
+    <span class="k">return</span> <span class="s">"find result"</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">show</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"No cache manager"</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">このプログラムは、次のように動作します。</div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>method is executed!
+find result
+find result
+find result
+</pre></div>
+</div>
+<p><strong>findValueFromLargeList() は3度実行されているのに、メソッドの内部の System.out.println() は最初の一回しか呼ばれていません</strong> 。これはキャッシュによってメソッドの返り値が保存されているため、実行されること無く結果だけを返しているからです。</p>
+</div>
+<div class="section" id="immutable-object">
+<h3>Immutable Object<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#immutable-object" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">キャッシュを考えるときに大事なのが、キャッシュの中に格納するオブジェクトを不変オブジェクトにすることです。</div>
+<div class="line"><br></div>
+<div class="line">Immutable Object 不変オブジェクトとは一度設定した値が変わらないオブジェクトです。</div>
+<div class="line">多くの場合、フィールドを final にし、コンストラクタでフィールドの値を全部セットします。もちろん setter は持ちません。</div>
+<div class="line"><br></div>
+<div class="line">どうしてこのような配慮が必要なのでしょうか？</div>
+<div class="line"><br></div>
+<div class="line">キャッシュに格納している値がどこかで変更されると、他のプログラムの動作に影響を与えるかもしれません。</div>
+<div class="line">あるいは、それによってまぐれで動作しているプログラムがあると、後で修正を行うと大変な事になります。</div>
+<div class="line"><br></div>
+<div class="line">オブジェクトの clone （ディープコピー）を返すキャッシュを実装する手もありますが、値を変更しても大丈夫だ、という前提でプログラムが作られてしまうと、そうでなくなった時に大変な修正が発生します。</div>
+<div class="line"><br></div>
+<div class="line">キャッシュされうるオブジェクトは Immutable Object にするようにしましょう。</div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">注釈</p>
+<p>HUE ではどうするの？</p>
+<div class="last line-block">
+<div class="line">HUE では不変オブジェクトの末尾に VO を付けてそれが不変であることを示します。</div>
+<div class="line">HUE の s-cube アーキテクチャではキャッシュを積極的に活用するため、随所に VO が出てきます。</div>
+<div class="line">不変オブジェクトは値を変更できず、データの入れ物としては不便ですが、そのような事情があるので、特にインターフェースを作成した場合には積極的に VO を選択し、キャッシュ可能であるようにしていきましょう。</div>
+<div class="line"><br></div>
+<div class="line">なお、現時点では可変オブジェクトの名前は Entity になっています。</div>
+<div class="line">パッケージデフォルトのスコープでのデータのやり取りなど、データの箱としてはこちらを使いましょう。</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+      </main><nav class="related-nav" aria-label="related navigation">
+
+  <ul class="breadcrumb-list">
+    <li>
+      <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html">Bootcamp ServerSide Intermediate - latest</a>
+    </li>
+  </ul>
+
+</nav>
+    </div>
+    <div class="right">
+
+<nav class="sidebar" aria-label="main navigation"><section class="side-widget localtoc">
+  <h3>目次</h3>
+  <div class="side-widget-content">
+    <ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#">データベース</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id2">データを高速に取り扱うには？</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id3">初期状態</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id4">データ取得の改善</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id5">データ取得量を減らす</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#join">JOIN を正しく理解する</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id6">送ったデータを受け取らない</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id7">データ取得回数を減らす</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id8">マスタのデータ取得回数を減らす</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#sql">SQL 関数をやめてみる</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id9">データ更新の改善</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#spring-jdbc">Spring JDBC</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#connection">Connection</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#transaction">Transaction</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#context-xml">context.xml を使う方法</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id10">問題1</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id11">解答</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id12">アノテーションを使う方法</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id13">問題2</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id14">解答</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id15">トランザクションに関する注意</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#jdbctemplate">JdbcTemplate</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id16">問題3</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id17">解答</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id18">問題4</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id19">解答</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id20">問題5</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id21">解答</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id22">問題6</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id23">解答</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#spring-cache-abstraction">Spring Cache Abstraction</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id24">キャッシュ</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#cachemanager">CacheManager</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#ehcache">EhCache</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id25">導入</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#redis">Redis</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id26">導入</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#simplecachemanager">SimpleCacheManager</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#id27">CacheManager を使ってみる</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#cacheable">@Cacheable</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_dbs.html#immutable-object">Immutable Object</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</section>
+<section class="side-widget searchbox" role="search">
+  <h3>クイック検索</h3>
+  <div class="side-widget-content">
+    <form class="search" action="https://webootcamp.worksap.co.jp/course/ss-i/ja/search.html" method="get">
+      <input type="text" name="q">
+      <input type="submit" value="検索">
+      <input type="hidden" name="check_keywords" value="yes">
+      <input type="hidden" name="area" value="default">
+    </form>
+    <p class="searchtip">
+      モジュール、クラス、または関数名を入力してください
+    </p>
+  </div>
+</section>
+<div role="note" aria-label="source link" class="side-widget source-link">
+  
+  <div class="side-widget-content">
+    <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/_sources/server_dbs.txt" rel="nofollow">ソースコードを表示</a>
+  </div>
+</div>
+
+</nav>
+    </div>
+  </div><footer id="global-footer">
+      © Copyright 2016, Works Applications Co., Ltd..
+    このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8 で生成しました。
+</footer>
+
+
+</body></html>

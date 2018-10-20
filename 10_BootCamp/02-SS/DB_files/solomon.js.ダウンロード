@@ -1,0 +1,9 @@
+$(window).load(function() {
+  // anchor scroll occur after load event
+  var hash = location.hash;
+  if ($(hash).prop('tagName') === 'DT') {
+    setTimeout(function() {
+      scrollBy(0, -72);
+    }, 300);
+  }
+});

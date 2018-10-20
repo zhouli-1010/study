@@ -1,0 +1,1554 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0139)https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    
+    <title>コンテナコンポーネントを作ってみよう — HUE BT documents 1.0 ドキュメント</title>
+    
+    <link rel="stylesheet" href="./コンテナコンポーネントを作ってみよう — HUE BT documents 1.0 ドキュメント_files/proBlue.css" type="text/css">
+    <link rel="stylesheet" href="./コンテナコンポーネントを作ってみよう — HUE BT documents 1.0 ドキュメント_files/pygments.css" type="text/css">
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="./コンテナコンポーネントを作ってみよう — HUE BT documents 1.0 ドキュメント_files/jquery.js.ダウンロード"></script>
+    <script type="text/javascript" src="./コンテナコンポーネントを作ってみよう — HUE BT documents 1.0 ドキュメント_files/underscore.js.ダウンロード"></script>
+    <script type="text/javascript" src="./コンテナコンポーネントを作ってみよう — HUE BT documents 1.0 ドキュメント_files/doctools.js.ダウンロード"></script>
+    <script type="text/javascript" src="./コンテナコンポーネントを作ってみよう — HUE BT documents 1.0 ドキュメント_files/translations.js.ダウンロード"></script>
+    <link rel="top" title="HUE BT documents 1.0 ドキュメント" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html"> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/genindex.html" title="総合索引" accesskey="I">索引</a></li>
+        <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">HUE BT documents 1.0 ドキュメント</a> »</li>
+<li class="right">
+    <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html">English</a> |
+    
+</li>
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>コンテナコンポーネントを作ってみよう<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>ここから、アプリケーションを組み立てていきます。</p>
+<p>Closure Library は、コンポーネントを木構造のように組み立ててゆく設計を取ります。
+例えば、2 ペインアプリケーションを作る際は、全体を Application コンポーネントとして、
+その子コンポーネントとして、右側ペイン、左側ペインを作ります。
+それぞれの子コンポーネントはさらに子コンポーネントをもち、最終的には UI コンポーネントを操作することになります。</p>
+<p>ここでは、DOM 操作を行うコンポーネントを「UI コンポーネント」、
+UI コンポーネントをまとめて制御を行うコンポーネントを「コンテナコンポーネント」と呼ぶことにします。</p>
+<p>このように設計することで、それぞれのパーツごとでテストを可能にします
+(必要によってはパーツごとの再利用もできます)。
+Todo list アプリケーションでは次のような分割を行います。</p>
+<ul class="simple">
+<li>Application (コンテナ)<ul>
+<li>Project List (Left pane; コンテナ)<ul>
+<li>List (UI)<ul>
+<li>Deletable List Plugin (UI)</li>
+<li>Selectable List Plugin (UI)</li>
+</ul>
+</li>
+<li>Registrar (UI) &amp; Foldable (UI)</li>
+</ul>
+</li>
+<li>Task List (Right pane; コンテナ)<ul>
+<li>List (UI)<ul>
+<li>Checkable List Plugin (UI)</li>
+</ul>
+</li>
+<li>Registrar (UI) &amp; Foldable (UI)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="section" id="wap-bootcamp-todolist-container-projectlist">
+<h2>wap.bootcamp.todolist.container.ProjectList コンポーネント<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#wap-bootcamp-todolist-container-projectlist" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>コンテナコンポーネントは UI コンポーネントとは異なり、<tt class="docutils literal"><span class="pre">container</span></tt> 名前空間に属すことになっています。
+これは、コンテナコンポーネントが DOM 操作と切り離すことを機械的にチェックすることが一つの理由となっています。</p>
+<p>とはいえ、コンテナコンポーネントも、UI コンポーネントと同様に作ることが出来ます。</p>
+<p>これまでの演習と同様、テスト用の HTML ファイルを sandbox/project-list.html に用意しました。</p>
+<div class="section" id="id2">
+<h3>子コンポーネントを動作させる<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id2" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>まずは、ProjectList の子コンポーネントが単独で動作するようにします。</p>
+<p>sandbox/project-list.html には、以下のプログラムが用意されています。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">projectList</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">$projectList</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(</span><span class="s1">'my-project-list'</span><span class="p">);</span>
+<span class="nx">projectList</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="nx">$projectList</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>まずはコンストラクタ。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {goog.dom.DomHelper=} opt_domHelper</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.ui.Component}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opt_domHelper</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">opt_domHelper</span><span class="p">);</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {wap.bootcamp.common.ui.List.&lt;number&gt;}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {wap.bootcamp.todolist.ui.Foldable}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {wap.bootcamp.todolist.ui.Registrar}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">;</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">buildComponents_</span><span class="p">();</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Component</span><span class="p">);</span>
+
+
+<span class="cm">/** @private */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">buildComponents_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">List</span><span class="p">([</span>
+    <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">DeletableListPlugin</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">(),</span>
+    <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">SelectableListPlugin</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">()</span>
+  <span class="p">]);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">addChild</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">);</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">addChild</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span><span class="p">);</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">addChild</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @private */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">discardComponents_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">removeChildren</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>コンポーネントのインスタンスの初期化については、<tt class="docutils literal"><span class="pre">buildComponents_()</span></tt> に切り出しました。
+忘れないうちにインスタンスを破棄する <tt class="docutils literal"><span class="pre">discardComponents_()</span></tt> を作っておきましょう。
+<tt class="docutils literal"><span class="pre">this.addChild()</span></tt> の反対の操作は <tt class="docutils literal"><span class="pre">this.removeChildren()</span></tt> になります (1 個ずつ削除する必要はありません)。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last"><tt class="docutils literal"><span class="pre">discardComponents_()</span></tt> は <tt class="docutils literal"><span class="pre">disposeInternal()</span></tt> 内部で呼び出されるはずです。</p>
+</div>
+<p>子コンポーネントを作る際には、必ず <tt class="docutils literal"><span class="pre">this.addChild()</span></tt> で子コンポーネントを自分自身に登録します。
+このようにしておくことで、親コンポーネントのライフサイクルにあわせて子コンポーネントの終了処理が自動的に行われます。</p>
+<p>プロジェクトのリスト部分は、Deletable + Selectable の 2 つのプラグインを使ったリストコンポーネントで実現します。
+プロジェクトの登録フォーム部は、先ほど作成した Foldable、Registrar コンポーネントを利用します。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">List、Foldable、Registrar のコンポーネントに継承関係がないことに注意してください。
+不要な継承関係を排除することがプログラムの責任分割をより容易にします。</p>
+</div>
+<p>続いて <tt class="docutils literal"><span class="pre">canDecorate()</span></tt> を実装します。</p>
+<p>コンテナコンポーネントは、基本的には子コンポーネントどうしを組み合わせて制御を行う役割を持っています。
+そのため、decorate 可能かどうかの判定基準は「全ての子コンポーネントを decorate できる」ことに集約されます。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">canDecorate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">$list</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findListElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">$foldable</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findFoldableElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">$registrar</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findRegistrarElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="k">return</span> <span class="p">(</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'canDecorate'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="nb">Boolean</span><span class="p">(</span><span class="nx">$list</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">canDecorate</span><span class="p">(</span><span class="nx">$list</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="nb">Boolean</span><span class="p">(</span><span class="nx">$foldable</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span><span class="p">.</span><span class="nx">canDecorate</span><span class="p">(</span><span class="nx">$foldable</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="nb">Boolean</span><span class="p">(</span><span class="nx">$registrar</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">.</span><span class="nx">canDecorate</span><span class="p">(</span><span class="nx">$registrar</span><span class="p">)</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {Element} $element</span>
+<span class="cm"> * @return {Element}</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findListElement_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">List</span><span class="p">.</span><span class="nx">CSS_CLASS</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {Element} $element</span>
+<span class="cm"> * @return {Element}</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findFoldableElement_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">CSS_CLASS</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {Element} $element</span>
+<span class="cm"> * @return {Element}</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findRegistrarElement_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASS</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>このようになります。</p>
+<p><tt class="docutils literal"><span class="pre">decorateInternal()</span></tt>、<tt class="docutils literal"><span class="pre">disposeInternal()</span></tt> も実装しましょう。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">decorateInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'decorateInternal'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findListElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">));</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findFoldableElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">));</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findRegistrarElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">disposeInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'disposeInternal'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">discardComponents_</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>なお、子コンポーネントの <tt class="docutils literal"><span class="pre">dispose()</span></tt> 処理は継承元、<tt class="docutils literal"><span class="pre">goog.ui.Component</span></tt> の <tt class="docutils literal"><span class="pre">disposeInternal()</span></tt> で呼び出されます。</p>
+<p>ここまでの処理を正しく記述していれば、</p>
+<ul class="simple">
+<li>リストの切り替えができる</li>
+<li>リストの削除ができる</li>
+<li>[New Project] をクリックするたびに登録フォームの表示・非表示が切り替わる</li>
+<li>登録フォームのテキスト欄に適当な文字列を入力し、[ADD] ボタンを押すと、テキスト欄がクリアされる</li>
+</ul>
+<p>が動作するはずです。これらの機能は全て UI コンポーネント自体の機能です。</p>
+</div>
+<div class="section" id="id3">
+<h3>コンテナコンポーネント固有の処理を書く<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id3" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>続いて、コンテナコンポーネント固有の処理を作っていきます。</p>
+<p>まずは、[ADD] ボタンが押された時の挙動です。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enterDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'enterDocument'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ADD</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tryAddProject_</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.todolist.ui.Registrar.AddEvent} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">tryAddProject_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Todo list アプリケーションでは、「同じ名称のプロジェクトを登録できない」という仕様があります。
+そのため、[ADD] ボタンを押したからといって、必ずその処理が実行されるわけではなく、
+バリデーションロジックを用意し、同じ名称のプロジェクトを登録しようとした場合に処理をキャンセルする必要があります。
+しかし、このバリデーションは ProjectList コンポーネント自身がやらないほうが無難です。</p>
+<p>まず第一に、この手のバリデーションはコンポーネント外でも共通して利用されるとは限らないことが挙げられます。
+プロジェクトの登録は ProjectList の UI で行わなければならないなんて制限を付けたくありません。
+第二に、ProjectList (クライアントサイド JavaScript) がバリデーションに必要な全ての情報を持っているとは限らないためです。</p>
+<p>このような事情から、バリデーションは外部のロジックで、かつ、非同期に行われることになります。
+しかも、バリデーションロジックのインターフェイスにはできるだけ依存したくありません。</p>
+<p>ProjectList が知りたいのは、バリデーションの結果が YES/NO のいずれであったか
+(および、ひょっとしたら NO だった場合にはその理由も) だけです。</p>
+<p>これらの条件を満たす解決策の一つが、イベントと Promise パターンの組み合わせになります。</p>
+<p>バリデーションのイベントを発生させ、プロジェクトのサーバー側への登録の正否によって
+Promise の resolve/reject が呼び出されるようにすれば良いですね。</p>
+<p>このような非同期の結果によってイベント処理の続行可否やキャンセル処理を行うためのイベントクラスとして、
+Bootcamp では、<tt class="docutils literal"><span class="pre">wap.bootcamp.common.event.AsynchronousTrialEvent</span></tt> を用意しました。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {string|!goog.events.EventId} type</span>
+<span class="cm"> * @param {!goog.promise.Resolver.&lt;RESULT&gt;} trial</span>
+<span class="cm"> * @param {TARGET=} opt_target</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.events.Event}</span>
+<span class="cm"> * @template TARGET,RESULT</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">trial</span><span class="p">,</span> <span class="nx">opt_target</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">opt_target</span><span class="p">);</span>
+
+  <span class="cm">/** @type {!goog.promise.Resolver.&lt;RESULT&gt;} */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">trial</span> <span class="o">=</span> <span class="nx">trial</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">Event</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>このクラスは、goog.events.Event に Promise の resolve/reject を行うための <tt class="docutils literal"><span class="pre">trial</span></tt> を加えたクラスになります。</p>
+<p><tt class="docutils literal"><span class="pre">goog.promise.Resolver</span></tt> という新しいクラスが登場します。
+Promise オブジェクトは、コンストラクタ引数に指定したコールバック関数を使って resolve/reject を行うのが基本設計なのですが、
+今回のようなケースで、 resolve/reject するオブジェクトを独立させたいという場合に、
+<tt class="docutils literal"><span class="pre">goog.Promise.withResolver()</span></tt> を使って <tt class="docutils literal"><span class="pre">goog.promise.Resolver</span></tt> を生成できるようになっています。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>いわゆる Deferred オブジェクトです。</p>
+<p class="last"><tt class="docutils literal"><span class="pre">goog.promise.Resolver()</span></tt> は、jQuery の <tt class="docutils literal"><span class="pre">jQuery.Deferred()</span></tt> と対応します。
+また、ECMAScript 6 では <tt class="docutils literal"><span class="pre">Promise.defer()</span></tt> で Deferred オブジェクトが取得できるようになる予定です。</p>
+</div>
+<p><tt class="docutils literal"><span class="pre">tryAddProject_()</span></tt> は次のようになります。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.todolist.ui.Registrar.AddEvent} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">tryAddProject_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">trialProject</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">title</span><span class="o">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">text</span> <span class="p">};</span>
+  <span class="cm">/** @type {goog.promise.Resolver.&lt;wap.bootcamp.todolist.dto.Project&gt;} */</span>
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">Promise</span><span class="p">.</span><span class="nx">withResolver</span><span class="p">();</span>
+  <span class="nx">trial</span><span class="p">.</span><span class="nx">promise</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">savedProject</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">addItem</span><span class="p">({</span>
+          <span class="nx">caption</span><span class="o">:</span> <span class="nx">savedProject</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+          <span class="nx">associatedData</span><span class="o">:</span> <span class="nx">savedProject</span><span class="p">.</span><span class="nx">id</span>
+        <span class="p">});</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+      <span class="p">.</span><span class="nx">thenCatch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">alert</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+      <span class="p">});</span>
+
+  <span class="kd">var</span> <span class="nx">tryAddEvent</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">CREATE_PROJECT</span><span class="p">,</span> <span class="nx">trial</span><span class="p">,</span> <span class="nx">trialProject</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="nx">tryAddEvent</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>肝は <tt class="docutils literal"><span class="pre">AsynchronousTrialEvent</span></tt> を発生させることです。
+成功した場合、<tt class="docutils literal"><span class="pre">trial.resolve()</span></tt> / <tt class="docutils literal"><span class="pre">reject()</span></tt> を呼ぶと、
+<tt class="docutils literal"><span class="pre">trial.promise</span></tt> の Promise オブジェクトが fulfilled/rejected になります。
+これに対して処理を記述します。</p>
+<p>なお、プロジェクトの保存に成功した場合、サーバー側からプロジェクトに <tt class="docutils literal"><span class="pre">id</span></tt> が割り振られるものとします。
+これは、<tt class="docutils literal"><span class="pre">ListItem</span></tt> の <tt class="docutils literal"><span class="pre">associatedData</span></tt> に登録しておきましょう
+(プロジェクトを切り替えたり、削除したりする時点で必要になります)。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">これは、<tt class="docutils literal"><span class="pre">wap.bootcamp.todolist.dto.Project</span></tt> の定義に従っています。
+そのため、<tt class="docutils literal"><span class="pre">ProjectList</span></tt> は <tt class="docutils literal"><span class="pre">Project</span></tt> データ型に依存します。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>このように書くと、データの保存に成功した場合にリストが登録されるようになります。
+一方、データの保存の正否にかかわらずリストに登録しておき、
+データ保存に失敗した場合にプロジェクトから削除する場合は、</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.todolist.ui.Registrar.AddEvent} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">tryAddProject_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">trialProject</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">title</span><span class="o">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">text</span> <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">trialListItem</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">addItem</span><span class="p">({</span>
+    <span class="nx">caption</span><span class="o">:</span> <span class="nx">project</span><span class="p">.</span><span class="nx">title</span>
+  <span class="p">});</span>
+
+  <span class="cm">/** @type {goog.promise.Resolver.&lt;wap.bootcamp.todolist.dto.Project&gt;} */</span>
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">Promise</span><span class="p">.</span><span class="nx">withResolver</span><span class="p">();</span>
+  <span class="nx">trial</span><span class="p">.</span><span class="nx">promise</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">savedProject</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">listItem</span><span class="p">.</span><span class="nx">setAssociatedData</span><span class="p">(</span><span class="nx">savedProject</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">thenCatch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">removeItem</span><span class="p">(</span><span class="nx">trialListItem</span><span class="p">);</span>
+      <span class="p">});</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">CREATE_PROJECT</span><span class="p">,</span> <span class="nx">trial</span><span class="p">,</span> <span class="nx">trialProject</span><span class="p">));</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p class="last">とほんの少しの修正で対応できます。
+状況に応じて使い分けしましょう。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>なお、非同期イベントは Promise の fulfilled/rejected を前提として動作します。
+ところが、コンポーネントを配置した後、非同期イベントをハンドルしなかった場合は
+永遠に pending の状態でスタックしてしまいます。</p>
+<p>それを防ぐためには、イベントが一切ハンドルされなかった場合は fulfilled と同様の挙動を示すようにしたいです。
+しかし、イベントがハンドルされているかどうかを検出する方法が用意されていません。</p>
+<p>代わりに、イベントがハンドルされた場合に、<tt class="docutils literal"><span class="pre">event.preventDefault()</span></tt> を呼ぶことにすれば問題は解決します。
+イベントが一切ハンドルされなかった場合 (<tt class="docutils literal"><span class="pre">event.preventDefault()</span></tt> が呼ばれなかった場合) は、
+<tt class="docutils literal"><span class="pre">this.dispatchEvent()</span></tt> の結果が <tt class="docutils literal"><span class="pre">true</span></tt> になるので、fulfilled 相当のロジックを記述してしまいます。</p>
+<p>以下のコードはその例になります。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.todolist.ui.Registrar.AddEvent} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">tryAddProject_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">trialProject</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">title</span><span class="o">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">text</span> <span class="p">};</span>
+  <span class="cm">/** @type {goog.promise.Resolver.&lt;wap.bootcamp.todolist.dto.Project&gt;} */</span>
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">Promise</span><span class="p">.</span><span class="nx">withResolver</span><span class="p">();</span>
+  <span class="nx">trial</span><span class="p">.</span><span class="nx">promise</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">savedProject</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">addItem</span><span class="p">({</span>
+          <span class="nx">caption</span><span class="o">:</span> <span class="nx">savedProject</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+          <span class="nx">associatedData</span><span class="o">:</span> <span class="nx">savedProject</span><span class="p">.</span><span class="nx">id</span>
+        <span class="p">});</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+      <span class="p">.</span><span class="nx">thenCatch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">alert</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+      <span class="p">});</span>
+
+  <span class="kd">var</span> <span class="nx">tryAddEvent</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">CREATE_PROJECT</span><span class="p">,</span> <span class="nx">trial</span><span class="p">,</span> <span class="nx">trialProject</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="nx">tryAddEvent</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">addItem</span><span class="p">({</span>
+        <span class="nx">caption</span><span class="o">:</span> <span class="nx">trialProject</span><span class="p">.</span><span class="nx">title</span>
+      <span class="p">});</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Promise が fulfilled の処理は非同期的に行われるので、それに合わせて setTimeout() を利用しています。</p>
+<p>とはいえ、毎回このような処理を書くのは面倒なので、HUE Bootcamp では必要がなければこの処理を省略して良いものとします。</p>
+<p class="last">ただし、イベントをハンドルする側では、<tt class="docutils literal"><span class="pre">event.preventDefault()</span></tt> の呼び出しを忘れずに行うようにしてください。</p>
+</div>
+<p>同様に削除時の処理です。まず <tt class="docutils literal"><span class="pre">enterDocument()</span></tt> にイベントハンドラの設定を追加して、</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enterDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'enterDocument'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ADD</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tryAddProject_</span>
+  <span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">DeletableListPlugin</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ITEM_DELETE</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tryDeleteProject_</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>次に削除のロジックを書きます。</p>
+<p>また、Todo list では「保存しますか？」の確認ダイアログを出す仕様になっていますが、
+このロジックはバリデーションとは異なり、コンポーネント固有の機能であると考えられます。
+そのため、確認ダイアログの表示は外部に切り出すのではなく <tt class="docutils literal"><span class="pre">tryDeleteProject_()</span></tt> に記述してしまいましょう。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.ui.DeletableListPlugin.ItemDeleteEvent} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">tryDeleteProject_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">listItem</span> <span class="o">=</span> <span class="cm">/** @type {wap.bootcamp.common.ui.ListItem.&lt;number&gt;} */</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">projectId</span> <span class="o">=</span> <span class="nx">listItem</span><span class="p">.</span><span class="nx">getAssociatedData</span><span class="p">();</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">confirm</span><span class="p">(</span><span class="s1">'Are you sure to delete project \''</span> <span class="o">+</span> <span class="nx">listItem</span><span class="p">.</span><span class="nx">getCaption</span><span class="p">()</span> <span class="o">+</span> <span class="s1">'\'?'</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">();</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="cm">/** @type {goog.promise.Resolver.&lt;number&gt;} */</span>
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">Promise</span><span class="p">.</span><span class="nx">withResolver</span><span class="p">();</span>
+  <span class="nx">trial</span><span class="p">.</span><span class="nx">promise</span>
+      <span class="p">.</span><span class="nx">thenCatch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+      <span class="p">});</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">DELETE_PROJECT</span><span class="p">,</span> <span class="nx">trial</span><span class="p">,</span> <span class="nx">projectId</span><span class="p">));</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>同様に、非同期処理での削除に失敗した場合に備えて、<tt class="docutils literal"><span class="pre">AsynchronousTrialEvent</span></tt> を発生させています。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p>このロジックでは、削除に失敗した場合、リストの項目が復活しません。
+<tt class="docutils literal"><span class="pre">tryAddProject_()</span></tt> と同様に、サーバー側での応答を待ってから処理を行いたい場合、
+一旦デフォルトの処理をキャンセルするのがよいでしょう。</p>
+<div class="last highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.ui.DeletableListPlugin.ItemDeleteEvent} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">tryDeleteProject_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">listItem</span> <span class="o">=</span> <span class="cm">/** @type {wap.bootcamp.common.ui.ListItem.&lt;number&gt;} */</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">projectId</span> <span class="o">=</span> <span class="nx">listItem</span><span class="p">.</span><span class="nx">getAssociatedData</span><span class="p">();</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">confirm</span><span class="p">(</span><span class="s1">'Are you sure to delete project \''</span> <span class="o">+</span> <span class="nx">listItem</span><span class="p">.</span><span class="nx">getCaption</span><span class="p">()</span> <span class="o">+</span> <span class="s1">'\'?'</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">();</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="cm">/** @type {goog.promise.Resolver.&lt;number&gt;} */</span>
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">Promise</span><span class="p">.</span><span class="nx">withResolver</span><span class="p">();</span>
+  <span class="nx">trial</span><span class="p">.</span><span class="nx">promise</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">removeItem</span><span class="p">(</span><span class="nx">listItem</span><span class="p">);</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+      <span class="p">.</span><span class="nx">thenCatch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+      <span class="p">});</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">DELETE_PROJECT</span><span class="p">,</span> <span class="nx">trial</span><span class="p">,</span> <span class="nx">projectId</span><span class="p">));</span>
+
+  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<p>ここでブラウザで動作を確認してみましょう。
+正しく作れていれば、削除 [×] ボタンを押すと、ダイアログが表示されるようになります。</p>
+<p>次に、プロジェクトの追加を行うためのメソッドを追加します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.todolist.dto.Project} project</span>
+<span class="cm"> * @return {wap.bootcamp.common.ui.ListItem} created list item</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addProject</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">project</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">addItem</span><span class="p">({</span>
+    <span class="nx">caption</span><span class="o">:</span> <span class="nx">project</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+    <span class="nx">associatedData</span><span class="o">:</span> <span class="nx">project</span><span class="p">.</span><span class="nx">id</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {!Array.&lt;wap.bootcamp.todolist.dto.Project&gt;} projects</span>
+<span class="cm"> * @return {Array.&lt;wap.bootcamp.common.ui.ListItem&gt;} created list items</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addProjects</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">projects</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">items</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">array</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">projects</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">project</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="nx">caption</span><span class="o">:</span> <span class="nx">project</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+      <span class="nx">associatedData</span><span class="o">:</span> <span class="nx">project</span><span class="p">.</span><span class="nx">id</span>
+    <span class="p">};</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">addItems</span><span class="p">(</span><span class="nx">items</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>1件追加用のメソッドと複数件追加用のメソッドの両方を提供します。</p>
+<p>これは、クライアントサイド JavaScript の速度のボトルネックとなりやすい DOM 操作のコストを
+UI コンポーネントの責任として正しく分割することを目的とし、
+UI コンポーネントの速度改善の恩恵を正しく受けられるようにすることが期待できます。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">ちなみに、この課題では複数件操作メソッドである <tt class="docutils literal"><span class="pre">addProjects()</span></tt> の方しか利用しません。</p>
+</div>
+<p>最後に、ListItem からプロジェクトの ID を取得する変換ロジックを用意しておきます。
+プロジェクトの ID が ListItem の associatedData に紐付いているという前提は、
+ProjectList コンポーネントのみが知っているべきで、その利用者が知るべきではありません。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.ui.ListItem.&lt;number&gt;} listItem</span>
+<span class="cm"> * @return {?number}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getProjectIdFrom</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">listItem</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">listItem</span><span class="p">.</span><span class="nx">getAssociatedData</span><span class="p">()</span> <span class="o">?</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">listItem</span><span class="p">.</span><span class="nx">getAssociatedData</span><span class="p">())</span> <span class="o">:</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>あとはこれらのメソッドを簡単にチェックします。
+以下のコードを sandbox/project-list.html の末尾に追加して Project 3 〜 Project 6 が表示されるようになり、
+コンソールに null、4、null、6 が順に表示されれば成功です。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">listItemOf3</span> <span class="o">=</span> <span class="nx">projectList</span><span class="p">.</span><span class="nx">addProject</span><span class="p">({</span>
+  <span class="nx">title</span><span class="o">:</span> <span class="s1">'Project 3'</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">listItemOf4</span> <span class="o">=</span> <span class="nx">projectList</span><span class="p">.</span><span class="nx">addProject</span><span class="p">({</span>
+  <span class="nx">title</span><span class="o">:</span> <span class="s1">'Project 4'</span><span class="p">,</span>
+  <span class="nx">id</span><span class="o">:</span> <span class="mi">4</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">listItems</span> <span class="o">=</span> <span class="nx">projectList</span><span class="p">.</span><span class="nx">addProjects</span><span class="p">([</span>
+  <span class="p">{</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="s1">'Project 5'</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="s1">'Project 6'</span><span class="p">,</span>
+    <span class="nx">id</span><span class="o">:</span> <span class="mi">6</span>
+  <span class="p">}</span>
+<span class="p">]);</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">projectList</span><span class="p">.</span><span class="nx">getProjectIdFrom</span><span class="p">(</span><span class="nx">listItemOf3</span><span class="p">));</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">projectList</span><span class="p">.</span><span class="nx">getProjectIdFrom</span><span class="p">(</span><span class="nx">listItemOf4</span><span class="p">));</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">projectList</span><span class="p">.</span><span class="nx">getProjectIdFrom</span><span class="p">(</span><span class="nx">listItems</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">projectList</span><span class="p">.</span><span class="nx">getProjectIdFrom</span><span class="p">(</span><span class="nx">listItems</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>
+</pre></div>
+</div>
+<p>また、プロジェクトの削除も動くようにしましょう。</p>
+<p>以下のコードを sandbox/project-list.html の末尾に追加して動作を確認してみましょう。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span>
+  <span class="nx">projectList</span><span class="p">,</span>
+  <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">DELETE_PROJECT</span><span class="p">,</span>
+  <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">trial</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="p">});</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="wap-bootcamp-todolist-container-tasklist">
+<h2>wap.bootcamp.todolist.container.TaskList コンポーネント<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#wap-bootcamp-todolist-container-tasklist" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>ProjectList コンポーネントと同じように作れます。やってみましょう。</p>
+<p>簡単な動作チェック用に sandbox/task-list.html を用意してあります。</p>
+<div class="section" id="id4">
+<h3>注意点<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id4" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul>
+<li><p class="first">プロジェクト名のラベルには、<tt class="docutils literal"><span class="pre">goog.ui.Control</span></tt> を使ってしまいましょう。</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">goog.ui.Control</span></tt> およびそのサブクラスについては、直接 <tt class="docutils literal"><span class="pre">decorate()</span></tt> を呼ぶことが非推奨になっています。
+代わりに <tt class="docutils literal"><span class="pre">goog.ui.decorate()</span></tt> を呼ぶことが求められます。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">$label</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span><span class="s1">'project-name'</span><span class="p">);</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">label_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Control</span><span class="p">();</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">label_</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="nx">$label</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>このコードは、Closure Library 上は</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">$label</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span><span class="s1">'project-name'</span><span class="p">);</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">label_</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="nx">$label</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>とすることが最近推奨されるようになりました。</p>
+<p>ところがこの方法は、List コンポーネントのように、
+要素のクラス名からプラグインを取捨選択する仕掛けには一切対応していません。</p>
+<p>そうした事情を踏まえ HUE Bootcamp では、当面の間は古い方法で記述することにします。
+しかし、そのままでは非推奨メソッドを利用している旨のエラーが発生するので、次のようにごまかすことにします。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">$label</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span><span class="s1">'project-name'</span><span class="p">);</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">label_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Control</span><span class="p">();</span>
+<span class="p">(</span><span class="cm">/** @type {goog.ui.Component} */</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">label_</span><span class="p">)).</span><span class="nx">decorate</span><span class="p">(</span><span class="nx">$label</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">タスクのチェックを切り替える <tt class="docutils literal"><span class="pre">tryToggleTask_()</span></tt> で、
+完了のチェックを外して未完了に戻す際には確認ダイアログを表示するようにしてください。</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">setProject()</span></tt> ではプロジェクトを削除すると同時に、リストをクリアしてしまいましょう。</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">addTask()</span></tt>、<tt class="docutils literal"><span class="pre">addTasks()</span></tt> のパラメーターに <tt class="docutils literal"><span class="pre">checked:</span> <span class="pre">task.done</span></tt> を加えると、
+(<tt class="docutils literal"><span class="pre">task.done</span></tt> が <tt class="docutils literal"><span class="pre">true</span></tt> のとき) チェックボックスにチェックが入ります。</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">disposeInternal()</span></tt> で <tt class="docutils literal"><span class="pre">this.project_</span> <span class="pre">=</span> <span class="pre">null;</span></tt> のリセットを忘れないでください。</p>
+</li>
+</ul>
+<div class="section" id="id5">
+<h4>解答例<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id5" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<script type="text/javascript">
+    function showhide(element){
+        if (!document.getElementById)
+            return
+
+        if (element.style.display == "block")
+            element.style.display = "none"
+        else
+            element.style.display = "block"
+    };
+</script>
+<a href="javascript:showhide(document.getElementById(&#39;hiddencodeblock1&#39;))">+ show/hide code</a><br><div id="hiddencodeblock1" style="display: none"><div class="highlight-javascript"><div class="highlight"><pre><span class="nx">goog</span><span class="p">.</span><span class="nx">provide</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.container.TaskList'</span><span class="p">);</span>
+
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.Promise'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.dom'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.dom.DomHelper'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.dom.classlist'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.events'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.promise.Resolver'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.ui.Component'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.ui.Control'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.common.event.AsynchronousTrialEvent'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.common.ui.CheckableListPlugin'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.common.ui.List'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.common.ui.ListItem'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.common.ui.ListPlugin'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.dto.Project'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.dto.Task'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.ui.Foldable'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.ui.Registrar'</span><span class="p">);</span>
+
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {goog.dom.DomHelper=} opt_domHelper</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.ui.Component}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opt_domHelper</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">opt_domHelper</span><span class="p">);</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {?wap.bootcamp.todolist.dto.Project}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">project_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {wap.bootcamp.common.ui.List.&lt;number&gt;}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {wap.bootcamp.todolist.ui.Foldable}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span><span class="p">;</span>
+
+
+  <span class="cm">/**</span>
+<span class="cm">   * Divert {@link goog.ui.Control} as a label UI component.</span>
+<span class="cm">   * @type {goog.ui.Control}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">projectLabel_</span><span class="p">;</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">buildComponents_</span><span class="p">();</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Component</span><span class="p">);</span>
+
+
+<span class="cm">/** @type {string} */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">CSS_CLASS</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'task-list'</span><span class="p">);</span>
+
+
+<span class="cm">/** @enum {string} */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">CSS_CLASSES</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">PROJECT_NAME</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'project-name'</span><span class="p">),</span>
+  <span class="nx">DISABLED</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'disabled'</span><span class="p">)</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @enum {string} */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">EventType</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">CREATE_TASK</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">getUniqueId</span><span class="p">(</span><span class="s1">'create-task'</span><span class="p">),</span>
+  <span class="nx">UPDATE_TASK</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">getUniqueId</span><span class="p">(</span><span class="s1">'update-task'</span><span class="p">)</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @private */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">buildComponents_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">List</span><span class="p">([</span>
+    <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">CheckableListPlugin</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">()</span>
+  <span class="p">]);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">addChild</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">);</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">addChild</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span><span class="p">);</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">addChild</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">);</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">projectLabel_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Control</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">addChild</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">projectLabel_</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @private */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">discardComponents_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">removeChildren</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">projectLabel_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">canDecorate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">$list</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findListElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">$foldable</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findFoldableElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">$registrar</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findRegistrarElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">$projectLabel</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findProjectLabelElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="k">return</span> <span class="p">(</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'canDecorate'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="nb">Boolean</span><span class="p">(</span><span class="nx">$list</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">canDecorate</span><span class="p">(</span><span class="nx">$list</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="nb">Boolean</span><span class="p">(</span><span class="nx">$foldable</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span><span class="p">.</span><span class="nx">canDecorate</span><span class="p">(</span><span class="nx">$foldable</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="nb">Boolean</span><span class="p">(</span><span class="nx">$registrar</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">.</span><span class="nx">canDecorate</span><span class="p">(</span><span class="nx">$registrar</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="nb">Boolean</span><span class="p">(</span><span class="nx">$projectLabel</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">projectLabel_</span><span class="p">.</span><span class="nx">canDecorate</span><span class="p">(</span><span class="nx">$projectLabel</span><span class="p">)</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {Element} $element</span>
+<span class="cm"> * @return {Element}</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findListElement_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">List</span><span class="p">.</span><span class="nx">CSS_CLASS</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {Element} $element</span>
+<span class="cm"> * @return {Element}</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findFoldableElement_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Foldable</span><span class="p">.</span><span class="nx">CSS_CLASS</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {Element} $element</span>
+<span class="cm"> * @return {Element}</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findRegistrarElement_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASS</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {Element} $element</span>
+<span class="cm"> * @return {Element}</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findProjectLabelElement_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">PROJECT_NAME</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">decorateInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'decorateInternal'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findListElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">));</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findFoldableElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">));</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findRegistrarElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">));</span>
+  <span class="p">(</span><span class="cm">/** @type {goog.ui.Component} */</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">projectLabel_</span><span class="p">)).</span><span class="nx">decorate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findProjectLabelElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">disposeInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'disposeInternal'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">discardComponents_</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">project_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enterDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'enterDocument'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ADD</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tryAddTask_</span><span class="p">,</span>
+      <span class="kc">false</span>
+  <span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">CheckableListPlugin</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ITEM_CHECKED</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tryToggleTask_</span><span class="p">,</span>
+      <span class="kc">false</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.todolist.ui.Registrar.AddEvent} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">tryAddTask_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">trialTask</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">projectId</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">project_</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">text</span><span class="p">,</span>
+    <span class="nx">done</span><span class="o">:</span> <span class="kc">false</span>
+  <span class="p">};</span>
+  <span class="cm">/** @type {goog.promise.Resolver.&lt;wap.bootcamp.todolist.dto.Task&gt;} */</span>
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">Promise</span><span class="p">.</span><span class="nx">withResolver</span><span class="p">();</span>
+  <span class="nx">trial</span><span class="p">.</span><span class="nx">promise</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">savedTask</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">addItem</span><span class="p">({</span>
+          <span class="nx">caption</span><span class="o">:</span> <span class="nx">savedTask</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+          <span class="nx">associatedData</span><span class="o">:</span> <span class="nx">savedTask</span><span class="p">.</span><span class="nx">id</span>
+        <span class="p">});</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+      <span class="p">.</span><span class="nx">thenCatch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+      <span class="p">});</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">CREATE_TASK</span><span class="p">,</span> <span class="nx">trial</span><span class="p">,</span> <span class="nx">trialTask</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.ui.CheckableListPlugin.ItemCheckEvent} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">tryToggleTask_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">listItem</span> <span class="o">=</span> <span class="cm">/** @type {wap.bootcamp.common.ui.ListItem} */</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">isChecked</span><span class="p">(</span><span class="nx">listItem</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">confirm</span><span class="p">(</span><span class="s1">'Are you sure to make a task \''</span> <span class="o">+</span>
+      <span class="nx">listItem</span><span class="p">.</span><span class="nx">getCaption</span><span class="p">()</span> <span class="o">+</span> <span class="s1">'\' undone?'</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">();</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="cm">/** @type {goog.promise.Resolver.&lt;wap.bootcamp.todolist.dto.Task&gt;} */</span>
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">Promise</span><span class="p">.</span><span class="nx">withResolver</span><span class="p">();</span>
+  <span class="nx">trial</span><span class="p">.</span><span class="nx">promise</span>
+      <span class="p">.</span><span class="nx">thenCatch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">toggleChecked</span><span class="p">(</span><span class="nx">listItem</span><span class="p">);</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+
+  <span class="kd">var</span> <span class="nx">task</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">id</span><span class="o">:</span> <span class="nx">listItem</span><span class="p">.</span><span class="nx">getAssociatedData</span><span class="p">(),</span>
+    <span class="nx">projectId</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">project_</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="nx">listItem</span><span class="p">.</span><span class="nx">getCaption</span><span class="p">(),</span>
+    <span class="nx">done</span><span class="o">:</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">isChecked</span><span class="p">(</span><span class="nx">listItem</span><span class="p">)</span> <span class="c1">// isChecked is not toggled yet.</span>
+  <span class="p">};</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">UPDATE_TASK</span><span class="p">,</span> <span class="nx">trial</span><span class="p">,</span> <span class="nx">task</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.todolist.dto.Task} task</span>
+<span class="cm"> * @return {wap.bootcamp.common.ui.ListItem} created listItems</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addTask</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">task</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">addItem</span><span class="p">({</span>
+    <span class="nx">caption</span><span class="o">:</span> <span class="nx">task</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+    <span class="nx">associatedData</span><span class="o">:</span> <span class="nx">task</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+    <span class="nx">checked</span><span class="o">:</span> <span class="nx">task</span><span class="p">.</span><span class="nx">done</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {!Array.&lt;wap.bootcamp.todolist.dto.Task&gt;} tasks</span>
+<span class="cm"> * @return {Array.&lt;wap.bootcamp.common.ui.ListItem&gt;} created listItems</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addTasks</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">tasks</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">items</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">array</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">tasks</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">task</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="nx">caption</span><span class="o">:</span> <span class="nx">task</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+      <span class="nx">associatedData</span><span class="o">:</span> <span class="nx">task</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+      <span class="nx">checked</span><span class="o">:</span> <span class="nx">task</span><span class="p">.</span><span class="nx">done</span>
+    <span class="p">};</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">addItems</span><span class="p">(</span><span class="nx">items</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {?wap.bootcamp.todolist.dto.Project} project</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setProject</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">project</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">project_</span> <span class="o">=</span> <span class="nx">project</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">projectLabel_</span><span class="p">.</span><span class="nx">setCaption</span><span class="p">(</span><span class="nx">project</span><span class="p">.</span><span class="nx">title</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">removeAll</span><span class="p">();</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @return {?wap.bootcamp.todolist.dto.Project}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getProject</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">project_</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.ui.ListItem.&lt;number&gt;} listItem</span>
+<span class="cm"> * @return {?number}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getTaskIdFrom</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">listItem</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">listItem</span><span class="p">.</span><span class="nx">getAssociatedData</span><span class="p">()</span> <span class="o">?</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">listItem</span><span class="p">.</span><span class="nx">getAssociatedData</span><span class="p">())</span> <span class="o">:</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div></div>
+</div>
+</div>
+<div class="section" id="wap-bootcamp-todolist-container-application">
+<h2>wap.bootcamp.todolist.container.Application コンポーネント<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#wap-bootcamp-todolist-container-application" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>最後のコンテナコンポーネントは、ProjectList と TaskList をつなげる Application コンポーネントです。</p>
+<p><tt class="docutils literal"><span class="pre">trySelectProject_()</span></tt> 以外については、これまでと完全に同じように作れます。
+<tt class="docutils literal"><span class="pre">enterDocument()</span></tt> で、<tt class="docutils literal"><span class="pre">wap.bootcamp.common.ui.SelectableListPlugin.EventType.ITEM_SELECT</span></tt> イベントを
+<tt class="docutils literal"><span class="pre">trySelectProject_()</span></tt> にバインドする所まで組んでしまい、<tt class="docutils literal"><span class="pre">trySelectProject_()</span></tt> の中は空白のまま残しておきましょう。</p>
+<p>同様に、動作チェックは sandbox/application.html で行ってください。</p>
+<script type="text/javascript">
+    function showhide(element){
+        if (!document.getElementById)
+            return
+
+        if (element.style.display == "block")
+            element.style.display = "none"
+        else
+            element.style.display = "block"
+    };
+</script>
+<a href="javascript:showhide(document.getElementById(&#39;hiddencodeblock2&#39;))">+ show/hide code</a><br><div id="hiddencodeblock2" style="display: none"><div class="highlight-javascript"><div class="highlight"><pre><span class="nx">goog</span><span class="p">.</span><span class="nx">provide</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.container.Application'</span><span class="p">);</span>
+
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.Promise'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.dom.DomHelper'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.events'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.promise.Resolver'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'goog.ui.Component'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.common.event.AsynchronousTrialEvent'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.common.ui.SelectableListPlugin'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.container.ProjectList'</span><span class="p">);</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s1">'wap.bootcamp.todolist.container.TaskList'</span><span class="p">);</span>
+
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {goog.dom.DomHelper=} opt_domHelper</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.ui.Component}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opt_domHelper</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">opt_domHelper</span><span class="p">);</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {wap.bootcamp.todolist.container.ProjectList}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">projectList_</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {wap.bootcamp.todolist.container.TaskList}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">taskList_</span><span class="p">;</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">buildComponents_</span><span class="p">();</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Component</span><span class="p">);</span>
+
+
+<span class="cm">/** @enum {string} */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">EventType</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">REQUIRE_TASKS</span><span class="o">:</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">getUniqueId</span><span class="p">(</span><span class="s1">'require-tasks'</span><span class="p">)</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @type {string} */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">CSS_CLASS</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">getCssName</span><span class="p">(</span><span class="s1">'todo-application'</span><span class="p">);</span>
+
+
+<span class="cm">/** @private */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">buildComponents_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">projectList_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">addChild</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">projectList_</span><span class="p">);</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">taskList_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">addChild</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">taskList_</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @private */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">discardComponents_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">removeChildren</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">projectList_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">taskList_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">canDecorate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">$projectList</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findProjectListElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">$taskList</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findTaskListElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="k">return</span> <span class="p">(</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'canDecorate'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="nb">Boolean</span><span class="p">(</span><span class="nx">$projectList</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">projectList_</span><span class="p">.</span><span class="nx">canDecorate</span><span class="p">(</span><span class="nx">$projectList</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="nb">Boolean</span><span class="p">(</span><span class="nx">$taskList</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">taskList_</span><span class="p">.</span><span class="nx">canDecorate</span><span class="p">(</span><span class="nx">$taskList</span><span class="p">)</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {Element} $element</span>
+<span class="cm"> * @return {Element}</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findProjectListElement_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">ProjectList</span><span class="p">.</span><span class="nx">CSS_CLASS</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {Element} $element</span>
+<span class="cm"> * @return {Element}</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findTaskListElement_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDomHelper</span><span class="p">().</span><span class="nx">getElementByClass</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">CSS_CLASS</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">decorateInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'decorateInternal'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">projectList_</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findProjectListElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">));</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">taskList_</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findTaskListElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">disposeInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'disposeInternal'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">discardComponents_</span><span class="p">();</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enterDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'enterDocument'</span><span class="p">);</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">projectList_</span><span class="p">,</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">SelectableListPlugin</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">ITEM_SELECT</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">trySelectProject_</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.todolist.dto.Project} project</span>
+<span class="cm"> * @return {wap.bootcamp.common.ui.ListItem} created list item</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addProject</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">project</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">projectList_</span><span class="p">.</span><span class="nx">addProject</span><span class="p">(</span><span class="nx">project</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {!Array.&lt;wap.bootcamp.todolist.dto.Project&gt;} projects</span>
+<span class="cm"> * @return {Array.&lt;wap.bootcamp.common.ui.ListItem&gt;} created list items</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addProjects</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">projects</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">projectList_</span><span class="p">.</span><span class="nx">addProjects</span><span class="p">(</span><span class="nx">projects</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div><div class="section" id="id6">
+<h3>コンテナコンポーネント間の連携<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id6" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>最後は <tt class="docutils literal"><span class="pre">trySelectProject_()</span></tt> です。
+これまでと同様に作ってみます。</p>
+<p>プロジェクトを選択した際の、<tt class="docutils literal"><span class="pre">Project</span></tt> DTO については、
+<tt class="docutils literal"><span class="pre">ListItem</span></tt> コンポーネントの抱える情報を組み合わせて作成することにします。
+ID は <tt class="docutils literal"><span class="pre">this.projectList_.getProjectIdFrom(listItem)</span></tt> で取得できます。
+タイトルも <tt class="docutils literal"><span class="pre">listItem.getCaption()</span></tt> で取得できます。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">アプリケーション操作中にプロジェクト名称が変更になっている可能性については、
+HUE Bootcamp においては考えなくて構いません。</p>
+</div>
+<p>プロジェクトのIDが決まるので、<tt class="docutils literal"><span class="pre">AsynchronousTrialEvent</span></tt> を使ってタスク情報を取得します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {wap.bootcamp.common.ui.SelectableListPlugin.ItemSelectEvent} event</span>
+<span class="cm"> * @private</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">trySelectProject_</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">listItem</span> <span class="o">=</span> <span class="cm">/** @type {wap.bootcamp.common.ui.ListItem} */</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">project</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">id</span><span class="o">:</span> <span class="nb">Number</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">projectList_</span><span class="p">.</span><span class="nx">getProjectIdFrom</span><span class="p">(</span><span class="nx">listItem</span><span class="p">)),</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="nx">listItem</span><span class="p">.</span><span class="nx">getCaption</span><span class="p">()</span>
+  <span class="p">};</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">taskList_</span><span class="p">.</span><span class="nx">setProject</span><span class="p">(</span><span class="nx">project</span><span class="p">);</span>
+
+  <span class="cm">/** @type {goog.promise.Resolver.&lt;Array.&lt;wap.bootcamp.todolist.dto.Task&gt;&gt;} */</span>
+  <span class="kd">var</span> <span class="nx">trial</span> <span class="o">=</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">Promise</span><span class="p">.</span><span class="nx">withResolver</span><span class="p">();</span>
+  <span class="nx">trial</span><span class="p">.</span><span class="nx">promise</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">tasks</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">taskList_</span><span class="p">.</span><span class="nx">addTasks</span><span class="p">(</span><span class="nx">tasks</span><span class="p">);</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+      <span class="p">.</span><span class="nx">thenCatch</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+      <span class="p">});</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="k">new</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">AsynchronousTrialEvent</span><span class="p">(</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">Application</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">REQUIRE_TASKS</span><span class="p">,</span> <span class="nx">trial</span><span class="p">,</span> <span class="nx">project</span><span class="p">.</span><span class="nx">id</span><span class="p">));</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id7">
+<h3>不具合の解消<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id7" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>これで概ね動作するのですが、ひとつ問題があります。
+プロジェクトの削除ボタンの挙動です。</p>
+<p>全てのプロジェクトを削除した時点で
+「TypeError: undefined is not a function」
+というエラーメッセージが表示されてしまいます。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">以下のコンテンツは、解答例通りに作ってあることを前提としています。
+必要に応じて内容の取捨選択を行ってください。
+既にこのようなケースを見越して正しい処理を記述してあるのならば、以下の内容は不要になります。</p>
+</div>
+<p>というのは、全てのプロジェクトを削除した時点でも、
+<tt class="docutils literal"><span class="pre">wap.bootcamp.common.ui.SelectableListPlugin.EventType.ITEM_SELECT</span></tt>
+イベントが発生するためです。
+この時、ブレークポイントを設定して event.target の中身を確認すれば、
+<tt class="docutils literal"><span class="pre">wap.bootcamp.common.ui.List</span></tt> のインスタンスが設定されているのがわかります。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">通常は <tt class="docutils literal"><span class="pre">wap.bootcamp.common.ui.ListItem</span></tt> のインスタンスが設定されます。</p>
+</div>
+<p>そこで、<tt class="docutils literal"><span class="pre">trySelectProject_()</span></tt> の処理冒頭に次のロジックを追加します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">noneIsSelected</span> <span class="o">=</span> <span class="o">!</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span> <span class="k">instanceof</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">common</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">ListItem</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">noneIsSelected</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">taskList_</span><span class="p">.</span><span class="nx">setProject</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+  <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>続いて <tt class="docutils literal"><span class="pre">TaskList#setProject()</span></tt> を次のように直します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {?wap.bootcamp.todolist.dto.Project} project</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setProject</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">project</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">project_</span> <span class="o">=</span> <span class="nx">project</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">projectLabel_</span><span class="p">.</span><span class="nx">setCaption</span><span class="p">(</span><span class="nx">project</span> <span class="o">?</span> <span class="nx">project</span><span class="p">.</span><span class="nx">title</span> <span class="o">:</span> <span class="s1">''</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">removeAll</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>これで全てのプロジェクトを削除した時点でエラーが発生することはなくなりますが、
+プロジェクトが選択されていない状態でも、タスクの入力フォームと [ADD] ボタンとが有効なままです。
+この状態で [ADD] ボタンを押すと、「Uncaught TypeError: Cannot read property ‘id’ of null」というエラーが発生します。</p>
+<p>プロジェクトが設定されていない状態では、入力フォームが無効になるようにしましょう。</p>
+<div class="section" id="tasklist">
+<h4>TaskList の修正<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#tasklist" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>最初に、<tt class="docutils literal"><span class="pre">wap.bootcamp.todolist.container.TaskList</span></tt> を修正します。</p>
+<p>まず、<tt class="docutils literal"><span class="pre">setProject()</span></tt> を次のように再修正します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {?wap.bootcamp.todolist.dto.Project} project</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setProject</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">project</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">project_</span> <span class="o">=</span> <span class="nx">project</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">projectLabel_</span><span class="p">.</span><span class="nx">setCaption</span><span class="p">(</span><span class="nx">project</span> <span class="o">?</span> <span class="nx">project</span><span class="p">.</span><span class="nx">title</span> <span class="o">:</span> <span class="s1">''</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">removeAll</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">setEnabled</span><span class="p">(</span><span class="nb">Boolean</span><span class="p">(</span><span class="nx">project</span><span class="p">));</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">isEnabled()</span></tt>、<tt class="docutils literal"><span class="pre">setEnabled()</span></tt> を実装します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @return {boolean}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">isEnabled</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">enabled_</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {boolean} enabled</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setEnabled</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">enabled</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">enabled_</span> <span class="o">=</span> <span class="nx">enabled</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">setEnabled</span><span class="p">(</span><span class="nx">enabled</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">.</span><span class="nx">setEnabled</span><span class="p">(</span><span class="nx">enabled</span><span class="p">);</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">enable</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(),</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">,</span> <span class="o">!</span><span class="nx">enabled</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>コンストラクタ、<tt class="docutils literal"><span class="pre">decorateInternal()</span></tt>、<tt class="docutils literal"><span class="pre">disposeInternal()</span></tt> も修正します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {goog.dom.DomHelper=} opt_domHelper</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.ui.Component}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opt_domHelper</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">opt_domHelper</span><span class="p">);</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {wap.bootcamp.todolist.dto.Task}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">project_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {wap.bootcamp.common.ui.List.&lt;number&gt;}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {wap.bootcamp.todolist.ui.Foldable}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span><span class="p">;</span>
+
+
+  <span class="cm">/**</span>
+<span class="cm">   * Divert {@link goog.ui.Control} as a label UI component.</span>
+<span class="cm">   * @type {goog.ui.Control}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">projectLabel_</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {boolean}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">enabled_</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">buildComponents_</span><span class="p">();</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Component</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">decorateInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'decorateInternal'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">list_</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findListElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">));</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">foldable_</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findFoldableElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">));</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">registrar_</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findRegistrarElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">));</span>
+  <span class="p">(</span><span class="cm">/** @type {goog.ui.Component} */</span> <span class="k">this</span><span class="p">.</span><span class="nx">projectLabel_</span><span class="p">).</span><span class="nx">decorate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">findProjectLabelElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">));</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">enabled_</span> <span class="o">=</span> <span class="o">!</span><span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span>
+      <span class="nx">$element</span><span class="p">,</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">TaskList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">disposeInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'disposeInternal'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">discardComponents_</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">project_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">enabled_</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p><tt class="docutils literal"><span class="pre">decorateInternal()</span></tt> で <tt class="docutils literal"><span class="pre">this.list_.isEnabled()</span></tt> と <tt class="docutils literal"><span class="pre">this.registrar_.isEnabled()</span></tt>、
+そして <tt class="docutils literal"><span class="pre">CSS_CLASSES.DISABLED</span></tt> の有無が不一致になるケースは想定していません。
+<tt class="docutils literal"><span class="pre">canDecorate()</span></tt> で正しく判定するのは相当複雑になってしまううえ、アプリ開発の本質からはずれてしまうので
+すべてが true/false のいずれかで一致することを前提として構いません。</p>
+<p class="last">HUE の「ページロード時に DOM 編集を行ってはいけない」という制約がなければ、
+子コンポーネントの状態 (とそれに伴う DOM の状態) を親コンポーネントの状態で上書きしてしまうのが無難ですが、
+HUE の場合は、フレームワーク側でそのような不整合な HTML を生成しないことで対応します。</p>
+</div>
+</div>
+<div class="section" id="registrar">
+<h4>Registrar の修正<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#registrar" title="このヘッドラインへのパーマリンク">¶</a></h4>
+<p>Registrar コンポーネントにも <tt class="docutils literal"><span class="pre">isEnabled()</span></tt>、<tt class="docutils literal"><span class="pre">setEnabled()</span></tt> を実装します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @param {goog.dom.DomHelper=} opt_domHelper</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @extends {goog.ui.Component}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">opt_domHelper</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">opt_domHelper</span><span class="p">);</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {Element}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {Element}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @type {boolean}</span>
+<span class="cm">   * @private</span>
+<span class="cm">   */</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">enabled_</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nx">goog</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">,</span> <span class="nx">goog</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Component</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">decorateInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'decorateInternal'</span><span class="p">,</span> <span class="nx">$element</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findTextElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">findAddButtonElement_</span><span class="p">(</span><span class="nx">$element</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">enabled_</span> <span class="o">=</span> <span class="o">!</span><span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span>
+      <span class="nx">$element</span><span class="p">,</span> <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+<span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">disposeInternal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">enabled_</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">'disposeInternal'</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">isEnabled()</span></tt>、<tt class="docutils literal"><span class="pre">setEnabled()</span></tt> も実装します。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @return {boolean}</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">isEnabled</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">enabled_</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * @param {boolean} enabled</span>
+<span class="cm"> */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setEnabled</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">enabled</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">enabled_</span> <span class="o">=</span> <span class="nx">enabled</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$text_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="o">!</span><span class="nx">enabled</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span><span class="p">.</span><span class="nx">disabled</span> <span class="o">=</span> <span class="o">!</span><span class="nx">enabled</span><span class="p">;</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">dom</span><span class="p">.</span><span class="nx">classlist</span><span class="p">.</span><span class="nx">enable</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getElement</span><span class="p">(),</span>
+      <span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">CSS_CLASSES</span><span class="p">.</span><span class="nx">DISABLED</span><span class="p">,</span> <span class="o">!</span><span class="nx">enabled</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>これで、全てのプロジェクトを削除したタイミングで、
+登録フォームが無効になり、エラーが出なくなります。</p>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">Foldable コンポーネントに関しても同様に有効・無効処理を付けるのが自然でしょうが、この演習課題では省略します。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">ノート</p>
+<p class="last">別法として、これらの継承元クラスを <tt class="docutils literal"><span class="pre">goog.ui.Control</span></tt> にすることで、
+有効・無効の処理を大幅に減らすことができます
+(場合によっては <tt class="docutils literal"><span class="pre">goog.ui.Control</span></tt> 標準機能だけで済むかも)。</p>
+</div>
+<p>あと、<tt class="docutils literal"><span class="pre">this.findAddButtonElement_($element)</span></tt> を <tt class="docutils literal"><span class="pre">decorateInternal()</span></tt> で呼び出すように変更したことにあわせて、
+<tt class="docutils literal"><span class="pre">enterDocument()</span></tt> で <tt class="docutils literal"><span class="pre">this.findAddButtonElement_($element)</span></tt> をもう一度呼ばないように回収しておきます。</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="cm">/** @override */</span>
+<span class="nx">wap</span><span class="p">.</span><span class="nx">bootcamp</span><span class="p">.</span><span class="nx">todolist</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">Registrar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enterDocument</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">goog</span><span class="p">.</span><span class="nx">base</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="s1">'enterDocument'</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getHandler</span><span class="p">().</span><span class="nx">listen</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">$addButton_</span><span class="p">,</span>
+      <span class="nx">goog</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">CLICK</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">fireAddEvent_</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>目次<a class="headerlink" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id8" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>ステップ 1</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_1_use_ui_components.html"><em>UI コンポーネントを使ってみよう</em></a></td>
+</tr>
+<tr class="row-even"><td>ステップ 2</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_2_make_ui_components.html"><em>UI コンポーネントを作ってみよう</em></a></td>
+</tr>
+<tr class="row-odd"><td>ステップ 3</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html"><em>コンテナコンポーネントを作ってみよう</em></a></td>
+</tr>
+<tr class="row-even"><td>ステップ 4</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_4_make_controllers.html"><em>コントローラーを作ろう</em></a></td>
+</tr>
+<tr class="row-odd"><td>ステップ 5</td>
+<td><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_5_add_validators.html"><em>バリデーションロジックを加える</em></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#">コンテナコンポーネントを作ってみよう</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#wap-bootcamp-todolist-container-projectlist">wap.bootcamp.todolist.container.ProjectList コンポーネント</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id2">子コンポーネントを動作させる</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id3">コンテナコンポーネント固有の処理を書く</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#wap-bootcamp-todolist-container-tasklist">wap.bootcamp.todolist.container.TaskList コンポーネント</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id4">注意点</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id5">解答例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#wap-bootcamp-todolist-container-application">wap.bootcamp.todolist.container.Application コンポーネント</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id6">コンテナコンポーネント間の連携</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id7">不具合の解消</a><ul>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#tasklist">TaskList の修正</a></li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#registrar">Registrar の修正</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html#id8">目次</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>このページ</h3>
+  <ul class="this-page-menu">
+    <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/_sources/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.txt" rel="nofollow">ソースコードを表示</a></li>
+  </ul>
+<div id="searchbox">
+  <h3>クイック検索</h3>
+    <form class="search" action="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/search.html" method="get">
+      <input type="text" name="q">
+      <input type="submit" value="検索">
+      <input type="hidden" name="check_keywords" value="yes">
+      <input type="hidden" name="area" value="default">
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    検索キーワードは短い言葉に分割するとヒットしやすいです。(例)前提条件→前提 条件
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/genindex.html" title="総合索引">索引</a></li>
+        <li><a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/ja/index.html">HUE BT documents 1.0 ドキュメント</a> »</li>
+<li class="right">
+    <a href="https://info.hue.workslan/doc/company-hue-doc/sphinx/bootcamp/clientSide/intermediate/practice/practice_3_make_container_components.html">English</a> |
+    
+</li>
+
+      </ul>
+    </div>
+    <div class="footer">
+        © Copyright 2013, Works Applications, Inc..
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2 で生成しました。
+    </div>
+  
+</body></html>

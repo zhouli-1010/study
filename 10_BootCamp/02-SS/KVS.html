@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<!-- saved from url=(0063)https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html -->
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+
+  <title>KVS — Bootcamp ServerSide Intermediate - latest</title>
+  <link rel="stylesheet" href="./KVS_files/normalize.css" type="text/css">
+  <link rel="stylesheet" href="./KVS_files/basic.css" type="text/css">
+  <link rel="stylesheet" href="./KVS_files/pygments.css" type="text/css">
+  <link rel="stylesheet" href="./KVS_files/solomon.css" type="text/css">
+  <link rel="index" title="索引" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/genindex.html">
+  <link rel="search" title="検索" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/search.html">
+  <link rel="top" title="Bootcamp ServerSide Intermediate - latest" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html">
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT:    '',
+      VERSION:     'latest',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE:  true
+    };
+  </script>
+  <script type="text/javascript" src="./KVS_files/jquery.js.ダウンロード"></script>
+  <script type="text/javascript" src="./KVS_files/underscore.js.ダウンロード"></script>
+  <script type="text/javascript" src="./KVS_files/doctools.js.ダウンロード"></script>
+  <script type="text/javascript" src="./KVS_files/translations.js.ダウンロード"></script>
+  <script src="./KVS_files/MathJax.js.ダウンロード" id=""></script>
+  <script type="text/javascript" src="./KVS_files/solomon.js.ダウンロード"></script>
+<style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+<body><div id="MathJax_Message" style="display: none;"></div><header id="global-header" class="both-side">
+  <div class="left">
+      <div class="vcenter">
+        <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html">
+          <img src="./KVS_files/bootcamp-logo.png" class="bland-logo">
+        </a>
+      </div>
+      <div class="vcenter">
+        <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html" class="master-link">
+          <h1>Bootcamp ServerSide Intermediate - latest</h1>
+        </a>
+      </div>
+    
+  </div>
+  
+  <div class="right">
+    <nav class="vcenter">
+      <ul class="rellinks">
+<li>
+    日本語
+  </li>
+<li>
+    <a href="https://webootcamp.worksap.co.jp/course/ss-i/en/server_kvs.html">
+    
+    English
+    </a>
+    
+  </li>
+        <li>
+          <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/genindex.html" title="総合索引" accesskey="I">索引</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+  <div class="both-side main-layout">
+    <div class="left"><nav class="related-nav" aria-label="related navigation">
+
+  <ul class="breadcrumb-list">
+    <li>
+      <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html">Bootcamp ServerSide Intermediate - latest</a>
+    </li>
+  </ul>
+
+</nav>
+      <main>
+  <div class="section" id="kvs">
+<h1>KVS<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#kvs" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="what-is-kvs">
+<h2>What is KVS?<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#what-is-kvs" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="line-block">
+<div class="line"><cite>NoSQL</cite> stands for Not Only SQL.</div>
+<div class="line"><cite>RDBMS</cite> stands for Relational DataBase Management System.</div>
+<div class="line"><cite>KVS</cite> stands for Key Value Store.</div>
+<div class="line">KVS is based on the NoSQL concept, and the Cassandra is one of KVS.</div>
+<div class="line">NoSQL concept is provided in order to realize.</div>
+</div>
+<ul class="simple">
+<li>Simplicity of Design</li>
+<li>Horizontal Scaling</li>
+<li>High availability</li>
+</ul>
+<div class="line-block">
+<div class="line">So the basic concept is <cite>Scale Out</cite> rather than <cite>Scale Up</cite> ,which is RDBMS�fs strategy.</div>
+<div class="line">Of course, it is not good at managing relation-ship among data.</div>
+</div>
+<div class="line-block">
+<div class="line">ACID is the greatest merit to use RDBMS.</div>
+<div class="line">As you know ACID stands for Atomicity, Consistency, Isolation and Durability.</div>
+<div class="line">The greatest merit of RDBMS is transaction safety.</div>
+<div class="line">However, KVS does not ensure the ACID fully, it is designed as compromised one.</div>
+<div class="line">Because of giving up fully support of ACID, KVS keeps simple design and easy to expand their ability by scaling out.</div>
+<div class="line">We need to consider about the difference in between.</div>
+<div class="line">Because we need to handle very complex data to be able to satify customer requirement.</div>
+<div class="line">In addition, as you know, COMPANY’s data is very compricated and hard to handle.</div>
+<div class="line">We need to tackle with it as hard as we can, to do so, we need to catch up with the basic strategy of Cassandra!!</div>
+</div>
+<div class="section" id="scaling-strategy">
+<h3>Scaling strategy<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#scaling-strategy" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">At first, we focus on the strategy both RDBMS and KVS.</div>
+<div class="line">As we learned, <cite>scale-up</cite> is the strategy for RDBMS, <cite>scale-out</cite> is for the KVS.</div>
+<div class="line">What is the each term? They are...</div>
+</div>
+<ul>
+<li><p class="first">Scale up means enhancing the performance with storengthening machine’s CPU and Memory.</p>
+</li>
+<li><div class="first line-block">
+<div class="line">Scale out means enhancing the performance with working many machines at the same time, if more power is necessary</div>
+<div class="line">we can add machine into the cluster to boost up the perfomance more.</div>
+</div>
+</li>
+</ul>
+<div class="line-block">
+<div class="line">KVS uses latter strategy.</div>
+<div class="line">From this point, we are going to learn about Cassandra that is one of the KVS.</div>
+<div class="line">It is quite similar on the surface, but internally completely different one.</div>
+<div class="line">As we learned, we should catch up with the difference in between RDBMS and KVS.</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="cassandra-essential">
+<h1>必修 Cassandra<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#cassandra-essential" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="line-block">
+<div class="line">まずこの章で Cassndra について誰もがおさえておくべきことを説明します。</div>
+<div class="line">それは今後 Cassandra を活用方法を議論していく上で必要な知識です。</div>
+</div>
+<div class="section" id="technical-terms">
+<h2>術語<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#technical-terms" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="line-block">
+<div class="line">まずは Cassandra にまつわる術語を覚えましょう。</div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%">
+<col width="79%">
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><p class="first last">術語</p>
+</th>
+<th class="head"><p class="first last">解説</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Cluster</td>
+<td><p class="first last">Node をまとめたものです。（Ring と呼ばれることもあります）</p>
+</td>
+</tr>
+<tr class="row-odd"><td>Node</td>
+<td><p class="first last">個々の Cassandra サーバです。</p>
+</td>
+</tr>
+<tr class="row-even"><td>KeySpace</td>
+<td><p class="first last">後述する Column Family をまとめるものです。</p>
+</td>
+</tr>
+<tr class="row-odd"><td>Column Family</td>
+<td><p class="first last">RDBMC における Table のように、Row が集まっています。</p>
+</td>
+</tr>
+<tr class="row-even"><td>Row</td>
+<td><p class="first last">Column の集まりです。</p>
+</td>
+</tr>
+<tr class="row-odd"><td>Primary Key</td>
+<td><p class="first last">データを一意に特定できるキーです。</p>
+</td>
+</tr>
+<tr class="row-even"><td>column</td>
+<td><p class="first last">KVS は Java の Map のようにデータを格納します。Column は Key にあたります。</p>
+</td>
+</tr>
+<tr class="row-odd"><td>Value</td>
+<td><p class="first last">KVS は Java の Map のようにデータを格納します。Column は Value にあたります。</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="figure">
+<h3>構造図<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#figure" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">上記の説明だけでは理解することは難しいかもしれません。そこで、JSON データを例に Cassandra の構造を見てみましょう。</div>
+</div>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="c1">// not proper JavaScript but for your understanding</span>
+<span class="kd">var</span> <span class="nx">keySpace</span> <span class="o">=</span>
+  <span class="p">{</span>
+  <span class="s1">'COLUMN_FAMILY1'</span> <span class="o">:</span> <span class="p">{</span>
+                        <span class="s1">'ROW1'</span> <span class="o">:</span> <span class="p">{</span>
+                                    <span class="s1">'COLUMN1'</span> <span class="o">:</span> <span class="s1">'VALUE1'</span><span class="p">,</span>
+                                    <span class="s1">'COLUMN2'</span> <span class="o">:</span> <span class="s1">'VALUE2'</span>
+                                 <span class="p">}</span>
+                        <span class="s1">'ROW2'</span> <span class="o">:</span> <span class="p">{</span>
+                                    <span class="s1">'COLUMN1'</span> <span class="o">:</span> <span class="s1">'VALUE1'</span>
+                                 <span class="p">}</span>
+                     <span class="p">},</span>
+  <span class="s1">'COLUMN_FAMILY2'</span> <span class="o">:</span> <span class="p">{</span>
+                        <span class="s1">'ROW1'</span> <span class="o">:</span> <span class="p">{</span>
+                                    <span class="s1">'COLUMN3'</span> <span class="o">:</span> <span class="s1">'VALUE3'</span>
+                                 <span class="p">}</span>
+                     <span class="p">}</span>
+  <span class="p">};</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">上の JSON で、「ROW1」はそれに紐付くデータを取得するために使われる「RowKey」となります。</div>
+<div class="line">このように、Cassandra のデータ構造はとても立体的ですが、特定のデータに直接アクセスするのは簡単です。</div>
+<div class="line">この単純さこそが高速なレスポンスを実現する鍵となっているのです。</div>
+<div class="line">なお、実際には Cassandra の内部構造は JSON ではなく、似たような別の構造をしています。</div>
+</div>
+</div>
+</div>
+<div class="section" id="keyspace">
+<h2>KeySpace<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#keyspace" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="what-is-keyspace">
+<h3>Keyspace とは何か？<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#what-is-keyspace" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">Keyspace は RDBMS の「database」のように最も大きなデータのかたまりになります。</div>
+<div class="line">ですから、私たちはまず最初に Keyspace をどのようなものにするか決定しなければなりません。</div>
+</div>
+<p>ほとんどは RDBMS の database 同様に考えますが、いくつか異なる点もあります。</p>
+<ul class="simple">
+<li>Replication factor</li>
+<li>Replication strategy</li>
+<li>Enable to specify column family</li>
+</ul>
+<div class="line-block">
+<div class="line">なかでもこれらが RDBMS と大きく異なる点になります。</div>
+</div>
+</div>
+<div class="section" id="replication-factor">
+<h3>Replication factor<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#replication-factor" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">Cassandra 固有の話に戻ります。</div>
+<div class="line">「Replication factor」とはいくつの Node にデータを保存するかの設定になります。</div>
+<div class="line">データのコピーを「Replica」と呼びます。たとえば、Replication factor が 3 のとき、</div>
+<div class="line">それぞれの Row は Ring 上の 3 つの Node にコピーされます。</div>
+<div class="line">このパラメータは KeySpace を作るときに後述する命令で設定できます。</div>
+</div>
+</div>
+<div class="section" id="replica-strategy">
+<h3>Replica strategy<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#replica-strategy" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">「Replication strategy」は「Replica」をどのように Cluster 上に配置していくかを意味します。</div>
+<div class="line">いくつかの Replication strategy があります。</div>
+</div>
+<ul class="simple">
+<li>SimpleStrategy</li>
+<li>OldNetworkTopologyStrategy</li>
+<li>NetworkTopologyStrategy</li>
+<li>LocalStrategy</li>
+</ul>
+</div>
+<div class="section" id="column-family">
+<h3>Column Family<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#column-family" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">Keyspace はそれぞれ最低でも 1 つの Column family を持っています（通常はもっと多くの Column family を持ちます）。</div>
+</div>
+</div>
+</div>
+<div class="section" id="column">
+<h2>Column<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#column" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="line-block">
+<div class="line">Cassandra の Column は RDBMS のそれとまったく異なります。</div>
+<div class="line">もっとも大きな違いは、Column を自由に追加できることでしょう。</div>
+<div class="line">Column は <cite>name</cite> と <cite>value</cite>、 <cite>timestamp</cite> で構成されています。</div>
+</div>
+<div class="section" id="column-structure">
+<h3>Column の構造<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#column-structure" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li><p class="first">Column の Name は byte[] 型です。</p>
+</li>
+<li><p class="first">Column の Value は byte[] 型です。</p>
+</li>
+<li><p class="first">Column の Timestamp は long 型です。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="column-is-sorted">
+<h3>Column はソート済み<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#column-is-sorted" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="line-block">
+<div class="line">Column は Column family を作ったときに指定した <cite>comparator</cite> オプションに応じてソートされます。</div>
+<div class="line"><cite>comparator</cite> は以下のいずれかから選択します。</div>
+</div>
+<ul class="simple">
+<li>AsciiType</li>
+<li>BytesType</li>
+<li>LexicalUUIDType</li>
+<li>IntegerType</li>
+<li>LongType</li>
+<li>TimeUUIDType</li>
+<li>UTF8Type</li>
+</ul>
+<div class="line-block">
+<div class="line">ソート順はここで選択した comparator により内部で自動的に決定されます。</div>
+<div class="line">実際の並べ替え処理はデータを Cassandra に保存したときに自動的に行われます。</div>
+<div class="line">つまり、データの並び順は固定で、後から決して変えることができないのです。</div>
+</div>
+</div>
+</div>
+<div class="section" id="other-keywords">
+<h2>その他のキーワード<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#other-keywords" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>本ドキュメントでは以下のキーワードを解説しませんが、HUE の本格的な開発がはじまるまでにキャッチアップしておく必要があるでしょう。</p>
+<ul class="simple">
+<li>Super Column</li>
+<li>Composite Key</li>
+</ul>
+<div class="line-block">
+<div class="line">概念的な説明はここまでです。十分に理解できたと思ったら以下に進んでいきましょう。</div>
+</div>
+</div>
+<div class="section" id="sample-environment">
+<h2>サンプル環境<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#sample-environment" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="line-block">
+<div class="line">この章ではこの <a class="reference external" href="https://mail.worksap.co.jp/webmail2/resources/fe/Fnhvdb974j">Cassandra サンプル</a> (Fetch code: gvAo3b) を使って学習を進めていきます。</div>
+<div class="line">この環境には説明のためいくつかの Column family が用意されています。</div>
+</div>
+<p>Be carefully! Because cassandra require 2GB heap, you need to use 64bit JVM.</p>
+<div class="section" id="installation-steps">
+<h3>インストール方法<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#installation-steps" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ol class="arabic simple">
+<li><p class="first">Zip ファイルを適当なフォルダに解凍します。</p>
+</li>
+<li><p class="first">cassandra.bat をダブルクリックするとあなたの PC 上で Cassandra が動きはじめます。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="section" id="cassandra-and-java">
+<h1>Cassandra and Java<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#cassandra-and-java" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="line-block">
+<div class="line">Can you image the usage of KVS? ...OK, why don’t you compare with SQL?</div>
+<div class="line">At first, there is a DTO and also  a similar table on RDB.</div>
+<div class="line">This @Key is same as PRIMARY KEY for SQL.</div>
+<div class="line">Of course, it is necessory for KVS.</div>
+<div class="line"><br></div>
+<div class="line">We should design partition key and sort key.</div>
+<div class="line">With hash value of partition key, Cassandra will split Row to each node.</div>
+<div class="line">Because of this architecture, partition key is not useful for sort.</div>
+<div class="line"><br></div>
+<div class="line">KeyValueAccess treat @Key(order = 0) as partition key.</div>
+<div class="line">And if you set “isPartitionKey = true”, KeyValueAccess treat it as partition key.</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleDto</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1L</span><span class="o">;</span>
+        <span class="nd">@Key</span><span class="o">(</span><span class="n">order</span> <span class="o">=</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">column1</span><span class="o">;</span>
+        <span class="nd">@Key</span><span class="o">(</span><span class="n">order</span> <span class="o">=</span> <span class="mi">1</span><span class="o">,</span> <span class="n">isPartitionKey</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">column2</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">You can’t set “isPartitionKey = true” if you not set partition key little order.</div>
+<div class="line">Because column2 is not partition key, the follow one will throw error.</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleDto</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1L</span><span class="o">;</span>
+        <span class="nd">@Key</span><span class="o">(</span><span class="n">order</span> <span class="o">=</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">column1</span><span class="o">;</span>
+        <span class="nd">@Key</span><span class="o">(</span><span class="n">order</span> <span class="o">=</span> <span class="mi">1</span><span class="o">)</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">column2</span><span class="o">;</span>
+        <span class="nd">@Key</span><span class="o">(</span><span class="n">order</span> <span class="o">=</span> <span class="mi">2</span><span class="o">,</span> <span class="n">isPartitionKey</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">column3</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">You can use dummy value to @Key(order = 0), if entity is small and Row size is little.</div>
+<div class="line">It will save single node, but be sorted.</div>
+<div class="line"><br></div>
+<div class="line">If your application is used by fix way, you can design partition key easy.</div>
+<div class="line">For example, Article belongs one user we can use UserId as partition key.</div>
+<div class="line">Never think about report, analysis and other use case at same time.</div>
+<div class="line">It is important to focus simple use case when you design column family.</div>
+<div class="line">And if there is some use case, you should devide them to some column family.</div>
+<div class="line">(You can use MQ, Async update for these column family)</div>
+<div class="line"><br></div>
+<div class="line">The detail of this design pattern is written in <a class="reference external" href="http://hue.workslan/mediawiki-latest/index.php/How_to_create_HUE_Index_data_document">here</a></div>
+</div>
+<p>To know specifications for this class, please see the <a class="reference external" href="https://scm.hue.workslan/tools/key-value-access/blob/master/src/test/java/com/worksap/company/access/cassandra/CassandraAccessNetflixTest.java">test case</a>.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">KeyValueDto</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2683933176384037064L</span><span class="o">;</span>
+
+        <span class="nd">@Key</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">key</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">value</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="n">ZonedDateTime</span> <span class="n">createData</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">KeyValueDto</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">String</span> <span class="n">value</span><span class="o">,</span> <span class="n">ZonedDateTime</span> <span class="n">createData</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">;</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">createData</span> <span class="o">=</span> <span class="n">createData</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getKey</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">key</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setKey</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getValue</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">value</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setValue</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">Objects</span><span class="o">.</span><span class="na">hash</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">createData</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="n">Object</span> <span class="n">obj</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="n">KeyValueDto</span><span class="o">){</span>
+                        <span class="n">KeyValueDto</span> <span class="n">kvd</span> <span class="o">=</span> <span class="o">(</span><span class="n">KeyValueDto</span><span class="o">)</span> <span class="n">obj</span><span class="o">;</span>
+                        <span class="k">return</span> <span class="n">Objects</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">kvd</span><span class="o">.</span><span class="na">key</span><span class="o">)</span>
+                                        <span class="o">&amp;&amp;</span> <span class="n">Objects</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">createData</span><span class="o">,</span> <span class="n">kvd</span><span class="o">.</span><span class="na">createData</span><span class="o">)</span>
+                                        <span class="o">&amp;&amp;</span> <span class="n">Objects</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">kvd</span><span class="o">.</span><span class="na">value</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">KEY_VALUE</span> <span class="p">(</span><span class="k">KEY</span> <span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">VALUE</span> <span class="n">VARCHAR2</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">(</span><span class="k">KEY</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">When you want to sort your Rows, You can use DateTime.</div>
+<div class="line">But in HUE development, you should use ZonedDateTime.</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">ZonedDateTime</span><span class="o">.</span><span class="na">now</span><span class="o">().</span><span class="na">withZoneSameInstant</span><span class="o">(</span><span class="n">ZoneId</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"JST"</span><span class="o">,</span> <span class="n">ZoneId</span><span class="o">.</span><span class="na">SHORT_IDS</span><span class="o">)),</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">When you want to get rundom value, You can use UUID.</div>
+<div class="line">You can choice type 1 or type 4.</div>
+<div class="line"><br></div>
+<div class="line">Type 1 has DateTime and MAC address, it is soreted and more difficult to conflict.</div>
+<div class="line">But in HUE, UUID is generated by AP server. (MAC address is same value). Then we lost a half part of UUID.</div>
+<div class="line">(And type 1 is not yet supported by JDK)</div>
+<div class="line"><br></div>
+<div class="line">Type 4 is random value. It is not sorted. But JDK support it.</div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="c1">// Type 1</span>
+<span class="c1">// use com.worksap.company.access.cassandra.uuid.UUIDUtil</span>
+<span class="n">UUIDUtil</span><span class="o">.</span><span class="na">getTimeUUID</span><span class="o">();</span>
+
+<span class="c1">// Type 4</span>
+<span class="n">UUID</span><span class="o">.</span><span class="na">randomUUID</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+</pre></div>
+</div>
+<div class="section" id="get-a-client-for-cassandra">
+<h2>Get a client for Cassandra<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#get-a-client-for-cassandra" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="get-by-autowired">
+<h3>Get by @Autowired<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#get-by-autowired" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>KeyValueAccess is include cassandra-access.jar. Because it was made by WorksApplications, you cannot get it by web repository. You should add repository at pom.xml.</p>
+<div class="highlight-xml"><div class="highlight"><pre><span></span><span class="nt">&lt;project</span> <span class="na">xmlns=</span><span class="s">"http://maven.apache.org/POM/4.0.0"</span>
+         <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+         <span class="na">xsi:schemaLocation=</span><span class="s">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+    :
+    :
+    :
+  <span class="nt">&lt;repositories&gt;</span>
+    <span class="nt">&lt;repository&gt;</span>
+      <span class="nt">&lt;id&gt;</span>hue-group<span class="nt">&lt;/id&gt;</span>
+      <span class="nt">&lt;url&gt;</span>https://nexus.hue.workslan/nexus/content/groups/hue<span class="nt">&lt;/url&gt;</span>
+      <span class="nt">&lt;snapshots&gt;</span>
+        <span class="nt">&lt;updatePolicy&gt;</span>always<span class="nt">&lt;/updatePolicy&gt;</span>
+      <span class="nt">&lt;/snapshots&gt;</span>
+    <span class="nt">&lt;/repository&gt;</span>
+  <span class="nt">&lt;/repositories&gt;</span>
+    :
+    :
+    :
+  <span class="nt">&lt;dependencies&gt;</span>
+    :
+    :
+    :
+    <span class="nt">&lt;dependency&gt;</span>
+      <span class="nt">&lt;groupId&gt;</span>com.worksap.company.access<span class="nt">&lt;/groupId&gt;</span>
+      <span class="nt">&lt;artifactId&gt;</span>cassandra-access<span class="nt">&lt;/artifactId&gt;</span>
+      <span class="nt">&lt;version&gt;</span>1.12.1<span class="nt">&lt;/version&gt;</span>
+      <span class="nt">&lt;exclusions&gt;</span>
+        <span class="nt">&lt;exclusion&gt;</span>
+          <span class="nt">&lt;groupId&gt;</span>commons-logging<span class="nt">&lt;/groupId&gt;</span>
+          <span class="nt">&lt;artifactId&gt;</span>commons-logging<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;/exclusion&gt;</span>
+        <span class="nt">&lt;exclusion&gt;</span>
+          <span class="nt">&lt;groupId&gt;</span>log4j<span class="nt">&lt;/groupId&gt;</span>
+          <span class="nt">&lt;artifactId&gt;</span>log4j<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;/exclusion&gt;</span>
+        <span class="nt">&lt;exclusion&gt;</span>
+          <span class="nt">&lt;groupId&gt;</span>org.mortbay.jetty<span class="nt">&lt;/groupId&gt;</span>
+          <span class="nt">&lt;artifactId&gt;</span>servlet-api<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;/exclusion&gt;</span>
+        <span class="nt">&lt;exclusion&gt;</span>
+          <span class="nt">&lt;groupId&gt;</span>org.springframework<span class="nt">&lt;/groupId&gt;</span>
+          <span class="nt">&lt;artifactId&gt;</span>spring<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;/exclusion&gt;</span>
+      <span class="nt">&lt;/exclusions&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+      <span class="nt">&lt;groupId&gt;</span>com.worksap.company<span class="nt">&lt;/groupId&gt;</span>
+      <span class="nt">&lt;artifactId&gt;</span>company-framework-autoindex-annotations<span class="nt">&lt;/artifactId&gt;</span>
+      <span class="nt">&lt;version&gt;</span>1.12.1<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+  <span class="nt">&lt;/dependencies&gt;</span>
+<span class="nt">&lt;/project&gt;</span>
+</pre></div>
+</div>
+<p>Then you can use KeyValueAccess in your code.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@Autowired</span>
+<span class="kd">private</span> <span class="n">KeyValueAccess</span> <span class="n">kva</span><span class="o">;</span>
+</pre></div>
+</div>
+<p>When you @Autowired this class, add bean definition at ApplicationContext.xml.</p>
+<div class="highlight-xml"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans</span>
+<span class="s">                           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"keyValueAccess"</span> <span class="na">class=</span><span class="s">"com.worksap.company.access.cassandra.CassandraAccessDatastax"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/beans&gt;</span>
+</pre></div>
+</div>
+<p>And add resource configuration at context.xml(tomcat).</p>
+<div class="highlight-xml"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;Context&gt;</span>
+
+  <span class="c">&lt;!-- other configurations... --&gt;</span>
+
+  <span class="nt">&lt;Resource</span> <span class="na">name=</span><span class="s">"company/Cassandra"</span> <span class="na">auth=</span><span class="s">"Container"</span> <span class="na">type=</span><span class="s">"java.io.File"</span>
+      <span class="na">factory=</span><span class="s">"com.worksap.company.access.cassandra.setting.CassandraSettingFactory"</span>
+      <span class="na">path=</span><span class="s">"c:\\Develop\\WorkSpace\\bootcamp\\bootcampKvs.properties"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/Context&gt;</span>
+</pre></div>
+</div>
+<p>Then you need to put “bootcampKvs.properties” at path. The file should be</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>cassandra.host=localhost
+cassandra.thriftPort=9160
+cassandra.nativeTransportPort=9042
+cassandra.readLevel=ONE
+cassandra.writeLevel=ONE
+cassandra.autoUpdateTable=true
+cassandra.clusterName=hue
+cassandra.schema=demo
+</pre></div>
+</div>
+</div>
+<div class="section" id="cast-yourself">
+<h3>Cast yourself<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#cast-yourself" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">KeyValueAccess</span> <span class="n">kva</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CassandraAccessDatastax</span><span class="o">(</span><span class="n">cassandraSetting</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="get-with-a-single-key">
+<h2>Get with a single key<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#get-with-a-single-key" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">KeyValueDto</span> <span class="n">keyValueDto</span> <span class="o">=</span> <span class="n">kva</span><span class="o">.</span><span class="na">getSingle</span><span class="o">(</span><span class="s">"10"</span><span class="o">.</span> <span class="n">KeyValueDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">KEY_VALUE</span> <span class="k">WHERE</span> <span class="k">KEY</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>kva#getSingle() only support single key(It means, you can use kva#getSingle() only when your entity has ONE @Key).</p>
+<p>If your entity has many keis, you should use kva#search().</p>
+<div class="section" id="get-with-mutiple-keys">
+<h3>Get with mutiple keys<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#get-with-mutiple-keys" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">keys</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="s">"10"</span><span class="o">,</span><span class="s">"20"</span><span class="o">,</span><span class="s">"30"</span><span class="o">);</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">KeyValueDto</span><span class="o">&gt;</span> <span class="n">dtos</span> <span class="o">=</span> <span class="n">kva</span><span class="o">.</span><span class="na">getMultiple</span><span class="o">(</span><span class="n">keys</span><span class="o">,</span> <span class="n">KeyValueDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">KEY_VALUE</span> <span class="k">WHERE</span> <span class="k">KEY</span> <span class="k">IN</span> <span class="p">(</span><span class="ss">"10"</span><span class="p">,</span><span class="ss">"20"</span><span class="p">,</span><span class="ss">"30"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="iterator-for-all-data">
+<h3>Iterator for all data<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#iterator-for-all-data" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Iterator</span><span class="o">&lt;</span><span class="n">KeyValueDto</span><span class="o">&gt;</span> <span class="n">dtos</span> <span class="o">=</span> <span class="n">kva</span><span class="o">.</span><span class="na">searchAllWithIterator</span><span class="o">(</span><span class="n">KeyValueDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">KEY_VALUE</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="list-data-start-with-a-given-key">
+<h3>List data start with a given key<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#list-data-start-with-a-given-key" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">KeyValueDto</span><span class="o">&gt;</span> <span class="n">emps</span> <span class="o">=</span> <span class="n">kva</span><span class="o">.</span><span class="na">search</span><span class="o">(</span>
+                <span class="k">new</span> <span class="n">SearchConditions</span><span class="o">(</span><span class="n">SearchCondition</span><span class="o">.</span><span class="na">gte</span><span class="o">(</span><span class="s">"key"</span><span class="o">,</span><span class="s">"aaa"</span><span class="o">)),</span>
+                <span class="n">KeyValueDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">KEY_VALUE</span> <span class="k">WHERE</span> <span class="k">KEY</span> <span class="o">&gt;=</span> <span class="ss">"aaa"</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can add other conditions like.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">KeyValueDto</span><span class="o">&gt;</span> <span class="n">emps</span> <span class="o">=</span> <span class="n">kva</span><span class="o">.</span><span class="na">search</span><span class="o">(</span>
+                <span class="k">new</span> <span class="n">SearchConditions</span><span class="o">(</span>
+                                <span class="n">SearchCondition</span><span class="o">.</span><span class="na">gte</span><span class="o">(</span><span class="s">"key"</span><span class="o">,</span> <span class="s">"aaa"</span><span class="o">),</span>
+                                <span class="n">SearchCondition</span><span class="o">.</span><span class="na">lt</span><span class="o">(</span><span class="s">"key"</span><span class="o">,</span> <span class="s">"aab"</span><span class="o">)),</span>
+                <span class="n">KeyValueDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">KEY_VALUE</span> <span class="k">WHERE</span> <span class="k">KEY</span> <span class="o">&gt;=</span> <span class="ss">"aaa"</span> <span class="k">AND</span> <span class="k">KEY</span> <span class="o">&lt;</span> <span class="ss">"aab"</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>There is a many SearchConditions(and order conditions).</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>SearchCondition.eq</td>
+<td>COLUMN = value</td>
+</tr>
+<tr class="row-even"><td>SearchCondition.in</td>
+<td>COLUMN IN (values...)</td>
+</tr>
+<tr class="row-odd"><td>SearchCondition.lt</td>
+<td>COLUMN &lt; value</td>
+</tr>
+<tr class="row-even"><td>SearchCondition.lte</td>
+<td>COLUMN &lt;= value</td>
+</tr>
+<tr class="row-odd"><td>SearchCondition.gt</td>
+<td>COLUMN &gt; value</td>
+</tr>
+<tr class="row-even"><td>SearchCondition.gte</td>
+<td>COLUMN &gt;= value</td>
+</tr>
+<tr class="row-odd"><td>SearchCondition.asc</td>
+<td>order by COLUMN ASC</td>
+</tr>
+<tr class="row-even"><td>SearchCondition.desc</td>
+<td>order by COLUMN DESC</td>
+</tr>
+<tr class="row-odd"><td>SearchCondition.all</td>
+<td>For #searchAll() method. Never use it.</td>
+</tr>
+</tbody>
+</table>
+<p>Because of already ROW was sorted, you can use &lt;, &gt;, &lt;=, &gt;= only last key.
+It means, if ENTITY has KEY1, KEY2, KEY3 it is OK.</p>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">ENTITY</span> <span class="k">WHERE</span> <span class="n">KEY1</span> <span class="o">=</span> <span class="ss">"aaa"</span> <span class="k">AND</span> <span class="n">KEY2</span> <span class="o">&gt;</span> <span class="ss">"a"</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>But it is NG.</p>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">ENTITY</span> <span class="k">WHERE</span> <span class="n">KEY1</span> <span class="o">&gt;</span> <span class="ss">"a"</span> <span class="k">AND</span> <span class="n">KEY2</span> <span class="o">=</span> <span class="ss">"aaa"</span><span class="p">;</span>
+<span class="k">SQL</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">ENTITY</span> <span class="k">WHERE</span> <span class="n">KEY1</span> <span class="o">=</span> <span class="ss">"aaa"</span> <span class="k">AND</span> <span class="n">KEY2</span> <span class="o">&gt;</span> <span class="ss">"a"</span> <span class="k">AND</span> <span class="n">KEY3</span> <span class="o">&lt;</span> <span class="ss">"bbb"</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="list-some-data-start-with-a-given-key">
+<h3>List some data start with a given key<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#list-some-data-start-with-a-given-key" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">KeyValueDto</span><span class="o">&gt;</span> <span class="n">emps</span> <span class="o">=</span> <span class="n">kva</span><span class="o">.</span><span class="na">search</span><span class="o">(</span>
+                <span class="k">new</span> <span class="n">SearchConditions</span><span class="o">(</span><span class="n">SearchCondition</span><span class="o">.</span><span class="na">gte</span><span class="o">(</span><span class="s">"key"</span><span class="o">,</span> <span class="n">KeyValueDto</span><span class="o">.</span><span class="na">class</span><span class="o">)),</span>
+                <span class="n">KeyValueDto</span><span class="o">.</span><span class="na">class</span><span class="o">,</span>
+                <span class="mi">25</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">KEY_VALUE</span> <span class="k">WHERE</span> <span class="k">KEY</span> <span class="o">&gt;=</span> <span class="ss">"key%"</span> <span class="k">LIMIT</span> <span class="mi">25</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="insert-a-dto">
+<h3>insert a dto<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#insert-a-dto" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">KeyValueDto</span> <span class="n">dto</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KeyValueDto</span><span class="o">(</span><span class="s">"key"</span><span class="o">,</span> <span class="s">"value"</span><span class="o">);</span>
+<span class="n">kva</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">dto</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">KEY_VALUE</span> <span class="p">(</span><span class="k">KEY</span><span class="p">,</span> <span class="n">VALUE</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="ss">"key"</span><span class="p">,</span> <span class="ss">"value"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delete-a-dto">
+<h3>delete a dto<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#delete-a-dto" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">KeyValueDto</span> <span class="n">dto</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KeyValueDto</span><span class="o">(</span><span class="s">"key"</span><span class="o">,</span> <span class="s">"value"</span><span class="o">);</span>
+<span class="n">kva</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">dto</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">DELETE</span> <span class="k">FROM</span> <span class="n">KEY_VALUE</span> <span class="k">WHERE</span> <span class="k">KEY</span> <span class="o">=</span> <span class="ss">"key"</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Did you suppose that KVS was almost the same as RDB? OK, let’s go to the next.</p>
+</div>
+</div>
+<div class="section" id="implement-an-index-for-kvs">
+<h2>Implement an index for KVS<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#implement-an-index-for-kvs" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>There are two Dtos, Article and Tag. An article belongs to several tags, and we should load articles belongs to a specific tag.
+(userId is dummy for partition key, and id is type 1 UUID)</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ArticleDto</span> <span class="o">{</span>
+        <span class="nd">@Key</span><span class="o">(</span><span class="n">order</span> <span class="o">=</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">userId</span><span class="o">;</span>
+        <span class="nd">@Key</span><span class="o">(</span><span class="n">order</span> <span class="o">=</span> <span class="mi">1</span><span class="o">)</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">id</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">content</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">title</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">tags</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">Article</span><span class="o">(</span><span class="n">String</span> <span class="n">userId</span><span class="o">,</span> <span class="n">String</span> <span class="n">id</span><span class="o">,</span> <span class="n">String</span> <span class="n">content</span><span class="o">,</span> <span class="n">String</span> <span class="n">title</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">tags</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">userId</span> <span class="o">=</span> <span class="n">userId</span><span class="o">;</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">;</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">title</span> <span class="o">=</span> <span class="n">title</span><span class="o">;</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">tags</span> <span class="o">=</span> <span class="n">tags</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getUserId</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">userId</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getId</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">id</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getContent</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">content</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getTitle</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">title</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">getTags</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">tags</span><span class="o">;</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TagDto</span> <span class="o">{</span>
+        <span class="nd">@Key</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">id</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">TagDto</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getId</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">id</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>and also, we need the relation between Articles and Tags.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="nd">@AutoIndex</span><span class="o">(</span><span class="n">ArticleDto</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TagArticleRelationDto</span> <span class="o">{</span>
+        <span class="nd">@Key</span><span class="o">(</span><span class="n">order</span> <span class="o">=</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"tags"</span><span class="o">)</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">tagId</span><span class="o">;</span>
+        <span class="nd">@Key</span><span class="o">(</span><span class="n">order</span> <span class="o">=</span> <span class="mi">1</span><span class="o">)</span>
+        <span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"id"</span><span class="o">)</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">articleId</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">TagArticleRelationDto</span><span class="o">(</span><span class="n">String</span> <span class="n">articleId</span><span class="o">,</span> <span class="n">String</span> <span class="n">tagId</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">articleId</span> <span class="o">=</span> <span class="n">articleId</span><span class="o">;</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">tagId</span> <span class="o">=</span> <span class="n">tagId</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getArticleId</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">articleId</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getTagId</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">tagId</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setArticleId</span><span class="o">(</span><span class="n">String</span> <span class="n">articleId</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">articleId</span> <span class="o">=</span> <span class="n">articleId</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setTagId</span><span class="o">(</span><span class="n">String</span> <span class="n">tagId</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">tagId</span> <span class="o">=</span> <span class="n">tagId</span><span class="o">;</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>@AutoIndex will help your program. It works after value(in this case ArticleDto) is changed. And it will change ArticlTagRelation column family with ArticleDto entity.
+Don’t forget to set @Column annotaion. It will lead @AutoIndex to find which field of value(in this case ArticleDto) should be binded to ArticlTagRelationDto entity.</p>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="n">cqlsh</span><span class="p">:</span><span class="n">demo</span><span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">article</span> <span class="p">(</span><span class="n">user_id</span> <span class="nb">TEXT</span><span class="p">,</span> <span class="n">id</span> <span class="nb">TEXT</span><span class="p">,</span> <span class="n">content</span> <span class="nb">TEXT</span><span class="p">,</span> <span class="n">title</span> <span class="nb">TEXT</span><span class="p">,</span> <span class="n">tags</span> <span class="n">LIST</span><span class="o">&lt;</span><span class="nb">TEXT</span><span class="o">&gt;</span><span class="p">,</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">id</span><span class="p">));</span>
+<span class="n">cqlsh</span><span class="p">:</span><span class="n">demo</span><span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">tag</span> <span class="p">(</span><span class="n">id</span> <span class="nb">TEXT</span><span class="p">,</span> <span class="n">name</span> <span class="nb">TEXT</span><span class="p">,</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+<span class="n">cqlsh</span><span class="p">:</span><span class="n">demo</span><span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">tag_article_relation</span> <span class="p">(</span><span class="n">article_id</span> <span class="nb">TEXT</span><span class="p">,</span> <span class="n">tag_id</span> <span class="nb">TEXT</span><span class="p">,</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">(</span><span class="n">tag_id</span><span class="p">,</span> <span class="n">article_id</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="section" id="load-articles-from-an-id-of-tag">
+<h3>Load articles from an id of tag<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#load-articles-from-an-id-of-tag" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>As you know, SQL can load data with one queue.</p>
+<div class="highlight-sql"><div class="highlight"><pre><span></span><span class="k">SQL</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="n">A</span><span class="p">.</span><span class="o">*</span> <span class="k">FROM</span> <span class="n">ARTICLE</span> <span class="n">A</span><span class="p">,</span> <span class="n">ARTICLE_TAG_RELATION</span> <span class="n">R</span> <span class="k">WHERE</span> <span class="n">A</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">R</span><span class="p">.</span><span class="n">ARTICLE_ID</span> <span class="k">AND</span> <span class="n">R</span><span class="p">.</span><span class="n">TAG_ID</span> <span class="o">=</span> <span class="ss">"TAG"</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Meanwhile, KVS has variouse way to load. According to avobe difinitions of Dtos, we can load data by following procedures.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">List</span><span class="o">&lt;</span><span class="n">TagArticleRelationDto</span><span class="o">&gt;</span> <span class="n">tagArticleRelationDtos</span> <span class="o">=</span> <span class="n">kva</span><span class="o">.</span><span class="na">search</span><span class="o">(</span><span class="s">"TAG"</span> <span class="o">+</span> <span class="s">"/"</span><span class="o">,</span> <span class="n">ArticleTagRelationDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+                <span class="k">new</span> <span class="n">SearchConditions</span><span class="o">(</span>
+                                <span class="n">SearchCondition</span><span class="o">.</span><span class="na">eq</span><span class="o">(</span><span class="s">"tagId"</span><span class="o">,</span> <span class="s">"TAG"</span><span class="o">)),</span>
+                <span class="n">TagArticleRelationDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">articleIds</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+<span class="k">for</span> <span class="o">(</span><span class="n">TagArticleRelationDto</span> <span class="n">tagArticleRelationDto</span> <span class="o">:</span> <span class="n">tagArticleRelationDtos</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">articleIds</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">tagArticleRelationDto</span><span class="o">.</span><span class="na">getArticleId</span><span class="o">());</span>
+<span class="o">}</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">ArticleDto</span><span class="o">&gt;</span> <span class="n">articleDtos</span> <span class="o">=</span> <span class="n">kva</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">articleIds</span><span class="o">,</span> <span class="n">ArticleDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="k">return</span> <span class="n">articleDtos</span><span class="o">;</span>
+</pre></div>
+</div>
+<p>We can implemnt not only this procedures, but also other data structures like below.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Tag</span> <span class="n">tag</span> <span class="o">=</span> <span class="n">kva</span><span class="o">.</span><span class="na">getSingle</span><span class="o">(</span><span class="s">"TAG"</span><span class="o">,</span> <span class="n">Tag</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="c1">//we need to implemnt tag.getArticleIds()</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">ArticleDto</span><span class="o">&gt;</span> <span class="n">articleDtos</span> <span class="o">=</span> <span class="n">kva</span><span class="o">.</span><span class="na">getMultiple</span><span class="o">(</span><span class="n">tag</span><span class="o">.</span><span class="na">getArticleIds</span><span class="o">(),</span> <span class="n">ArticleDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="k">return</span> <span class="n">articleDtos</span><span class="o">;</span>
+</pre></div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Iterator</span><span class="o">&lt;</span><span class="n">ArticleDto</span><span class="o">&gt;</span> <span class="n">articleDtos</span> <span class="o">=</span> <span class="n">kva</span><span class="o">.</span><span class="na">searchAllWithIterator</span><span class="o">(</span><span class="n">ArticleDto</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">ArticleDto</span><span class="o">&gt;</span> <span class="n">results</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+<span class="k">for</span> <span class="o">(</span><span class="n">ArticleDto</span> <span class="n">articleDto</span> <span class="o">:</span> <span class="n">articleDtos</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">articleDto</span><span class="o">.</span><span class="na">getTags</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="s">"TAG"</span><span class="o">)){</span>
+                <span class="n">results</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">articleDto</span><span class="o">);</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+<span class="k">return</span> <span class="n">results</span><span class="o">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="question">
+<h3>Question<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#question" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>These three procedures have merits and demerits. Which one do you think the best? And why is that?</p>
+</div>
+</div>
+<div class="section" id="original-comparator">
+<h2>Original Comparator<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#original-comparator" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="line-block">
+<div class="line">Sort order is very important for us, Cassandra automatically detects sort order by column type.</div>
+<div class="line">However, our development is much more compricated that default comparator sort order.</div>
+<div class="line">How to handle it?</div>
+</div>
+<p>Under Construction... Please google it at the moment.</p>
+</div>
+<div class="section" id="cql">
+<h2>CQL<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#cql" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>If you need to use Cassandra directly, you should use CQL. There is first step guide to use CQL.</p>
+<p><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs_cql.html"><span class="doc">CQL</span></a></p>
+</div>
+<div class="section" id="design-pattern">
+<h2>Design Pattern<a class="headerlink" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#design-pattern" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>As you know, it’s quite important to design a good primaly key to bring out performance of KVS because we can get data only with the primaly key. So we’re writing some design patterns that reusable popular solutions. At first, please overview <a class="reference download internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/_downloads/NoSQL_Design_Pattern.pdf" download=""><code class="xref download docutils literal"><span class="pre">the</span> <span class="pre">basis</span> <span class="pre">of</span> <span class="pre">design</span> <span class="pre">pattern</span></code></a>. This document includes index, join, tree and history design patterns.</p>
+<p>And there is <a class="reference download internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/_downloads/DesignPatternsofKVS.pdf" download=""><code class="xref download docutils literal"><span class="pre">more</span> <span class="pre">detail</span> <span class="pre">document</span></code></a> that writes about pros&amp;cons for each data models.</p>
+<p>If you want to know the basic of Cassandra, there is a useful contents at <a class="reference external" href="https://academy.datastax.com/courses">datastack’s courses</a>. These contents will help you to use Cassandra, but you should use cassandra-access at first. Because cassandra-access try to keep the balance of total column family usage. (If you can adjust all Sub-system’s usage of Cassandra, you can create own column families. But it is better to use common library...)
+[EOF]</p>
+</div>
+</div>
+
+
+      </main><nav class="related-nav" aria-label="related navigation">
+
+  <ul class="breadcrumb-list">
+    <li>
+      <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/index.html">Bootcamp ServerSide Intermediate - latest</a>
+    </li>
+  </ul>
+
+</nav>
+    </div>
+    <div class="right">
+
+<nav class="sidebar" aria-label="main navigation"><section class="side-widget localtoc">
+  <h3>目次</h3>
+  <div class="side-widget-content">
+    <ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#">KVS</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#what-is-kvs">What is KVS?</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#scaling-strategy">Scaling strategy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#cassandra-essential">必修 Cassandra</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#technical-terms">術語</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#figure">構造図</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#keyspace">KeySpace</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#what-is-keyspace">Keyspace とは何か？</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#replication-factor">Replication factor</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#replica-strategy">Replica strategy</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#column-family">Column Family</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#column">Column</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#column-structure">Column の構造</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#column-is-sorted">Column はソート済み</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#other-keywords">その他のキーワード</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#sample-environment">サンプル環境</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#installation-steps">インストール方法</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#cassandra-and-java">Cassandra and Java</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#get-a-client-for-cassandra">Get a client for Cassandra</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#get-by-autowired">Get by @Autowired</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#cast-yourself">Cast yourself</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#get-with-a-single-key">Get with a single key</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#get-with-mutiple-keys">Get with mutiple keys</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#iterator-for-all-data">Iterator for all data</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#list-data-start-with-a-given-key">List data start with a given key</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#list-some-data-start-with-a-given-key">List some data start with a given key</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#insert-a-dto">insert a dto</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#delete-a-dto">delete a dto</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#implement-an-index-for-kvs">Implement an index for KVS</a><ul>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#load-articles-from-an-id-of-tag">Load articles from an id of tag</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#question">Question</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#original-comparator">Original Comparator</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#cql">CQL</a></li>
+<li><a class="reference internal" href="https://webootcamp.worksap.co.jp/course/ss-i/ja/server_kvs.html#design-pattern">Design Pattern</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</section>
+<section class="side-widget searchbox" role="search">
+  <h3>クイック検索</h3>
+  <div class="side-widget-content">
+    <form class="search" action="https://webootcamp.worksap.co.jp/course/ss-i/ja/search.html" method="get">
+      <input type="text" name="q">
+      <input type="submit" value="検索">
+      <input type="hidden" name="check_keywords" value="yes">
+      <input type="hidden" name="area" value="default">
+    </form>
+    <p class="searchtip">
+      モジュール、クラス、または関数名を入力してください
+    </p>
+  </div>
+</section>
+<div role="note" aria-label="source link" class="side-widget source-link">
+  
+  <div class="side-widget-content">
+    <a href="https://webootcamp.worksap.co.jp/course/ss-i/ja/_sources/server_kvs.txt" rel="nofollow">ソースコードを表示</a>
+  </div>
+</div>
+
+</nav>
+    </div>
+  </div><footer id="global-footer">
+      © Copyright 2016, Works Applications Co., Ltd..
+    このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8 で生成しました。
+</footer>
+
+
+</body></html>
